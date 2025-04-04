@@ -37,12 +37,22 @@ export default function Home() {
 
 	// Animation effects when page loads
 	useEffect(() => {
-		setIsLoaded(true);
+		// Check if this is the first visit
+		const isFirstVisit = localStorage.getItem('hasVisited') === null;
 
-		// Intro animation timing
-		const introTimer = setTimeout(() => {
+		if (isFirstVisit) {
+			setIsLoaded(true);
+			localStorage.setItem('hasVisited', 'true');
+
+			// Intro animation timing
+			const introTimer = setTimeout(() => {
+				setIntroComplete(true);
+			}, 2500);
+		} else {
+			// If not first visit, skip animation
+			setIsLoaded(true);
 			setIntroComplete(true);
-		}, 2500);
+		}
 
 		// Rotate through features
 		const featureInterval = setInterval(() => {
@@ -57,7 +67,6 @@ export default function Home() {
 		window.addEventListener('scroll', handleScroll);
 
 		return () => {
-			clearTimeout(introTimer);
 			clearInterval(featureInterval);
 			window.removeEventListener('scroll', handleScroll);
 		};
