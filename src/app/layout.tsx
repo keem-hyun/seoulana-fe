@@ -50,8 +50,8 @@ export default function RootLayout({
 			<body
 				className={`${geistSans.variable} ${geistMono.variable} ${silkscreen.variable} ${poppins.variable} ${quicksand.variable} antialiased`}
 			>
-				<GlobalHeader />
 				<SolanaWalletProvider>
+					<GlobalHeader />
 					<div className="min-h-screen flex flex-col">
 						{children}
 						<GlobalFooter />
