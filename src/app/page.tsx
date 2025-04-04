@@ -1,7 +1,7 @@
 'use client';
 
 import Image from 'next/image';
-import { WalletButton } from '@/components/WalletButton';
+import { WalletButton } from '@/components/wallet/WalletButton';
 import Link from 'next/link';
 import { useState, useEffect, useRef } from 'react';
 

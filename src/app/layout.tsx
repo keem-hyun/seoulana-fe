@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { SolanaWalletProvider } from '@/components/SolanaWalletProvider';
+import { SolanaWalletProvider } from '@/components/wallet/SolanaWalletProvider';
 import { Geist, Geist_Mono, Silkscreen, Poppins, Quicksand } from 'next/font/google';
 import '@/styles/globals.css';
 

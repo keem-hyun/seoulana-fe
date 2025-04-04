@@ -5,8 +5,8 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import GameRoomList from '@/components/gamerooms/GameRoomList';
 import CreateGameRoomForm from '@/components/gamerooms/CreateGameRoomForm';
-import { WalletButton } from '@/components/WalletButton';
-import LinkWalletButton from '@/components/LinkWalletButton';
+import { WalletButton } from '@/components/wallet/WalletButton';
+import LinkWalletButton from '@/components/wallet/LinkWalletButton';
 import { toast, Toaster } from 'react-hot-toast';
 
 type User = {
