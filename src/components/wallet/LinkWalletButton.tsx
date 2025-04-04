@@ -33,7 +33,7 @@ export default function LinkWalletButton({ user, onWalletLinked }: LinkWalletBut
 		try {
 			const walletAddress = publicKey.toString();
 
-			const { data } = await api.post<{ walletAddress: string }>('/users/wallet', {
+			const { data } = await api.put<{ walletAddress: string }>('/users/wallet', {
 				walletAddress: walletAddress,
 			});
 			setWalletAddress(data.walletAddress);
