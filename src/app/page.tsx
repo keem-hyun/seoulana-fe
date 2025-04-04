@@ -64,7 +64,7 @@ export default function Home() {
 	}, []);
 
 	return (
-		<main className="flex flex-col items-center min-h-screen overflow-x-hidden font-quicksand">
+		<main className="flex flex-col items-center min-h-screen font-quicksand">
 			{/* Intro Animation Overlay - Shows only during intro sequence */}
 			{!introComplete && (
 				<div className="fixed inset-0 z-50 flex items-center justify-center bg-gradient-to-br from-pink-light/50 via-white to-purple-light/50">
