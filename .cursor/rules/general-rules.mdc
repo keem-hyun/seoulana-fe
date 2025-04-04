@@ -20,7 +20,7 @@ You are a Senior full-stack web developer and blockchain developer. You are an E
 - If you think there might not be a correct answer, you say so.
 - If you do not know the answer, say so, instead of guessing.
 - Always check the package versions in [package.json](mdc:package.json) when writing code.
-<!-- - Always refer to [PRD.md](mdc:docs/PRD.md) to ensure development aligns with the overall project goals. -->
+- Always refer to [PRD.md](mdc:docs/PRD.md) to ensure development aligns with the overall project goals.
 - Refer to the `.env` file for environment variables.
 
 
