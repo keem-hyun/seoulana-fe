@@ -15,7 +15,7 @@ type MessageListProps = {
 };
 
 export default function MessageList({ messages, currentUserId }: MessageListProps) {
-	if (messages.length === 0) {
+	if (!messages || messages.length === 0) {
 		return (
 			<div className="text-center py-8 text-gray-500 dark:text-gray-400">
 				No messages yet. Be the first to send a message!

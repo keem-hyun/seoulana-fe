@@ -51,7 +51,7 @@ export default function CommunityPage() {
 		async function fetchData() {
 			try {
 				const [communityResponse, userResponse] = await Promise.all([
-					api.get<Community>(`/communities/${id}`),
+					api.get<Community>(`/communities/${id}/messages`),
 					api.get<User>('/auth/user'),
 				]);
 
@@ -97,7 +97,7 @@ export default function CommunityPage() {
 
 	const handleRefresh = async () => {
 		try {
-			const { data } = await api.get<Community>(`/communities/${id}`);
+			const { data } = await api.get<Community>(`/communities/${id}/messages`);
 			setCommunity(data);
 		} catch (error) {
 			console.error('Error refreshing community:', error);
