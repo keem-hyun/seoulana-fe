@@ -149,7 +149,7 @@ export default function Home() {
 							How It Works
 						</a>
 						<Link
-							href="/Kasoro"
+							href="/kasoro"
 							className="px-5 py-2 bg-gradient-to-r from-pink-primary to-purple-primary text-purple-dark rounded-full font-medium shadow-md hover:shadow-pink transition-all hover:scale-105"
 						>
 							Launch App
@@ -193,7 +193,7 @@ export default function Home() {
 
 						<div className="flex flex-col sm:flex-row justify-center gap-5 mb-20">
 							<Link
-								href="/Kasoro"
+								href="/kasoro"
 								className="px-10 py-5 bg-white/80 border-2 border-pink-light text-pink-dark rounded-full shadow-md text-xl font-semibold transition-all hover:bg-pink-light/20 hover:border-pink-primary"
 							>
 								<span>Launch App</span>
