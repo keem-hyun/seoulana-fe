@@ -3,7 +3,7 @@ import Link from 'next/link';
 
 export default function GlobalHeader() {
 	return (
-		<header className="sticky top-0 w-full py-6 px-6 flex justify-between items-center relative z-50 bg-gradient-to-br from-pink-light/40 via-white to-purple-light/40 backdrop-blur-sm">
+		<header className="sticky top-0 w-full h-16 py-6 px-6 flex justify-between items-center relative z-50 bg-gradient-to-br from-pink-light/40 via-white to-purple-light/40 backdrop-blur-sm">
 			<div className="flex items-center gap-3">
 				<div className="w-12 h-12 bg-white rounded-xl shadow-pink flex items-center justify-center p-2">
 					<Image src="/images/kasoro_logo.png" alt="Kasoro Logo" width={32} height={32} />
