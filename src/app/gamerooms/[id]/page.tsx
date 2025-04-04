@@ -88,7 +88,7 @@ export default function GameRoomPage() {
 
 	async function fetchGameRoomMessages() {
 		try {
-			const response = await fetch(`http://localhost:3001/gamerooms/${gameRoomId}/messages`, {
+			const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/gamerooms/${gameRoomId}/messages`, {
 				credentials: 'include',
 			});
 
@@ -139,7 +139,7 @@ export default function GameRoomPage() {
 						</p>
 					) : (
 						<Link
-							href="http://localhost:3001/auth/login/twitter"
+							href={`${process.env.NEXT_PUBLIC_API_URL}/auth/login/twitter`}
 							className="bg-black text-white px-4 py-2 rounded-full text-sm"
 						>
 							Login with X
