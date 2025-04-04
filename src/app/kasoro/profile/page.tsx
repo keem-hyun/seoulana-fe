@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
+import { Twitter, Send } from 'lucide-react';
 
 export default function ProfilePage() {
 	const [isLoaded, setIsLoaded] = useState(false);
@@ -251,7 +252,7 @@ export default function ProfilePage() {
 							<div className="flex items-center justify-between p-4 border-2 border-pink-light rounded-2xl hover:border-pink-primary transition-colors">
 								<div className="flex items-center gap-4">
 									<div className="w-12 h-12 rounded-full bg-black flex items-center justify-center">
-										<Image src="/x-logo.svg" alt="X Logo" width={20} height={20} className="invert" />
+										<Twitter className="w-6 h-6 text-white" />
 									</div>
 									<div>
 										<h4 className="font-semibold text-lg">Twitter / X</h4>
@@ -274,9 +275,7 @@ export default function ProfilePage() {
 							<div className="flex items-center justify-between p-4 border-2 border-pink-light rounded-2xl hover:border-pink-primary transition-colors">
 								<div className="flex items-center gap-4">
 									<div className="w-12 h-12 rounded-full bg-[#0088cc] flex items-center justify-center">
-										<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="white">
-											<path d="M12 0c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm0 2c5.514 0 10 4.486 10 10s-4.486 10-10 10-10-4.486-10-10 4.486-10 10-10zm-2.426 14.741h-.012l-3.78-2.58c-.35-.302-.531-.917-.399-1.238l.365-.777c.117-.292.409-.373.695-.12l1.422 1.01c.262.184.543.204.705.064l4.869-4.796c.236-.226.548-.219.752.034l2.48 2.461c.194.158.223.471.083.806l-2.306 3.747c-.145.29-.415.391-.685.275l-4.189-2.12"></path>
-										</svg>
+										<Send className="w-6 h-6 text-white" />
 									</div>
 									<div>
 										<h4 className="font-semibold text-lg">Telegram</h4>
