@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { SolanaWalletProvider } from '@/components/wallet/SolanaWalletProvider';
 import { Geist, Geist_Mono, Silkscreen, Poppins, Quicksand } from 'next/font/google';
 import '@/styles/globals.css';
+import GlobalHeader from '@/components/global/GlobalHeader';
 
 const geistSans = Geist({
 	variable: '--font-geist-sans',
@@ -48,6 +49,7 @@ export default function RootLayout({
 			<body
 				className={`${geistSans.variable} ${geistMono.variable} ${silkscreen.variable} ${poppins.variable} ${quicksand.variable} antialiased`}
 			>
+				<GlobalHeader />
 				<SolanaWalletProvider>{children}</SolanaWalletProvider>
 			</body>
 		</html>
