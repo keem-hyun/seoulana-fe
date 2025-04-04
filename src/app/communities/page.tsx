@@ -54,54 +54,40 @@ export default function CommunitysPage() {
 	}
 
 	return (
-		<div className="container mx-auto px-4 py-8">
-			<Toaster position="top-right" />
-			<div className="flex justify-between items-center mb-8">
-				<h1 className="text-3xl font-bold uppercase tracking-wider">Communities</h1>
-				<div className="flex items-center gap-4">
-					{user ? (
-						<>
-							<p className="text-sm">
-								Logged in as <span className="font-semibold">@{user.username}</span>
-							</p>
-							<Link
-								href="/auth/logout"
-								className="bg-gray-200 dark:bg-gray-700 px-4 py-2 border-2 border-black dark:border-white text-sm font-bold"
-							>
-								Logout
-							</Link>
-						</>
-					) : (
-						<Link
-							href={`${process.env.NEXT_PUBLIC_API_URL}/auth/login/twitter`}
-							className="bg-black text-white px-4 py-2 border-2 border-black text-sm font-bold"
-						>
-							Login with X
-						</Link>
-					)}
-					<div className="ml-2">
-						<WalletButton />
-					</div>
-				</div>
-			</div>
-
-			<div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-				<div className="md:col-span-2">
-					<CommunityList />
-				</div>
-				<div className="md:col-span-1">
-					<div className="bg-white dark:bg-gray-800 border-2 border-black dark:border-white p-6">
+		<div className="min-h-screen">
+			<div className="container mx-auto px-4 py-8">
+				<Toaster position="top-right" />
+				<div className="flex justify-between items-center mb-8">
+					<h1 className="text-3xl font-bold uppercase tracking-wider">Communities</h1>
+					<div className="flex items-center gap-4">
 						{user ? (
 							<>
-								{user.walletAddress ? null : <LinkWalletButton user={user} onWalletLinked={handleWalletLinked} />}
-								<CreateCommunityForm userWalletAddress={user.walletAddress} />
+								<p className="text-sm">
+									Logged in as <span className="font-semibold">@{user.username}</span>
+								</p>
+								<Link
+									href="/auth/logout"
+									className="bg-gray-200 dark:bg-gray-700 px-4 py-2 border-2 border-black dark:border-white text-sm font-bold"
+								>
+									Logout
+								</Link>
 							</>
 						) : (
-							<div className="bg-yellow-50 dark:bg-yellow-900/30 border-2 border-black dark:border-yellow-700 p-4 text-yellow-800 dark:text-yellow-300">
-								Please log in to create a community.
-							</div>
+							<Link
+								href={`${process.env.NEXT_PUBLIC_API_URL}/auth/login/twitter`}
+								className="bg-black text-white px-4 py-2 border-2 border-black text-sm font-bold"
+							>
+								Login with X
+							</Link>
 						)}
+						<div className="ml-2">
+							<WalletButton />
+						</div>
 					</div>
+				</div>
+
+				<div className="flex-1">
+					<CommunityList />
 				</div>
 			</div>
 		</div>
