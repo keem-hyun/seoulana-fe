@@ -1,6 +1,6 @@
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { useWallet } from '@solana/wallet-adapter-react';
-import { WalletMultiButton } from '@solana/wallet-adapter-react-ui';
+import { WalletButton } from '@/components/wallet/WalletButton';
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
 
@@ -27,7 +27,7 @@ export default function LoginDialog({ isOpen, onClose }: LoginDialogProps) {
 				<div className="grid gap-4 py-4">
 					{mounted && (
 						<div className="flex flex-col items-center gap-2">
-							<WalletMultiButton className="wallet-button w-full px-4 py-3 rounded-lg bg-gradient-to-r from-pink-primary to-purple-primary text-purple-dark font-medium hover:opacity-90 transition-opacity border border-purple-primary" />
+							<WalletButton />
 						</div>
 					)}
 

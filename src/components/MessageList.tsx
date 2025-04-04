@@ -10,15 +10,15 @@ export type Message = {
 };
 
 type MessageListProps = {
-	messages?: Message[];
+	messages: Message[];
 	currentUserId?: string;
 };
 
-export default function MessageList({ messages = [], currentUserId }: MessageListProps) {
-	if (!messages || messages.length === 0) {
+export default function MessageList({ messages, currentUserId }: MessageListProps) {
+	if (messages.length === 0) {
 		return (
 			<div className="text-center py-8 text-gray-500 dark:text-gray-400">
-				아직 메시지가 없습니다. 첫 메시지를 보내보세요!
+				No messages yet. Be the first to send a message!
 			</div>
 		);
 	}
@@ -42,10 +42,7 @@ export default function MessageList({ messages = [], currentUserId }: MessageLis
 							)}
 							<div>{message.content}</div>
 							<div className="text-xs text-right mt-1 opacity-70">
-								{new Date(message.createdAt).toLocaleTimeString([], {
-									hour: '2-digit',
-									minute: '2-digit',
-								})}
+								{new Date(message.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
 							</div>
 						</div>
 					</div>

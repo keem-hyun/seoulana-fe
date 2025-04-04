@@ -9,18 +9,6 @@ import CreateMessageForm from '@/components/CreateMessageForm';
 import { WalletButton } from '@/components/wallet/WalletButton';
 import { toast, Toaster } from 'react-hot-toast';
 import DepositBountyDialog from '@/components/communities/DepositBountyDialog';
-
-interface Message {
-	id: string;
-	content: string;
-	createdAt: string;
-	userId: string;
-	user: {
-		id: string;
-		username: string;
-	};
-}
-
 interface Creator {
 	id: string;
 	xId: string;
@@ -36,7 +24,7 @@ interface Community {
 	createdAt: string;
 	creatorId: string;
 	creator: Creator;
-	messages: Message[];
+	messages: any[];
 	lastMessageTime: string;
 	contractAddress: string;
 	bountyAmount: number;
@@ -78,15 +66,6 @@ export default function CommunityPage() {
 		}
 
 		fetchData();
-
-		// 5초마다 메시지 업데이트
-		const intervalId = setInterval(() => {
-			if (!loading && !error) {
-				handleRefresh();
-			}
-		}, 5000);
-
-		return () => clearInterval(intervalId);
 	}, [id]);
 
 	const getRemainingTime = () => {
