@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import CommunityList from '@/components/communities/CommunityList';
-import CreateCommunityForm from '@/components/communities/CreateCommunityForm';
+import CreateCommunityDialog from '@/components/communities/CreateCommunityDialog';
 import { WalletButton } from '@/components/wallet/WalletButton';
 import LinkWalletButton from '@/components/wallet/LinkWalletButton';
 import { toast, Toaster } from 'react-hot-toast';
@@ -19,6 +19,7 @@ type User = {
 export default function CommunitysPage() {
 	const [user, setUser] = useState<User | null>(null);
 	const [loading, setLoading] = useState(true);
+	const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
 	const router = useRouter();
 
 	useEffect(() => {
@@ -58,7 +59,18 @@ export default function CommunitysPage() {
 			<div className="container mx-auto px-4 py-8">
 				<Toaster position="top-right" />
 				<div className="flex justify-between items-center mb-8">
-					<h1 className="text-3xl font-bold uppercase tracking-wider">Communities</h1>
+					<div className="flex items-center gap-4">
+						<h1 className="text-3xl font-bold uppercase tracking-wider">Communities</h1>
+						{user && (
+							<button
+								onClick={() => setIsCreateDialogOpen(true)}
+								className="flex items-center gap-2 bg-black dark:bg-white text-white dark:text-black px-4 py-2 border-2 border-black dark:border-white text-sm font-bold hover:bg-gray-800 dark:hover:bg-gray-200 transition-colors"
+							>
+								<span>+</span>
+								<span>Create Community</span>
+							</button>
+						)}
+					</div>
 					<div className="flex items-center gap-4">
 						{user ? (
 							<>
@@ -83,12 +95,23 @@ export default function CommunitysPage() {
 						<div className="ml-2">
 							<WalletButton />
 						</div>
+						{user && (
+							<div className="ml-2">
+								<LinkWalletButton user={user} onWalletLinked={handleWalletLinked} />
+							</div>
+						)}
 					</div>
 				</div>
 
 				<div className="flex-1">
 					<CommunityList />
 				</div>
+
+				<CreateCommunityDialog
+					isOpen={isCreateDialogOpen}
+					onClose={() => setIsCreateDialogOpen(false)}
+					userWalletAddress={user?.walletAddress}
+				/>
 			</div>
 		</div>
 	);
