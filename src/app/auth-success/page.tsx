@@ -20,7 +20,7 @@ export default function AuthSuccess() {
 	useEffect(() => {
 		async function fetchUser() {
 			try {
-				const response = await fetch('http://localhost:3001/auth/user', {
+				const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/user`, {
 					method: 'GET',
 					credentials: 'include',
 					headers: {

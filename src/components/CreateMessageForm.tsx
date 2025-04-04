@@ -20,7 +20,7 @@ export default function CreateMessageForm({ gameRoomId, onMessageSent }: CreateM
 		setError(null);
 
 		try {
-			const response = await fetch('http://localhost:3001/messages', {
+			const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/messages`, {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json',

@@ -50,8 +50,8 @@ export default function GameRoomPage() {
 			try {
 				// Fetch user and game room in parallel
 				const [userResponse, gameRoomResponse] = await Promise.all([
-					fetch('http://localhost:3001/auth/user', { credentials: 'include' }),
-					fetch(`http://localhost:3001/gamerooms/${gameRoomId}/messages`, { credentials: 'include' }),
+					fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/user`, { credentials: 'include' }),
+					fetch(`${process.env.NEXT_PUBLIC_API_URL}/gamerooms/${gameRoomId}/messages`, { credentials: 'include' }),
 				]);
 
 				if (!gameRoomResponse.ok) {
