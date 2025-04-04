@@ -12,7 +12,7 @@ type User = {
 	username: string;
 };
 
-type GameRoom = {
+type Community = {
 	id: string;
 	name: string;
 	description: string;
@@ -30,19 +30,19 @@ type Message = {
 	content: string;
 	createdAt: string;
 	userId: string;
-	gameRoomId: string;
+	communityId: string;
 	user: {
 		id: string;
 		username: string;
 	};
 };
 
-export default function GameRoomPage() {
+export default function CommunityPage() {
 	const params = useParams();
-	const gameRoomId = params.id as string;
+	const communityId = params.id as string;
 
 	const [user, setUser] = useState<User | null>(null);
-	const [gameRoom, setGameRoom] = useState<GameRoom | null>(null);
+	const [community, setCommunity] = useState<Community | null>(null);
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState<string | null>(null);
 	const [messages, setMessages] = useState<Message[]>([]);
@@ -52,7 +52,7 @@ export default function GameRoomPage() {
 			try {
 				const [userResponse, messagesResponse] = await Promise.all([
 					api.get<User>('/auth/user'),
-					api.get<Message[]>(`/gamerooms/${gameRoomId}/messages`),
+					api.get<Message[]>(`/communities/${communityId}/messages`),
 				]);
 				setUser(userResponse.data);
 				setMessages(messagesResponse.data);
@@ -74,13 +74,13 @@ export default function GameRoomPage() {
 		}, 5000);
 
 		return () => clearInterval(intervalId);
-	}, [gameRoomId]);
+	}, [communityId]);
 
 	const fetchMessages = async () => {
 		try {
-			const { data } = await api.get<Message[]>(`/gamerooms/${gameRoomId}/messages`);
+			const { data } = await api.get<Message[]>(`/communities/${communityId}/messages`);
 			setMessages(data);
-			setGameRoom((prev) =>
+			setCommunity((prev) =>
 				prev
 					? {
 							...prev,
@@ -101,13 +101,16 @@ export default function GameRoomPage() {
 		);
 	}
 
-	if (error || !gameRoom) {
+	if (error || !community) {
 		return (
 			<div className="container mx-auto px-4 py-8">
 				<div className="bg-red-50 dark:bg-red-900/30 border border-red-200 dark:border-red-700 rounded-md p-6 text-red-800 dark:text-red-300">
 					<h2 className="text-xl font-semibold mb-2">Error</h2>
-					<p>{error || 'Game room not found'}</p>
-					<Link href="/gamerooms" className="mt-4 inline-block bg-red-100 dark:bg-red-800 px-4 py-2 rounded-md text-sm">
+					<p>{error || 'Community not found'}</p>
+					<Link
+						href="/communities"
+						className="mt-4 inline-block bg-red-100 dark:bg-red-800 px-4 py-2 rounded-md text-sm"
+					>
 						Back to Game Rooms
 					</Link>
 				</div>
@@ -118,11 +121,11 @@ export default function GameRoomPage() {
 	return (
 		<div className="container mx-auto px-4 py-8">
 			<div className="mb-6">
-				<Link href="/gamerooms" className="text-blue-600 dark:text-blue-400 hover:underline mb-4 inline-block">
+				<Link href="/communities" className="text-blue-600 dark:text-blue-400 hover:underline mb-4 inline-block">
 					← Back to Game Rooms
 				</Link>
 				<div className="flex justify-between items-center">
-					<h1 className="text-3xl font-bold">{gameRoom.name}</h1>
+					<h1 className="text-3xl font-bold">{community.name}</h1>
 					{user ? (
 						<p className="text-sm">
 							Logged in as <span className="font-semibold">@{user.username}</span>
@@ -136,7 +139,7 @@ export default function GameRoomPage() {
 						</Link>
 					)}
 				</div>
-				{gameRoom.description && <p className="text-gray-600 dark:text-gray-400 mt-2">{gameRoom.description}</p>}
+				{community.description && <p className="text-gray-600 dark:text-gray-400 mt-2">{community.description}</p>}
 			</div>
 
 			<div className="grid grid-cols-1 gap-8">
@@ -149,7 +152,7 @@ export default function GameRoomPage() {
 					</div>
 					<div className="p-4 border-t border-gray-200 dark:border-gray-700">
 						{user ? (
-							<CreateMessageForm gameRoomId={gameRoom.id} onMessageSent={fetchMessages} />
+							<CreateMessageForm communityId={community.id} onMessageSent={fetchMessages} />
 						) : (
 							<div className="bg-yellow-50 dark:bg-yellow-900/30 border border-yellow-200 dark:border-yellow-700 rounded-md p-4 text-yellow-800 dark:text-yellow-300">
 								Please log in to send messages.

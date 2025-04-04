@@ -169,7 +169,7 @@ export default function Home() {
 
 						<div className="flex flex-col sm:flex-row justify-center gap-5 mb-20">
 							<Link
-								href="/gamerooms"
+								href="/communities"
 								className="px-10 py-5 bg-white/80 border-2 border-pink-light text-pink-dark rounded-full shadow-md text-xl font-semibold transition-all hover:bg-pink-light/20 hover:border-pink-primary"
 							>
 								<span>Launch App</span>

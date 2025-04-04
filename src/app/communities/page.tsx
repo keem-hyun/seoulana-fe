@@ -3,8 +3,8 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import GameRoomList from '@/components/gamerooms/GameRoomList';
-import CreateGameRoomForm from '@/components/gamerooms/CreateGameRoomForm';
+import CommunityList from '@/components/communities/CommunityList';
+import CreateCommunityForm from '@/components/communities/CreateCommunityForm';
 import { WalletButton } from '@/components/wallet/WalletButton';
 import LinkWalletButton from '@/components/wallet/LinkWalletButton';
 import { toast, Toaster } from 'react-hot-toast';
@@ -16,7 +16,7 @@ type User = {
 	walletAddress?: string | null;
 };
 
-export default function GameRoomsPage() {
+export default function CommunitysPage() {
 	const [user, setUser] = useState<User | null>(null);
 	const [loading, setLoading] = useState(true);
 	const router = useRouter();
@@ -87,14 +87,14 @@ export default function GameRoomsPage() {
 
 			<div className="grid grid-cols-1 md:grid-cols-3 gap-8">
 				<div className="md:col-span-2">
-					<GameRoomList />
+					<CommunityList />
 				</div>
 				<div className="md:col-span-1">
 					<div className="bg-white dark:bg-gray-800 border-2 border-black dark:border-white p-6">
 						{user ? (
 							<>
 								{user.walletAddress ? null : <LinkWalletButton user={user} onWalletLinked={handleWalletLinked} />}
-								<CreateGameRoomForm userWalletAddress={user.walletAddress} />
+								<CreateCommunityForm userWalletAddress={user.walletAddress} />
 							</>
 						) : (
 							<div className="bg-yellow-50 dark:bg-yellow-900/30 border-2 border-black dark:border-yellow-700 p-4 text-yellow-800 dark:text-yellow-300">

@@ -4,11 +4,11 @@ import { useState } from 'react';
 import { api } from '@/api';
 
 type CreateMessageFormProps = {
-	gameRoomId: string;
+	communityId: string;
 	onMessageSent?: () => void;
 };
 
-export default function CreateMessageForm({ gameRoomId, onMessageSent }: CreateMessageFormProps) {
+export default function CreateMessageForm({ communityId, onMessageSent }: CreateMessageFormProps) {
 	const [content, setContent] = useState('');
 	const [loading, setLoading] = useState(false);
 	const [error, setError] = useState<string | null>(null);
@@ -23,7 +23,7 @@ export default function CreateMessageForm({ gameRoomId, onMessageSent }: CreateM
 		try {
 			const { data } = await api.post('/messages', {
 				content,
-				gameRoomId,
+				communityId,
 			});
 			onMessageSent && onMessageSent();
 			setContent('');

@@ -10,7 +10,7 @@ interface FormProps {
 	userWalletAddress?: string | null;
 }
 
-interface GameRoomResponse {
+interface CommunityResponse {
 	id: string;
 	name: string;
 	description: string;
@@ -18,7 +18,7 @@ interface GameRoomResponse {
 	creatorId: string;
 }
 
-export default function CreateGameRoomForm({ userWalletAddress }: FormProps) {
+export default function CreateCommunityForm({ userWalletAddress }: FormProps) {
 	const [name, setName] = useState('');
 	const [description, setDescription] = useState('');
 	const [bountyAmount, setBountyAmount] = useState(1);
@@ -57,7 +57,7 @@ export default function CreateGameRoomForm({ userWalletAddress }: FormProps) {
 		setError(null);
 
 		try {
-			const { data } = await api.post<GameRoomResponse>('/gamerooms', {
+			const { data } = await api.post<CommunityResponse>('/communities', {
 				name,
 				description,
 				bountyAmount,
@@ -75,10 +75,10 @@ export default function CreateGameRoomForm({ userWalletAddress }: FormProps) {
 
 			toast.success('Community created successfully!');
 
-			// Navigate to the new game room
-			router.push(`/gamerooms/${data.id}`);
+			// Navigate to the new community
+			router.push(`/communities/${data.id}`);
 		} catch (error) {
-			console.error('Error creating game room:', error);
+			console.error('Error creating community:', error);
 			const errorMessage = error instanceof Error ? error.message : 'Failed to create community';
 			setError(errorMessage);
 			toast.error(errorMessage);

@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { api } from '@/api';
 
-interface GameRoom {
+interface Community {
 	id: string;
 	name: string;
 	description: string;
@@ -15,17 +15,17 @@ interface GameRoom {
 	baseFeePercentage?: number;
 }
 
-export default function GameRoomList() {
-	const [gameRooms, setGameRooms] = useState<GameRoom[]>([]);
+export default function CommunityList() {
+	const [communitys, setCommunitys] = useState<Community[]>([]);
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState<string | null>(null);
 
-	const fetchGameRooms = async () => {
+	const fetchCommunitys = async () => {
 		try {
-			const { data } = await api.get<GameRoom[]>('/gamerooms');
-			setGameRooms(data);
+			const { data } = await api.get<Community[]>('/communities');
+			setCommunitys(data);
 		} catch (error) {
-			console.error('Error fetching game rooms:', error);
+			console.error('Error fetching comunities:', error);
 			setError(error instanceof Error ? error.message : 'Failed to load communities');
 		} finally {
 			setLoading(false);
@@ -33,7 +33,7 @@ export default function GameRoomList() {
 	};
 
 	useEffect(() => {
-		fetchGameRooms();
+		fetchCommunitys();
 	}, []);
 
 	if (loading) {
@@ -56,7 +56,7 @@ export default function GameRoomList() {
 		);
 	}
 
-	if (gameRooms.length === 0) {
+	if (communitys.length === 0) {
 		return (
 			<div className="bg-white dark:bg-gray-800 border-2 border-black dark:border-white p-6">
 				<p className="text-center text-gray-500 dark:text-gray-400 py-8">
@@ -72,8 +72,8 @@ export default function GameRoomList() {
 			<hr className="border-black dark:border-white border-1 mb-6" />
 
 			<div className="space-y-4">
-				{gameRooms.map((room) => (
-					<Link key={room.id} href={`/gamerooms/${room.id}`} className="block">
+				{communitys.map((room) => (
+					<Link key={room.id} href={`/communities/${room.id}`} className="block">
 						<div className="border-2 border-black dark:border-white hover:bg-blue-50 dark:hover:bg-gray-700 p-4 transition-colors cursor-pointer">
 							<div className="flex justify-between items-start">
 								<h3 className="font-bold text-lg">{room.name}</h3>
