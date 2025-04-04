@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { api } from '@/api';
 
 type CreateMessageFormProps = {
 	gameRoomId: string;
@@ -12,7 +13,7 @@ export default function CreateMessageForm({ gameRoomId, onMessageSent }: CreateM
 	const [loading, setLoading] = useState(false);
 	const [error, setError] = useState<string | null>(null);
 
-	async function handleSubmit(e: React.FormEvent) {
+	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault();
 		if (!content.trim()) return;
 
@@ -20,34 +21,19 @@ export default function CreateMessageForm({ gameRoomId, onMessageSent }: CreateM
 		setError(null);
 
 		try {
-			const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/messages`, {
-				method: 'POST',
-				headers: {
-					'Content-Type': 'application/json',
-				},
-				credentials: 'include',
-				body: JSON.stringify({ content, gameRoomId }),
+			const { data } = await api.post('/messages', {
+				content,
+				gameRoomId,
 			});
-
-			if (!response.ok) {
-				const errorData = await response.json().catch(() => ({}));
-				throw new Error(errorData.message || `Error: ${response.status} ${response.statusText}`);
-			}
-
-			// Clear input
+			onMessageSent && onMessageSent();
 			setContent('');
-
-			// Notify parent component if callback exists
-			if (onMessageSent) {
-				onMessageSent();
-			}
 		} catch (error) {
-			console.error('Error sending message:', error);
+			console.error('Error creating message:', error);
 			setError(error instanceof Error ? error.message : 'Failed to send message');
 		} finally {
 			setLoading(false);
 		}
-	}
+	};
 
 	return (
 		<form onSubmit={handleSubmit} className="space-y-2">

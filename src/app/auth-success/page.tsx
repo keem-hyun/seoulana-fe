@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Twitter } from 'lucide-react';
+import { api } from '@/api';
 
 // Define user type for TypeScript
 interface User {
@@ -20,22 +21,7 @@ export default function AuthSuccess() {
 	useEffect(() => {
 		async function fetchUser() {
 			try {
-				const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/user`, {
-					method: 'GET',
-					credentials: 'include',
-					headers: {
-						Accept: 'application/json',
-						'Content-Type': 'application/json',
-					},
-					mode: 'cors',
-				});
-
-				if (!response.ok) {
-					throw new Error(`Error fetching user: ${response.status} ${response.statusText}`);
-				}
-
-				const data = await response.json();
-				console.log('User data received:', data);
+				const { data } = await api.get<User>('/auth/user');
 
 				// Check if the data has valid user properties
 				if (data && data.id && data.username) {

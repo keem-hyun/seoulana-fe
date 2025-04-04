@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { toast } from 'react-hot-toast';
+import { api } from '@/api';
 
 interface User {
 	id: string;
@@ -18,8 +19,8 @@ interface LinkWalletButtonProps {
 export default function LinkWalletButton({ user, onWalletLinked }: LinkWalletButtonProps) {
 	const { connected, publicKey, disconnect } = useWallet();
 	const [linking, setLinking] = useState(false);
-
-	const isLinked = user.walletAddress && user.walletAddress.length > 0;
+	const [walletAddress, setWalletAddress] = useState(user.walletAddress || '');
+	const [isLinked, setIsLinked] = useState(!!user.walletAddress);
 
 	const handleLinkWallet = async () => {
 		if (!connected || !publicKey) {
@@ -32,28 +33,13 @@ export default function LinkWalletButton({ user, onWalletLinked }: LinkWalletBut
 		try {
 			const walletAddress = publicKey.toString();
 
-			const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/wallet`, {
-				method: 'PUT',
-				headers: {
-					'Content-Type': 'application/json',
-				},
-				credentials: 'include',
-				body: JSON.stringify({ walletAddress }),
+			const { data } = await api.post<{ walletAddress: string }>('/users/wallet', {
+				walletAddress: walletAddress,
 			});
-
-			if (!response.ok) {
-				const errorData = await response.json().catch(() => ({}));
-				throw new Error(errorData.message || `Error: ${response.status} ${response.statusText}`);
-			}
-
-			const data = await response.json();
-
-			if (data.success) {
-				toast.success('Wallet linked successfully!');
-				onWalletLinked(walletAddress);
-			} else {
-				throw new Error('Failed to link wallet');
-			}
+			setWalletAddress(data.walletAddress);
+			setIsLinked(true);
+			toast.success('Wallet linked successfully!');
+			onWalletLinked(walletAddress);
 		} catch (error) {
 			console.error('Error linking wallet:', error);
 			toast.error(error instanceof Error ? error.message : 'Failed to link wallet');
@@ -65,20 +51,9 @@ export default function LinkWalletButton({ user, onWalletLinked }: LinkWalletBut
 	const handleUnlinkWallet = async () => {
 		if (isLinked) {
 			try {
-				const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/wallet`, {
-					method: 'PUT',
-					headers: {
-						'Content-Type': 'application/json',
-					},
-					credentials: 'include',
-					body: JSON.stringify({ walletAddress: null }),
-				});
-
-				if (!response.ok) {
-					const errorData = await response.json().catch(() => ({}));
-					throw new Error(errorData.message || `Error: ${response.status} ${response.statusText}`);
-				}
-
+				await api.delete('/users/wallet');
+				setWalletAddress('');
+				setIsLinked(false);
 				disconnect();
 				onWalletLinked('');
 				toast.success('Wallet unlinked successfully');
@@ -101,8 +76,8 @@ export default function LinkWalletButton({ user, onWalletLinked }: LinkWalletBut
 		return (
 			<div className="bg-green-50 border-2 border-black p-3 text-sm mb-4">
 				<p className="mb-2">
-					Wallet linked: {user.walletAddress?.substring(0, 4)}...
-					{user.walletAddress?.substring(user.walletAddress.length - 4)}
+					Wallet linked: {walletAddress?.substring(0, 4)}...
+					{walletAddress?.substring(walletAddress.length - 4)}
 				</p>
 				<button
 					onClick={handleUnlinkWallet}

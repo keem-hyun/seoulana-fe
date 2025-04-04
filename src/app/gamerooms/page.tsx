@@ -8,6 +8,7 @@ import CreateGameRoomForm from '@/components/gamerooms/CreateGameRoomForm';
 import { WalletButton } from '@/components/wallet/WalletButton';
 import LinkWalletButton from '@/components/wallet/LinkWalletButton';
 import { toast, Toaster } from 'react-hot-toast';
+import { api } from '@/api';
 
 type User = {
 	id: string;
@@ -20,31 +21,18 @@ export default function GameRoomsPage() {
 	const [loading, setLoading] = useState(true);
 	const router = useRouter();
 
-	const fetchUser = async () => {
-		try {
-			const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/user`, {
-				credentials: 'include',
-			});
-
-			if (!response.ok) {
-				throw new Error('Failed to fetch user');
-			}
-
-			const userData = await response.json();
-			if (userData && userData.id) {
-				setUser(userData);
-			} else {
-				setUser(null);
-			}
-		} catch (error) {
-			console.error('Error fetching user:', error);
-			setUser(null);
-		} finally {
-			setLoading(false);
-		}
-	};
-
 	useEffect(() => {
+		async function fetchUser() {
+			try {
+				const { data } = await api.get<User>('/auth/user');
+				setUser(data);
+			} catch (error) {
+				console.error('Error fetching user:', error);
+			} finally {
+				setLoading(false);
+			}
+		}
+
 		fetchUser();
 	}, []);
 

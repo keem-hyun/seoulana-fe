@@ -4,9 +4,18 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { toast } from 'react-hot-toast';
+import { api } from '@/api';
 
 interface FormProps {
 	userWalletAddress?: string | null;
+}
+
+interface GameRoomResponse {
+	id: string;
+	name: string;
+	description: string;
+	createdAt: string;
+	creatorId: string;
 }
 
 export default function CreateGameRoomForm({ userWalletAddress }: FormProps) {
@@ -48,28 +57,14 @@ export default function CreateGameRoomForm({ userWalletAddress }: FormProps) {
 		setError(null);
 
 		try {
-			const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/gamerooms`, {
-				method: 'POST',
-				headers: {
-					'Content-Type': 'application/json',
-				},
-				credentials: 'include',
-				body: JSON.stringify({
-					name,
-					description,
-					bountyAmount,
-					timeLimit,
-					baseFeePercentage,
-					walletAddress: publicKey.toString(),
-				}),
+			const { data } = await api.post<GameRoomResponse>('/gamerooms', {
+				name,
+				description,
+				bountyAmount,
+				timeLimit,
+				baseFeePercentage,
+				walletAddress: publicKey.toString(),
 			});
-
-			if (!response.ok) {
-				const errorData = await response.json().catch(() => ({}));
-				throw new Error(errorData.message || `Error: ${response.status} ${response.statusText}`);
-			}
-
-			const data = await response.json();
 
 			// Reset form
 			setName('');

@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
+import { api } from '@/api';
 
 interface GameRoom {
 	id: string;
@@ -19,27 +20,19 @@ export default function GameRoomList() {
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState<string | null>(null);
 
-	useEffect(() => {
-		async function fetchGameRooms() {
-			try {
-				const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/gamerooms`, {
-					credentials: 'include',
-				});
-
-				if (!response.ok) {
-					throw new Error(`Failed to fetch game rooms: ${response.status}`);
-				}
-
-				const data = await response.json();
-				setGameRooms(data);
-			} catch (error) {
-				console.error('Error fetching game rooms:', error);
-				setError(error instanceof Error ? error.message : 'Failed to load communities');
-			} finally {
-				setLoading(false);
-			}
+	const fetchGameRooms = async () => {
+		try {
+			const { data } = await api.get<GameRoom[]>('/gamerooms');
+			setGameRooms(data);
+		} catch (error) {
+			console.error('Error fetching game rooms:', error);
+			setError(error instanceof Error ? error.message : 'Failed to load communities');
+		} finally {
+			setLoading(false);
 		}
+	};
 
+	useEffect(() => {
 		fetchGameRooms();
 	}, []);
 

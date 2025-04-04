@@ -5,6 +5,7 @@ import { useParams } from 'next/navigation';
 import Link from 'next/link';
 import MessageList from '@/components/MessageList';
 import CreateMessageForm from '@/components/CreateMessageForm';
+import { api } from '@/api';
 
 type User = {
 	id: string;
@@ -44,28 +45,17 @@ export default function GameRoomPage() {
 	const [gameRoom, setGameRoom] = useState<GameRoom | null>(null);
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState<string | null>(null);
+	const [messages, setMessages] = useState<Message[]>([]);
 
 	useEffect(() => {
 		async function fetchData() {
 			try {
-				// Fetch user and game room in parallel
-				const [userResponse, gameRoomResponse] = await Promise.all([
-					fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/user`, { credentials: 'include' }),
-					fetch(`${process.env.NEXT_PUBLIC_API_URL}/gamerooms/${gameRoomId}/messages`, { credentials: 'include' }),
+				const [userResponse, messagesResponse] = await Promise.all([
+					api.get<User>('/auth/user'),
+					api.get<Message[]>(`/gamerooms/${gameRoomId}/messages`),
 				]);
-
-				if (!gameRoomResponse.ok) {
-					throw new Error(`Failed to fetch game room: ${gameRoomResponse.statusText}`);
-				}
-
-				const userData = await userResponse.json();
-				const gameRoomData = await gameRoomResponse.json();
-
-				if (userData && userData.id) {
-					setUser(userData);
-				}
-
-				setGameRoom(gameRoomData);
+				setUser(userResponse.data);
+				setMessages(messagesResponse.data);
 			} catch (error) {
 				console.error('Error fetching data:', error);
 				setError(error instanceof Error ? error.message : 'An unknown error occurred');
@@ -79,29 +69,29 @@ export default function GameRoomPage() {
 		// Set up polling for new messages every 5 seconds
 		const intervalId = setInterval(() => {
 			if (!loading && !error) {
-				fetchGameRoomMessages();
+				fetchMessages();
 			}
 		}, 5000);
 
 		return () => clearInterval(intervalId);
 	}, [gameRoomId]);
 
-	async function fetchGameRoomMessages() {
+	const fetchMessages = async () => {
 		try {
-			const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/gamerooms/${gameRoomId}/messages`, {
-				credentials: 'include',
-			});
-
-			if (!response.ok) {
-				throw new Error(`Failed to fetch messages: ${response.statusText}`);
-			}
-
-			const gameRoomData = await response.json();
-			setGameRoom(gameRoomData);
+			const { data } = await api.get<Message[]>(`/gamerooms/${gameRoomId}/messages`);
+			setMessages(data);
+			setGameRoom((prev) =>
+				prev
+					? {
+							...prev,
+							messages: data,
+					  }
+					: null
+			);
 		} catch (error) {
 			console.error('Error fetching messages:', error);
 		}
-	}
+	};
 
 	if (loading) {
 		return (
@@ -155,11 +145,11 @@ export default function GameRoomPage() {
 						<h2 className="text-xl font-semibold">Messages</h2>
 					</div>
 					<div className="p-4">
-						<MessageList messages={gameRoom.messages || []} currentUserId={user?.id} />
+						<MessageList messages={messages || []} currentUserId={user?.id} />
 					</div>
 					<div className="p-4 border-t border-gray-200 dark:border-gray-700">
 						{user ? (
-							<CreateMessageForm gameRoomId={gameRoom.id} onMessageSent={fetchGameRoomMessages} />
+							<CreateMessageForm gameRoomId={gameRoom.id} onMessageSent={fetchMessages} />
 						) : (
 							<div className="bg-yellow-50 dark:bg-yellow-900/30 border border-yellow-200 dark:border-yellow-700 rounded-md p-4 text-yellow-800 dark:text-yellow-300">
 								Please log in to send messages.
