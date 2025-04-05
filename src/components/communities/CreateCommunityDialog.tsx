@@ -44,7 +44,7 @@ export default function CreateCommunityDialog({ isOpen, onClose, userWalletAddre
 	const [uploadingImage, setUploadingImage] = useState(false);
 	const router = useRouter();
 	const { connected, publicKey, sendTransaction } = useWallet();
-	console.log('basefee:', baseFee);
+
 	const isWalletLinked = !!userWalletAddress;
 
 	const uploadToPinata = async (file: File): Promise<string> => {
