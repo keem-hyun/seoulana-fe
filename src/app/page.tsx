@@ -73,11 +73,11 @@ export default function Home() {
 	}, []);
 
 	return (
-		<main className="flex flex-col items-center min-h-screen font-quicksand">
+		<main className="flex flex-col items-center min-h-screen">
 			{/* Intro Animation Overlay - Shows only during intro sequence */}
 			{!introComplete && (
 				<div className="fixed inset-0 z-50 flex items-center justify-center bg-gradient-to-br from-pink-light/50 via-white to-purple-light/50">
-					<div className="flex flex-col items-center">
+					<div className="flex flex-col items-center ">
 						<div
 							className={`transform transition-all duration-1000 ease-out ${
 								isLoaded ? 'scale-100 opacity-100' : 'scale-50 opacity-0'
@@ -95,7 +95,7 @@ export default function Home() {
 							</div>
 						</div>
 						<h1
-							className={`mt-10 text-6xl font-bold text-purple-dark/80 bg-clip-text bg-gradient-to-r from-pink-primary to-purple-primary transition-all duration-1000 delay-300 ${
+							className={`font-[bazzi] mt-10 text-6xl font-bold text-purple-dark/80 bg-clip-text bg-gradient-to-r from-pink-primary to-purple-primary transition-all duration-1000 delay-300 ${
 								isLoaded ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0'
 							}`}
 						>
@@ -165,7 +165,9 @@ export default function Home() {
 										className="relative z-10 p-2"
 									/>
 								</div>
-								<h1 className="mt-13 text-6xl md:text-7xl font-bold text-purple-dark/80 bg-clip-text bg-gradient-to-r from-pink-primary to-purple-primary">
+								<h1
+									className={`font-[bazzi] mt-13 text-6xl md:text-7xl font-bold text-purple-dark/80 bg-clip-text bg-gradient-to-r from-pink-primary to-purple-primary`}
+								>
 									KASORO
 								</h1>
 							</div>

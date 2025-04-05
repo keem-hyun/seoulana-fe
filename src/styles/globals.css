@@ -3,12 +3,16 @@
 
 @custom-variant dark (&:is(.dark *));
 
+@font-face {
+	font-family: 'Bazzi';
+	src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_20-04@2.1/Bazzi.woff') format('woff');
+	font-weight: normal;
+	font-style: normal;
+}
+
 @theme {
-	--font-sans: 'Bazzi';
-	--font-mono: 'Bazzi';
-	--font-pixel: 'Bazzi';
-	--font-poppins: 'Bazzi';
-	--font-quicksand: 'Bazzi';
+	--font-quicksand: 'Quicksand', sans-serif;
+	--font-bazzi: 'Bazzi';
 }
 
 :root {
@@ -58,7 +62,7 @@
 }
 
 body {
-	font-family: 'Bazzi', Arial, Helvetica, sans-serif;
+	font-family: 'Quicksand', Arial, Helvetica, sans-serif;
 	overflow-x: hidden;
 	width: 100%;
 	position: relative;
