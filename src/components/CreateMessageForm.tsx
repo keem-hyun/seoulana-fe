@@ -243,10 +243,10 @@ export default function CreateMessageForm({ communityId, onMessageSent }: Create
 			);
 
 			// Send transaction to the network
+			const latestBlockhash = await connection.getLatestBlockhash();
 			const signature = await sendTransaction(transaction, connection);
 
 			// Wait for confirmation
-			const latestBlockhash = await connection.getLatestBlockhash();
 			await connection.confirmTransaction({
 				signature,
 				blockhash: latestBlockhash.blockhash,

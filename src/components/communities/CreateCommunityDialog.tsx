@@ -214,11 +214,12 @@ export default function CreateCommunityDialog({ isOpen, onClose, userWalletAddre
 					.instruction()
 			);
 
+			const latestBlockhash = await connection.getLatestBlockhash();
 			// Send transaction to the network
 			const signature = await sendTransaction(transaction, connection);
 
 			// Wait for confirmation
-			const latestBlockhash = await connection.getLatestBlockhash();
+			
 			await connection.confirmTransaction(
 				{
 					signature,
