@@ -66,7 +66,7 @@ export function useWebSocket(communityId: string): UseWebSocketReturn {
     socket.on('connect_error', (error) => {
       console.error('Socket connection error:', error, error.message);
       console.log('Socket connection options:', {
-        url: socket.io.uri,
+        // uri 대신 socket.io.engine.uri 사용 또는 아예 제거
         transports: socket.io.opts.transports,
         withCredentials: socket.io.opts.withCredentials
       });
