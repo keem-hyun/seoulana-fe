@@ -13,7 +13,7 @@ interface CommunityCardProps {
 	creatorId: string;
 	bountyAmount?: number;
 	timeLimit?: number;
-	baseFeePercentage?: number;
+	baseFeeAmount?: number;
 	lastMessageTime?: string | null;
 }
 
@@ -25,7 +25,7 @@ export default function CommunityCard({
 	creatorId,
 	bountyAmount,
 	timeLimit,
-	baseFeePercentage,
+	baseFeeAmount,
 	lastMessageTime: initialLastMessageTime,
 }: CommunityCardProps) {
 	// Use the WebSocket hook to get real-time updates
@@ -169,12 +169,12 @@ export default function CommunityCard({
 							</span>
 							<span
 								className={`${
-									baseFeePercentage !== undefined
+									baseFeeAmount !== undefined
 										? 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-200'
 										: 'bg-gray-100 text-gray-500 dark:bg-gray-700 dark:text-gray-400'
 								} px-3 py-1 text-xs font-medium rounded-full`}
 							>
-								{baseFeePercentage !== undefined && baseFeePercentage !== null ? `${baseFeePercentage} SOL` : '0 SOL'}
+								{baseFeeAmount !== undefined && baseFeeAmount !== null ? `${Number(baseFeeAmount).toFixed(2)} SOL` : '0 SOL'}
 							</span>
 						</div>
 					</div>

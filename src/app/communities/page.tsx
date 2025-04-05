@@ -23,7 +23,7 @@ interface Community {
 	creatorId: string;
 	bountyAmount?: number;
 	timeLimit?: number;
-	baseFeePercentage?: number;
+	baseFeeAmount?: number;
 	lastMessageTime?: string | null;
 }
 
@@ -201,7 +201,7 @@ export default function CommunitysPage() {
 										creatorId={community.creatorId}
 										bountyAmount={community.bountyAmount}
 										timeLimit={community.timeLimit}
-										baseFeePercentage={community.baseFeePercentage}
+										baseFeeAmount={community.baseFeeAmount}
 										lastMessageTime={community.lastMessageTime}
 									/>
 								))}
