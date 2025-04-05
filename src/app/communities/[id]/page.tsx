@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
 import { api } from '@/api';
@@ -54,67 +54,77 @@ export default function CommunityPage() {
 	// Connect to WebSocket for real-time updates
 	const { isConnected, lastMessageTime } = useWebSocket(id as string);
 
-	// Update community data when a new message is received
-	useEffect(() => {
-		if (lastMessageTime && community) {
-			setCommunity({
-				...community,
-				lastMessageTime,
-			});
-		}
-	}, [lastMessageTime, community]);
-
-	// Update timer every second for real-time countdown
-	useEffect(() => {
-		const timer = setInterval(() => {
-			setSecondsCounter(prev => prev + 1);
-			updateRemainingTime();
-		}, 1000);
-		
-		return () => clearInterval(timer);
-	}, [community?.lastMessageTime, community?.timeLimit]);
-
-	// Calculate and update the remaining time text
-	const updateRemainingTime = () => {
-		if (!community?.timeLimit || !community?.lastMessageTime) {
-			setRemainingTimeText(community?.timeLimit ? `${community.timeLimit}m (inactive)` : '-');
-			return;
-		}
+	// Memoize the isExpired function to prevent recalculations on every render
+	const isExpired = useCallback(() => {
+		if (!community?.timeLimit || !community?.lastMessageTime) return false;
 		
 		const lastMessageDate = new Date(community.lastMessageTime);
 		const now = new Date();
 		const elapsedMsSinceLastMessage = now.getTime() - lastMessageDate.getTime();
-		
-		// Convert time limit from minutes to milliseconds
 		const timeLimitMs = community.timeLimit * 60 * 1000;
 		
-		// Calculate remaining time in milliseconds
-		const remainingMs = Math.max(0, timeLimitMs - elapsedMsSinceLastMessage);
-		
-		if (remainingMs <= 0) {
-			setRemainingTimeText('Expired');
-			return;
-		}
-		
-		// Convert to minutes and seconds
-		const remainingMins = Math.floor(remainingMs / 60000);
-		const remainingSecs = Math.floor((remainingMs % 60000) / 1000);
-		
-		// Format the time string
-		if (remainingMins > 0) {
-			setRemainingTimeText(`${remainingMins}m ${remainingSecs}s`);
-		} else {
-			setRemainingTimeText(`${remainingSecs}s`);
-		}
-	};
+		return elapsedMsSinceLastMessage >= timeLimitMs;
+	}, [community?.timeLimit, community?.lastMessageTime]);
 
-	// Initialize remaining time when community data changes
+	// Update timer every second for real-time countdown - use isExpired function as dependency
 	useEffect(() => {
-		if (community) {
-			updateRemainingTime();
-		}
-	}, [community]);
+		const timer = setInterval(() => {
+			setSecondsCounter(prev => prev + 1);
+		}, 1000);
+		
+		return () => clearInterval(timer);
+	}, []); // No dependencies to prevent re-creating interval
 
+	// Calculate and update the remaining time text - separate from the interval
+	useEffect(() => {
+		// Update on secondsCounter change to reflect every second
+		const updateRemainingTime = () => {
+			if (!community?.timeLimit || !community?.lastMessageTime) {
+				setRemainingTimeText(community?.timeLimit ? `${community.timeLimit}m (inactive)` : '-');
+				return;
+			}
+			
+			const lastMessageDate = new Date(community.lastMessageTime);
+			const now = new Date();
+			const elapsedMsSinceLastMessage = now.getTime() - lastMessageDate.getTime();
+			
+			// Convert time limit from minutes to milliseconds
+			const timeLimitMs = community.timeLimit * 60 * 1000;
+			
+			// Calculate remaining time in milliseconds
+			const remainingMs = Math.max(0, timeLimitMs - elapsedMsSinceLastMessage);
+			
+			if (remainingMs <= 0) {
+				setRemainingTimeText('Expired');
+				return;
+			}
+			
+			// Convert to minutes and seconds
+			const remainingMins = Math.floor(remainingMs / 60000);
+			const remainingSecs = Math.floor((remainingMs % 60000) / 1000);
+			
+			// Format the time string
+			if (remainingMins > 0) {
+				setRemainingTimeText(`${remainingMins}m ${remainingSecs}s`);
+			} else {
+				setRemainingTimeText(`${remainingSecs}s`);
+			}
+		};
+
+		updateRemainingTime();
+	}, [secondsCounter, community?.timeLimit, community?.lastMessageTime]);
+
+	// Update community data when a new message is received via WebSocket
+	useEffect(() => {
+		if (lastMessageTime && community) {
+			setCommunity(prevCommunity => ({
+				...prevCommunity,
+				lastMessageTime,
+			}));
+		}
+	}, [lastMessageTime]);
+
+	// Initial data fetch
 	useEffect(() => {
 		async function fetchData() {
 			try {
@@ -125,8 +135,7 @@ export default function CommunityPage() {
 
 				console.log('Community data loaded:', communityResponse.data);
 				console.log('User data loaded:', userResponse.data);
-				console.log('WebSocket connected:', isConnected);
-
+				
 				if (communityResponse.data.messages && communityResponse.data.messages.length > 0) {
 					console.log('Message structure sample:', communityResponse.data.messages[0]);
 				}
@@ -141,33 +150,21 @@ export default function CommunityPage() {
 			}
 		}
 
-		fetchData();
-	}, [id, isConnected]);
+		if (id) {
+			fetchData();
+		}
+	}, [id]); // Only depend on id, not isConnected which changes often
 
-	const isExpired = () => {
-		if (!community?.timeLimit || !community?.lastMessageTime) return false;
-		
-		const lastMessageDate = new Date(community.lastMessageTime);
-		const now = new Date();
-		const elapsedMsSinceLastMessage = now.getTime() - lastMessageDate.getTime();
-		const timeLimitMs = community.timeLimit * 60 * 1000;
-		
-		return elapsedMsSinceLastMessage >= timeLimitMs;
-	};
-
-	const handleRefresh = async () => {
+	// Memoize the refresh function to avoid recreating it on each render
+	const handleRefresh = useCallback(async () => {
 		try {
 			const { data } = await api.get<Community>(`/communities/${id}/messages`);
 			setCommunity(data);
-			// Debug message structure
-			if (data.messages && data.messages.length > 0) {
-				console.log('Message structure sample:', data.messages[0]);
-			}
 		} catch (error) {
 			console.error('Error refreshing community:', error);
 			toast.error('커뮤니티 정보를 새로고침하는데 실패했습니다');
 		}
-	};
+	}, [id]);
 
 	if (loading) {
 		return (
@@ -186,8 +183,6 @@ export default function CommunityPage() {
 			</div>
 		);
 	}
-
-	const expired = isExpired();
 
 	return (
 		<div className="min-h-screen">
@@ -225,7 +220,7 @@ export default function CommunityPage() {
 								</div>
 								<div className="flex items-center space-x-4">
 									{/* <WalletButton /> */}
-									{!expired && (
+									{!isExpired() && (
 										<button
 											onClick={() => setIsDepositDialogOpen(true)}
 											className="bg-[rgba(255,182,193,0.5)] hover:bg-[rgba(255,182,193,0.6)] text-black px-4 py-2 border-2 border-[rgba(255,182,193,0.5)] font-bold transition-colors rounded-[20px]"
@@ -245,7 +240,7 @@ export default function CommunityPage() {
 								</div>
 								<div
 									className={`relative overflow-hidden rounded-[20px] border-2 border-[rgba(255,182,193,0.5)] p-4 shadow-[0_4px_0_rgba(255,182,193,0.5)] ${
-										expired
+										isExpired()
 											? 'bg-red-100'
 											: !community.lastMessageTime
 											? 'bg-gray-100'
@@ -297,7 +292,7 @@ export default function CommunityPage() {
 
 						<div className="bg-white dark:bg-gray-800 border-2 border-[rgba(255,182,193,0.5)] p-6 shadow-[0_4px_0_rgba(255,182,193,0.5)] rounded-[20px]">
 							<h2 className="text-2xl font-bold mb-6">messages</h2>
-							{expired ? (
+							{isExpired() ? (
 								<div className="bg-red-50 dark:bg-red-900/30 border-2 border-red-200 dark:border-red-700 p-4 text-red-800 dark:text-red-300 mb-6">
 									This community has expired
 								</div>
