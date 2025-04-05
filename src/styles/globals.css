@@ -1,15 +1,14 @@
 @import 'tailwindcss';
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Quicksand:wght@300;400;500;600;700&display=swap');
 @import 'tw-animate-css';
 
 @custom-variant dark (&:is(.dark *));
 
 @theme {
-	--font-sans: var(--font-geist-sans);
-	--font-mono: var(--font-geist-mono);
-	--font-pixel: var(--font-silkscreen);
-	--font-poppins: 'Poppins', sans-serif;
-	--font-quicksand: 'Quicksand', sans-serif;
+	--font-sans: 'Bazzi';
+	--font-mono: 'Bazzi';
+	--font-pixel: 'Bazzi';
+	--font-poppins: 'Bazzi';
+	--font-quicksand: 'Bazzi';
 }
 
 :root {
@@ -59,7 +58,7 @@
 }
 
 body {
-	font-family: 'Quicksand', 'Poppins', Arial, Helvetica, sans-serif;
+	font-family: 'Bazzi', Arial, Helvetica, sans-serif;
 	overflow-x: hidden;
 	width: 100%;
 	position: relative;

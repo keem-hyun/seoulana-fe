@@ -1,39 +1,8 @@
 import type { Metadata } from 'next';
 import { SolanaWalletProvider } from '@/components/wallet/SolanaWalletProvider';
-import { Geist, Geist_Mono, Silkscreen, Poppins, Quicksand } from 'next/font/google';
 import '@/styles/globals.css';
 import GlobalHeader from '@/components/global/GlobalHeader';
 import GlobalFooter from '@/components/global/GlobalFooter';
-
-const geistSans = Geist({
-	variable: '--font-geist-sans',
-	subsets: ['latin'],
-});
-
-const geistMono = Geist_Mono({
-	variable: '--font-geist-mono',
-	subsets: ['latin'],
-});
-
-const silkscreen = Silkscreen({
-	weight: '400',
-	variable: '--font-silkscreen',
-	subsets: ['latin'],
-});
-
-const poppins = Poppins({
-	weight: ['300', '400', '500', '600', '700'],
-	variable: '--font-poppins',
-	subsets: ['latin'],
-	display: 'swap',
-});
-
-const quicksand = Quicksand({
-	weight: ['300', '400', '500', '600', '700'],
-	variable: '--font-quicksand',
-	subsets: ['latin'],
-	display: 'swap',
-});
 
 export const metadata: Metadata = {
 	title: 'Kasoro | First CommuniFi on Solana',
@@ -47,9 +16,19 @@ export default function RootLayout({
 }>) {
 	return (
 		<html lang="en">
-			<body
-				className={`${geistSans.variable} ${geistMono.variable} ${silkscreen.variable} ${poppins.variable} ${quicksand.variable} antialiased`}
-			>
+			<head>
+				<style>
+					{`
+						@font-face {
+							font-family: 'Bazzi';
+							src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_20-04@2.1/Bazzi.woff') format('woff');
+							font-weight: normal;
+							font-style: normal;
+						}
+					`}
+				</style>
+			</head>
+			<body className="font-['Bazzi'] antialiased">
 				<SolanaWalletProvider>
 					<GlobalHeader />
 					<div className="min-h-screen flex flex-col">

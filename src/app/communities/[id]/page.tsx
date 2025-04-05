@@ -47,7 +47,7 @@ export default function CommunityPage() {
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState<string | null>(null);
 	const [isDepositDialogOpen, setIsDepositDialogOpen] = useState(false);
-	
+
 	// Connect to WebSocket for real-time updates
 	const { isConnected, lastMessageTime } = useWebSocket(id as string);
 
@@ -56,7 +56,7 @@ export default function CommunityPage() {
 		if (lastMessageTime && community) {
 			setCommunity({
 				...community,
-				lastMessageTime
+				lastMessageTime,
 			});
 		}
 	}, [lastMessageTime]);
@@ -144,7 +144,7 @@ export default function CommunityPage() {
 	return (
 		<div className="flex min-h-screen">
 			{/* 왼쪽 사이드바 */}
-			<div className="w-64 bg-white dark:bg-gray-800 border-r-2 border-black dark:border-white p-4">
+			<div className="w-64 bg-white dark:bg-gray-800 border-2 border-[rgba(255,182,193,0.5)] p-4 shadow-[0_4px_0_rgba(255,182,193,0.5)] rounded-[20px]">
 				<div className="mb-6">
 					<h2 className="text-xl font-bold mb-4">staker list</h2>
 					<div className="space-y-2">{/* 여기에 커뮤니티 목록이 들어갈 예정 */}</div>
@@ -165,7 +165,7 @@ export default function CommunityPage() {
 						</Link>
 					</div>
 
-					<div className="bg-white dark:bg-gray-800 border-2 border-black dark:border-white p-6 mb-8">
+					<div className="bg-white dark:bg-gray-800 border-2 border-[rgba(255,182,193,0.5)] p-6 mb-8 shadow-[0_4px_0_rgba(255,182,193,0.5)] rounded-[20px]">
 						<div className="flex justify-between items-start mb-6">
 							<div>
 								<h1 className="text-3xl font-bold mb-2">{community.name}</h1>
@@ -179,7 +179,7 @@ export default function CommunityPage() {
 								{!expired && (
 									<button
 										onClick={() => setIsDepositDialogOpen(true)}
-										className="bg-yellow-300 hover:bg-yellow-400 text-black px-4 py-2 border-2 border-black font-bold transition-colors"
+										className="bg-[rgba(255,182,193,0.5)] hover:bg-[rgba(255,182,193,0.6)] text-black px-4 py-2 border-2 border-[rgba(255,182,193,0.5)] font-bold transition-colors rounded-[20px]"
 									>
 										bounty deposit
 									</button>
@@ -188,25 +188,31 @@ export default function CommunityPage() {
 						</div>
 
 						<div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-							<div className="border-2 border-black p-4 bg-yellow-300">
-								<div className="text-sm font-bold mb-1">total bounty</div>
-								<div className="text-2xl font-mono font-bold">{community.bountyAmount} SOL</div>
+							<div className="relative overflow-hidden rounded-[20px] border-2 border-[rgba(255,182,193,0.5)] p-4 bg-white shadow-[0_4px_0_rgba(255,182,193,0.5)]">
+								<div className="relative">
+									<div className="text-sm font-bold mb-1">total bounty</div>
+									<div className="text-2xl font-mono font-bold">{community.bountyAmount} SOL</div>
+								</div>
 							</div>
 							<div
-								className={`border-2 border-black p-4 ${
+								className={`relative overflow-hidden rounded-[20px] border-2 border-[rgba(255,182,193,0.5)] p-4 shadow-[0_4px_0_rgba(255,182,193,0.5)] ${
 									expired
-										? 'bg-red-300'
+										? 'bg-white'
 										: remainingTime?.includes('분') && !remainingTime?.includes('시간')
-										? 'bg-orange-300'
-										: 'bg-green-300'
+										? 'bg-white'
+										: 'bg-white'
 								}`}
 							>
-								<div className="text-sm font-bold mb-1">time limit</div>
-								<div className="text-2xl font-mono font-bold">{remainingTime}</div>
+								<div className="relative">
+									<div className="text-sm font-bold mb-1">time limit</div>
+									<div className="text-2xl font-mono font-bold">{remainingTime}</div>
+								</div>
 							</div>
-							<div className="border-2 border-black p-4 bg-blue-300">
-								<div className="text-sm font-bold mb-1">base fee</div>
-								<div className="text-2xl font-mono font-bold">{community.baseFeePercentage}%</div>
+							<div className="relative overflow-hidden rounded-[20px] border-2 border-[rgba(255,182,193,0.5)] p-4 bg-white shadow-[0_4px_0_rgba(255,182,193,0.5)]">
+								<div className="relative">
+									<div className="text-sm font-bold mb-1">base fee</div>
+									<div className="text-2xl font-mono font-bold">{community.baseFeePercentage}%</div>
+								</div>
 							</div>
 						</div>
 
@@ -218,12 +224,9 @@ export default function CommunityPage() {
 							)}
 							<div>Created at: {new Date(community.createdAt).toLocaleString()}</div>
 							<div className="flex items-center">
-								Latest activity: 
+								Latest activity:
 								<span className="font-medium ml-1">
-									{community.lastMessageTime 
-										? new Date(community.lastMessageTime).toLocaleString() 
-										: 'No messages yet'
-									}
+									{community.lastMessageTime ? new Date(community.lastMessageTime).toLocaleString() : 'No messages yet'}
 								</span>
 								{isConnected && (
 									<span className="flex h-2 w-2 ml-2">
@@ -235,7 +238,7 @@ export default function CommunityPage() {
 						</div>
 					</div>
 
-					<div className="bg-white dark:bg-gray-800 border-2 border-black dark:border-white p-6">
+					<div className="bg-white dark:bg-gray-800 border-2 border-[rgba(255,182,193,0.5)] p-6 shadow-[0_4px_0_rgba(255,182,193,0.5)] rounded-[20px]">
 						<h2 className="text-2xl font-bold mb-6">messages</h2>
 						{expired ? (
 							<div className="bg-red-50 dark:bg-red-900/30 border-2 border-red-200 dark:border-red-700 p-4 text-red-800 dark:text-red-300 mb-6">
