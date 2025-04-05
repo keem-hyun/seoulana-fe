@@ -57,21 +57,21 @@ export default function CommunityPage() {
 	// Memoize the isExpired function to prevent recalculations on every render
 	const isExpired = useCallback(() => {
 		if (!community?.timeLimit || !community?.lastMessageTime) return false;
-		
+
 		const lastMessageDate = new Date(community.lastMessageTime);
 		const now = new Date();
 		const elapsedMsSinceLastMessage = now.getTime() - lastMessageDate.getTime();
 		const timeLimitMs = community.timeLimit * 60 * 1000;
-		
+
 		return elapsedMsSinceLastMessage >= timeLimitMs;
 	}, [community?.timeLimit, community?.lastMessageTime]);
 
 	// Update timer every second for real-time countdown - use isExpired function as dependency
 	useEffect(() => {
 		const timer = setInterval(() => {
-			setSecondsCounter(prev => prev + 1);
+			setSecondsCounter((prev) => prev + 1);
 		}, 1000);
-		
+
 		return () => clearInterval(timer);
 	}, []); // No dependencies to prevent re-creating interval
 
@@ -83,26 +83,26 @@ export default function CommunityPage() {
 				setRemainingTimeText(community?.timeLimit ? `${community.timeLimit}m (inactive)` : '-');
 				return;
 			}
-			
+
 			const lastMessageDate = new Date(community.lastMessageTime);
 			const now = new Date();
 			const elapsedMsSinceLastMessage = now.getTime() - lastMessageDate.getTime();
-			
+
 			// Convert time limit from minutes to milliseconds
 			const timeLimitMs = community.timeLimit * 60 * 1000;
-			
+
 			// Calculate remaining time in milliseconds
 			const remainingMs = Math.max(0, timeLimitMs - elapsedMsSinceLastMessage);
-			
+
 			if (remainingMs <= 0) {
 				setRemainingTimeText('Expired');
 				return;
 			}
-			
+
 			// Convert to minutes and seconds
 			const remainingMins = Math.floor(remainingMs / 60000);
 			const remainingSecs = Math.floor((remainingMs % 60000) / 1000);
-			
+
 			// Format the time string
 			if (remainingMins > 0) {
 				setRemainingTimeText(`${remainingMins}m ${remainingSecs}s`);
@@ -117,10 +117,13 @@ export default function CommunityPage() {
 	// Update community data when a new message is received via WebSocket
 	useEffect(() => {
 		if (lastMessageTime && community) {
-			setCommunity(prevCommunity => ({
-				...prevCommunity,
-				lastMessageTime,
-			}));
+			setCommunity((prevCommunity) => {
+				if (!prevCommunity) return null;
+				return {
+					...prevCommunity,
+					lastMessageTime,
+				};
+			});
 		}
 	}, [lastMessageTime]);
 
@@ -135,7 +138,7 @@ export default function CommunityPage() {
 
 				console.log('Community data loaded:', communityResponse.data);
 				console.log('User data loaded:', userResponse.data);
-				
+
 				if (communityResponse.data.messages && communityResponse.data.messages.length > 0) {
 					console.log('Message structure sample:', communityResponse.data.messages[0]);
 				}
@@ -298,8 +301,13 @@ export default function CommunityPage() {
 								</div>
 							) : (
 								<>
-									<div className="mb-6">
-										<CreateMessageForm communityId={community.id} onMessageSent={handleRefresh} />
+									<div className="mb-6 flex items-center gap-4">
+										<div className="w-32 h-32 bg-white rounded-[20px] border-2 border-[rgba(255,182,193,0.5)] p-4 shadow-[0_4px_0_rgba(255,182,193,0.5)] flex items-center justify-center">
+											<div className="text-2xl font-bold">{remainingTimeText}</div>
+										</div>
+										<div className="flex-1">
+											<CreateMessageForm communityId={community.id} onMessageSent={handleRefresh} />
+										</div>
 									</div>
 								</>
 							)}

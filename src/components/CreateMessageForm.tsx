@@ -57,7 +57,7 @@ export default function CreateMessageForm({ communityId, onMessageSent }: Create
 
 			console.log('Message sent successfully:', data);
 			setContent('');
-			
+
 			// Use a flag to ensure callback is only called once
 			if (!messageSentRef.current && onMessageSent) {
 				messageSentRef.current = true;
