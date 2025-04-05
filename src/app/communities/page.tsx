@@ -8,7 +8,6 @@ import CreateCommunityDialog from '@/components/communities/CreateCommunityDialo
 import LinkWalletButton from '@/components/wallet/LinkWalletButton';
 import { toast, Toaster } from 'react-hot-toast';
 import { api } from '@/api';
-import { useWallet } from '@solana/wallet-adapter-react';
 
 type User = {
 	id: string;
@@ -33,7 +32,6 @@ export default function CommunitysPage() {
 	const [loading, setLoading] = useState(true);
 	const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
 	const router = useRouter();
-	const { connected, publicKey } = useWallet();
 
 	// 커뮤니티 상태 관리
 	const [communitys, setCommunitys] = useState<Community[]>([]);
@@ -46,23 +44,6 @@ export default function CommunitysPage() {
 			try {
 				const { data } = await api.get<User>('/auth/user');
 				setUser(data);
-				// if (data.walletAddress) {
-				// 	handleWalletLinked(data.walletAddress);
-				// } else if (connected && publicKey) {
-				// 	// 지갑이 연결되어 있고 walletAddress가 없는 경우
-				// 	const walletAddress = publicKey.toString();
-				// 	try {
-				// 		const { data: updatedData } = await api.put<{ walletAddress: string }>('/users/wallet', {
-				// 			walletAddress: walletAddress,
-				// 		});
-				// 		handleWalletLinked(updatedData.walletAddress);
-				// 		toast.success('Wallet linked successfully!');
-				// 		//리프레쉬
-				// 	} catch (error) {
-				// 		console.error('Error linking wallet:', error);
-				// 		toast.error(error instanceof Error ? error.message : 'Failed to link wallet');
-				// 	}
-				// }
 			} catch (error) {
 				console.error('Error fetching user:', error);
 			} finally {
@@ -71,7 +52,7 @@ export default function CommunitysPage() {
 		}
 
 		fetchUser();
-	}, [connected, publicKey]);
+	}, []);
 
 	// 커뮤니티 데이터 불러오기
 	useEffect(() => {
@@ -99,13 +80,6 @@ export default function CommunitysPage() {
 			});
 		}
 	};
-
-	// useEffect(() => {
-	// 	if (user?.walletAddress) {
-	// 		router.refresh();
-	// 	}
-	// 	console.log('user?.walletAddress', user?.walletAddress);
-	// }, [user?.walletAddress]);
 
 	// 검색 기능 처리
 	const handleSearch = (searchTerm: string) => {

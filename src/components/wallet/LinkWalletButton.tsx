@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { toast } from 'react-hot-toast';
 import { api } from '@/api';
@@ -22,17 +22,6 @@ export default function LinkWalletButton({ user, onWalletLinked }: LinkWalletBut
 	const [walletAddress, setWalletAddress] = useState(user.walletAddress || '');
 	const [isLinked, setIsLinked] = useState(!!user.walletAddress);
 
-	useEffect(() => {
-		// user prop이 변경될 때마다 상태를 업데이트
-		setWalletAddress(user.walletAddress || '');
-		setIsLinked(!!user.walletAddress);
-
-		// 지갑이 연결되어 있고 walletAddress가 없는 경우 자동으로 연결 시도
-		if (connected && publicKey && !user.walletAddress) {
-			handleLinkWallet();
-		}
-	}, [user, connected, publicKey]);
-
 	const handleLinkWallet = async () => {
 		if (!connected || !publicKey) {
 			toast.error('Please connect your wallet first');
@@ -49,6 +38,7 @@ export default function LinkWalletButton({ user, onWalletLinked }: LinkWalletBut
 			});
 			setWalletAddress(data.walletAddress);
 			setIsLinked(true);
+			toast.success('Wallet linked successfully!');
 			onWalletLinked(walletAddress);
 		} catch (error) {
 			console.error('Error linking wallet:', error);
