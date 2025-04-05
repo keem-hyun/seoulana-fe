@@ -117,6 +117,7 @@ export default function CreateMessageForm({ communityId, onMessageSent }: Create
 			// Only add imageLink if we have an image URL
 			if (imageUrl) {
 				Object.assign(messageData, { imageLink: imageUrl });
+				console.log('Sending message with image URL:', imageUrl);
 			}
 			
 			await api.post(`/messages`, messageData);

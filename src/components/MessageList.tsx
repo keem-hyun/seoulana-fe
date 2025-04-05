@@ -4,6 +4,7 @@ export type Message = {
 	createdAt: string;
 	senderId?: string;
 	userId?: string; // For backwards compatibility
+	imageURL?: string; // Add support for image URL
 	sender?: {
 		id: string;
 		username: string;
@@ -30,6 +31,10 @@ export default function MessageList({ messages, currentUserId }: MessageListProp
 
 	console.log('Messages:', messages);
 	console.log('Current user ID:', currentUserId);
+	
+	// Check if any messages have images
+	const messagesWithImages = messages.filter(msg => msg.imageURL);
+	console.log('Messages with images:', messagesWithImages.length, messagesWithImages);
 
 	return (
 		<div className="space-y-4">
@@ -54,6 +59,21 @@ export default function MessageList({ messages, currentUserId }: MessageListProp
 									<div className="font-medium text-xs text-gray-500 dark:text-gray-400 mb-1">@{username}</div>
 								)}
 								<div>{message.content}</div>
+								
+								{/* Display image if message has imageURL */}
+								{message.imageURL && (
+									<div className="mt-2">
+										<a href={message.imageURL} target="_blank" rel="noopener noreferrer">
+											<img 
+												src={message.imageURL} 
+												alt="Message attachment" 
+												className="max-w-full rounded-md max-h-60 object-contain hover:opacity-90 transition-opacity"
+												loading="lazy"
+											/>
+										</a>
+									</div>
+								)}
+								
 								<div className="text-xs text-right mt-1 opacity-70">
 									{new Date(message.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
 								</div>
