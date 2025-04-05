@@ -84,7 +84,7 @@ export default function Home() {
 									/>
 								</div>
 								<h1
-									className={`font-[bazzi] mt-4 md:mt-6 text-6xl md:text-8xl lg:text-9xl font-bold bg-clip-text bg-gradient-to-r from-pink-primary via-purple-primary to-pink-primary text-transparent drop-shadow-lg animate-pulse-soft`}
+									className={`font-[bazzi] mt-4 md:mt-6 text-6xl md:text-8xl lg:text-9xl font-bold bg-clip-text bg-gradient-to-r from-pink-primary via-purple-primary to-pink-primary animate-pulse-soft`}
 									style={{ textShadow: '0 0 15px rgba(255, 95, 158, 0.5)' }}
 								>
 									KASORO
@@ -92,24 +92,24 @@ export default function Home() {
 							</div>
 						</div>
 
-						<p className="text-xl md:text-3xl text-white font-semibold mb-4 md:mb-6 drop-shadow-md">
+						<p className="text-xl md:text-3xl text-black font-semibold mb-4 md:mb-6 drop-shadow-md">
 							First CommuniFi on Solana
 						</p>
-						<p className="text-lg md:text-xl text-white max-w-3xl mx-auto mb-10 md:mb-16 drop-shadow-md font-medium backdrop-blur-sm px-4 py-2">
+						<p className="text-lg md:text-xl text-black max-w-3xl mx-auto mb-10 md:mb-16 drop-shadow-md font-medium backdrop-blur-sm px-4 py-2">
 							The cutest community-driven platform for content creators and community builders
 						</p>
 
 						<div className="flex flex-col sm:flex-row justify-center gap-4 md:gap-6">
 							<Link
 								href="/communities"
-								className="px-10 py-5 bg-gradient-to-r from-pink-primary to-purple-primary text-white rounded-full shadow-lg text-xl font-semibold transition-all hover:shadow-xl hover:scale-105 border-2 border-white/20"
+								className="px-10 py-5 bg-gradient-to-r from-pink-primary to-purple-primary text-black rounded-full shadow-lg text-xl font-semibold transition-all hover:shadow-xl hover:scale-105 border-2 border-white/20"
 							>
 								<span className="mr-2">Launch App</span>
 								<span className="inline-block">→</span>
 							</Link>
 							<a
 								href="#how-it-works"
-								className="px-10 py-5 bg-white/20 backdrop-blur-sm border-2 border-white/30 text-white rounded-full shadow-md text-xl font-semibold transition-all hover:bg-white/30 hover:scale-105"
+								className="px-10 py-5 bg-white/20 backdrop-blur-sm border-2 border-white/30 text-black rounded-full shadow-md text-xl font-semibold transition-all hover:bg-white/30 hover:scale-105"
 							>
 								<span className="mr-2">Learn More</span>
 								<span className="inline-block">↓</span>
