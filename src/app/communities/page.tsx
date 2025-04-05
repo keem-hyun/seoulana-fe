@@ -130,7 +130,7 @@ export default function CommunitysPage() {
 						{user && (
 							<button
 								onClick={() => setIsCreateDialogOpen(true)}
-								className="flex items-center gap-2 bg-black dark:bg-white text-white dark:text-black px-4 py-2 border-2 border-black dark:border-white text-sm font-bold hover:bg-gray-800 dark:hover:bg-gray-200 transition-colors"
+								className="flex items-center gap-2 bg-[rgba(255,182,193,0.5)] hover:bg-[rgba(255,182,193,0.6)] text-black px-4 py-2 border-2 border-[rgba(255,182,193,0.5)] rounded-[20px] text-sm font-bold transition-colors"
 							>
 								<span>+</span>
 								<span>Create Community</span>
@@ -191,20 +191,33 @@ export default function CommunitysPage() {
 							</p>
 						) : (
 							<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-								{filteredCommunitys.map((community) => (
-									<CommunityCard
-										key={community.id}
-										id={community.id}
-										name={community.name}
-										description={community.description}
-										createdAt={community.createdAt}
-										creatorId={community.creatorId}
-										bountyAmount={community.bountyAmount}
-										timeLimit={community.timeLimit}
-										baseFeePercentage={community.baseFeePercentage}
-										lastMessageTime={community.lastMessageTime}
-									/>
-								))}
+								{filteredCommunitys.map((community) => {
+									console.log('Community Data:', {
+										id: community.id,
+										name: community.name,
+										description: community.description,
+										createdAt: community.createdAt,
+										creatorId: community.creatorId,
+										bountyAmount: community.bountyAmount,
+										timeLimit: community.timeLimit,
+										baseFeePercentage: community.baseFeePercentage,
+										lastMessageTime: community.lastMessageTime,
+									});
+									return (
+										<CommunityCard
+											key={community.id}
+											id={community.id}
+											name={community.name}
+											description={community.description}
+											createdAt={community.createdAt}
+											creatorId={community.creatorId}
+											bountyAmount={community.bountyAmount}
+											timeLimit={community.timeLimit}
+											baseFeePercentage={community.baseFeePercentage}
+											lastMessageTime={community.lastMessageTime}
+										/>
+									);
+								})}
 							</div>
 						)}
 					</div>

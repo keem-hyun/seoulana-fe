@@ -46,15 +46,17 @@ export default function LoginPage() {
 					<div className="w-16 h-16 bg-white rounded-xl shadow-pink flex items-center justify-center p-2 mb-4">
 						<Image src="/images/kasoro_logo.png" alt="Kasoro Logo" width={40} height={40} />
 					</div>
-					<h1 className="text-2xl font-bold text-purple-dark mb-2">로그인</h1>
-					<p className="text-sm text-gray-500 text-center">계속하려면 지갑과 X(트위터) 계정을 모두 연결해주세요.</p>
+					<h1 className="text-2xl font-bold text-purple-dark mb-2">Login</h1>
+					<p className="text-sm text-gray-500 text-center">
+						To continue, please connect your wallet and X (Twitter) account.
+					</p>
 				</div>
 
 				{searchParams.get('error') && (
 					<div className="mb-4 p-3 bg-red-100 text-red-700 rounded-lg text-sm text-center">
 						{searchParams.get('error') === 'twitter_auth_failed'
-							? 'X 계정 연결에 실패했습니다. 다시 시도해주세요.'
-							: '오류가 발생했습니다. 다시 시도해주세요.'}
+							? 'Failed to connect X account. Please try again.'
+							: 'An error occurred. Please try again.'}
 					</div>
 				)}
 
@@ -63,7 +65,7 @@ export default function LoginPage() {
 						<div className="flex flex-col items-center gap-2">
 							<WalletButton />
 							<div className="mt-2 text-center text-sm text-gray-500">
-								{publicKey ? '✅ 지갑이 연결되었습니다' : '지갑을 연결해주세요'}
+								{publicKey ? '✅ Wallet connected' : 'Connect your wallet'}
 							</div>
 						</div>
 					)}
@@ -72,7 +74,7 @@ export default function LoginPage() {
 						href={`${process.env.NEXT_PUBLIC_API_URL}/auth/login/twitter`}
 						className="flex items-center justify-center gap-2 w-full px-4 py-3 rounded-lg bg-black text-white font-medium hover:opacity-90 transition-opacity"
 					>
-						{hasTwitterConnected ? '✅ X 계정 연결됨' : 'X 계정 연결하기'}
+						{hasTwitterConnected ? '✅ X account connected' : 'Connect X account'}
 					</Link>
 
 					<button
@@ -98,12 +100,12 @@ export default function LoginPage() {
 								d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
 							/>
 						</svg>
-						로그인
+						Login
 					</button>
 
 					<div className="text-center">
 						<Link href="/" className="text-sm text-purple-primary hover:underline">
-							홈으로 돌아가기
+							Back to Home
 						</Link>
 					</div>
 				</div>
