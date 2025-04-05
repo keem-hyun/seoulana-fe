@@ -35,6 +35,7 @@ interface Community {
 	timeLimit: number;
 	baseFeePercentage: number;
 	walletAddress: string | null;
+	imageURL?: string;
 }
 
 interface User {
@@ -175,166 +176,204 @@ export default function CommunityPage() {
 
 	if (loading) {
 		return (
-			<div className="flex items-center justify-center min-h-screen">
-				<div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-gray-900 dark:border-white"></div>
+			<div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-white via-pink-50 to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-purple-950">
+				<div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-[#FF69B4] dark:border-[#FF1493]"></div>
 			</div>
 		);
 	}
 
 	if (error || !community) {
 		return (
-			<div className="container mx-auto px-4 py-8">
-				<div className="bg-red-50 dark:bg-red-900/30 border-2 border-red-200 dark:border-red-700 p-4 text-red-800 dark:text-red-300">
-					{error || '커뮤니티를 찾을 수 없습니다'}
+			<div className="container mx-auto px-4 py-8 bg-gradient-to-br from-white via-pink-50 to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-purple-950">
+				<div className="bg-red-100 dark:bg-red-900/30 border-4 border-dashed border-red-400 dark:border-red-600 p-6 rounded-xl text-red-800 dark:text-red-300 text-center font-bold text-xl">
+					{error || 'Oops! This meme community was too dank to find! 🤔'}
 				</div>
 			</div>
 		);
 	}
 
 	return (
-		<div className="min-h-screen">
+		<div className="min-h-screen bg-gradient-to-br from-white via-pink-50 to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-purple-950">
 			<div className="container mx-auto px-4 py-8">
 				<div className="mb-8">
 					<Link
 						href="/communities"
-						className="text-sm text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200"
+						className="inline-flex items-center gap-2 text-base font-bold text-[#FF69B4] dark:text-[#FF69B4] hover:text-[#FF1493] dark:hover:text-[#FF1493] bg-white dark:bg-gray-800 px-4 py-2 rounded-full border-4 border-dashed border-[#FF69B4] dark:border-[#FF1493] shadow-md transform hover:-translate-x-1 transition-all"
 					>
-						← back to community list
+						← back to all the dank memes
 					</Link>
 				</div>
 
-				<div className="flex gap-8">
-					{/* 왼쪽 사이드바 */}
-					<div className="w-64 bg-white dark:bg-gray-800 border-2 border-[rgba(255,182,193,0.5)] p-4 shadow-[0_4px_0_rgba(255,182,193,0.5)] rounded-[20px]">
+				<div className="flex flex-col lg:flex-row gap-8">
+					{/* Left sidebar */}
+					<div className="w-full lg:w-64 bg-white dark:bg-gray-800 border-4 border-dashed border-[#FF69B4] dark:border-[#FF1493] p-5 shadow-xl rounded-xl transform rotate-0">
 						<div className="mb-6">
-							<h2 className="text-xl font-bold mb-4">staker list</h2>
+							<div className="flex items-center mb-4">
+								<div className="w-8 h-8 bg-[#FF69B4] rounded-full mr-3 transform rotate-0"></div>
+								<h2 className="text-xl font-extrabold text-[#FF69B4] dark:text-[#FF69B4] uppercase">Meme Stakers</h2>
+							</div>
+							<hr className="border-[#FF69B4] dark:border-[#FF1493] border-2 border-dashed mb-4" />
 							<DepositorsList communityId={id as string} />
 						</div>
 					</div>
 
-					{/* 메인 컨텐츠 */}
+					{/* Main content */}
 					<div className="flex-1">
 						<Toaster position="top-right" />
 
-						<div className="bg-white dark:bg-gray-800 border-2 border-[rgba(255,182,193,0.5)] p-6 mb-8 shadow-[0_4px_0_rgba(255,182,193,0.5)] rounded-[20px]">
-							<div className="flex justify-between items-start mb-6">
+						<div className="bg-white dark:bg-gray-800 border-4 border-dashed border-[#FF69B4] dark:border-[#FF1493] p-6 mb-8 shadow-xl rounded-xl transform rotate-0">
+							{community.imageURL && (
+								<div className="mb-6 flex justify-center">
+									<img 
+										src={community.imageURL} 
+										alt={community.name} 
+										className="max-h-48 rounded-xl border-4 border-dashed border-[#FF69B4] dark:border-[#FF1493] transform hover:scale-105 transition-all duration-300" 
+									/>
+								</div>
+							)}
+						
+							<div className="flex flex-col md:flex-row justify-between items-start gap-6 mb-6">
 								<div>
-									<h1 className="text-3xl font-bold mb-2">{community.name}</h1>
-									<p className="text-gray-600 dark:text-gray-300">{community.description}</p>
-									<p className="text-sm text-gray-500 dark:text-gray-400 mt-2">
-										Created by @{community.creator.username}
+									<h1 className="text-4xl font-extrabold mb-2 text-transparent bg-clip-text bg-gradient-to-r from-[#FF69B4] to-purple-500 dark:from-[#FF1493] dark:to-purple-400 uppercase transform rotate-0">{community.name}</h1>
+									<p className="text-gray-700 dark:text-gray-300 font-medium text-lg">{community.description}</p>
+									<p className="text-base text-[#FF69B4] dark:text-[#FF69B4] mt-2 font-bold">
+										Created by the legendary @{community.creator.username} 🔥
 									</p>
 								</div>
-								<div className="flex items-center space-x-4">
-									{/* <WalletButton /> */}
+								<div className="flex items-center gap-4">
 									{!isExpired() && (
 										<button
 											onClick={() => setIsClaimDialogOpen(true)}
-											className="bg-[rgba(255,182,193,0.5)] hover:bg-[rgba(255,182,193,0.6)] text-black px-4 py-2 border-2 border-[rgba(255,182,193,0.5)] font-bold transition-colors rounded-[20px]"
+											className="bg-[#FF69B4] hover:bg-[#FF1493] text-white px-5 py-3 border-4 border-dashed border-white dark:border-gray-700 rounded-full text-base font-extrabold transition-all transform hover:scale-105 shadow-lg uppercase"
 										>
-											claim
+											Claim Rewards 💰
 										</button>
 									)}
 
 									{!isExpired() && (
 										<button
 											onClick={() => setIsDepositDialogOpen(true)}
-											className="bg-[rgba(255,182,193,0.5)] hover:bg-[rgba(255,182,193,0.6)] text-black px-4 py-2 border-2 border-[rgba(255,182,193,0.5)] font-bold transition-colors rounded-[20px]"
+											className="bg-purple-500 hover:bg-purple-600 text-white px-5 py-3 border-4 border-dashed border-white dark:border-gray-700 rounded-full text-base font-extrabold transition-all transform hover:scale-105 shadow-lg uppercase"
 										>
-											bounty deposit
+											Add Bounty 🚀
 										</button>
 									)}
 								</div>
 							</div>
 
-							<div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-								<div className="relative overflow-hidden rounded-[20px] border-2 border-[rgba(255,182,193,0.5)] p-4 bg-white shadow-[0_4px_0_rgba(255,182,193,0.5)]">
+							<div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+								<div className="relative overflow-hidden rounded-xl border-4 border-dashed border-[#FF69B4] dark:border-[#FF1493] p-5 bg-gradient-to-br from-pink-50 to-purple-50 dark:from-gray-800 dark:to-gray-700 shadow-lg transform rotate-0 hover:rotate-0 transition-all">
 									<div className="relative">
-										<div className="text-sm font-bold mb-1">total bounty</div>
-										<div className="text-2xl font-mono font-bold">
+										<div className="text-lg font-extrabold mb-1 text-[#FF69B4] dark:text-[#FF69B4] uppercase">Total Stonks</div>
+										<div className="text-3xl font-mono font-extrabold bg-white dark:bg-gray-900 px-4 py-2 rounded-lg border-2 border-dashed border-[#FF69B4] dark:border-[#FF1493] text-center">
 											{community.bountyAmount !== null && community.bountyAmount !== undefined
 												? Number(community.bountyAmount).toFixed(2)
 												: '0.00'}{' '}
 											SOL
 										</div>
+										<div className="absolute -right-1 -top-1 text-2xl animate-bounce">💰</div>
 									</div>
 								</div>
 								<div
-									className={`relative overflow-hidden rounded-[20px] border-2 border-[rgba(255,182,193,0.5)] p-4 shadow-[0_4px_0_rgba(255,182,193,0.5)] ${
+									className={`relative overflow-hidden rounded-xl border-4 border-dashed p-5 shadow-lg transform rotate-0 hover:rotate-0 transition-all ${
 										isExpired()
-											? 'bg-red-100'
+											? 'border-red-500 dark:border-red-600 bg-red-100 dark:bg-red-900/30'
 											: !community.lastMessageTime
-											? 'bg-gray-100'
+											? 'border-gray-400 dark:border-gray-500 bg-gray-100 dark:bg-gray-800'
 											: remainingTimeText.includes('m') && parseInt(remainingTimeText.split('m')[0]) <= 5
-											? 'bg-orange-100'
-											: 'bg-green-100'
+											? 'border-orange-400 dark:border-orange-500 bg-orange-100 dark:bg-orange-900/30'
+											: 'border-green-400 dark:border-green-500 bg-green-100 dark:bg-green-900/30'
 									}`}
 								>
 									<div className="relative">
-										<div className="text-sm font-bold mb-1">time remaining</div>
-										<div className="text-2xl font-mono font-bold">
+										<div className="text-lg font-extrabold mb-1 uppercase">
+											{isExpired() ? "Time's Up!" : "Meme Time Left"}
+										</div>
+										<div className={`text-3xl font-mono font-extrabold bg-white dark:bg-gray-900 px-4 py-2 rounded-lg border-2 border-dashed ${
+											isExpired()
+												? 'border-red-500 dark:border-red-600 text-red-600 dark:text-red-400'
+												: !community.lastMessageTime
+												? 'border-gray-400 dark:border-gray-500 text-gray-600 dark:text-gray-400'
+												: remainingTimeText.includes('m') && parseInt(remainingTimeText.split('m')[0]) <= 5
+												? 'border-orange-400 dark:border-orange-500 text-orange-600 dark:text-orange-400'
+												: 'border-green-400 dark:border-green-500 text-green-600 dark:text-green-400'
+										} text-center`}>
 											{remainingTimeText}
 											{/* This hidden span forces re-render every second */}
 											<span className="hidden">{secondsCounter}</span>
 										</div>
+										<div className="absolute -right-1 -top-1 text-2xl animate-pulse">⏰</div>
 									</div>
 								</div>
-								<div className="relative overflow-hidden rounded-[20px] border-2 border-[rgba(255,182,193,0.5)] p-4 bg-white shadow-[0_4px_0_rgba(255,182,193,0.5)]">
+								<div className="relative overflow-hidden rounded-xl border-4 border-dashed border-[#FF69B4] dark:border-[#FF1493] p-5 bg-gradient-to-br from-pink-50 to-purple-50 dark:from-gray-800 dark:to-gray-700 shadow-lg transform rotate-0 hover:rotate-0 transition-all">
 									<div className="relative">
-										<div className="text-sm font-bold mb-1">base fee</div>
-										<div className="text-2xl font-mono font-bold">{community.baseFeePercentage ? Number(community.baseFeePercentage).toFixed(2) : '_'} SOL</div>
+										<div className="text-lg font-extrabold mb-1 text-[#FF69B4] dark:text-[#FF69B4] uppercase">Base Fee</div>
+										<div className="text-3xl font-mono font-extrabold bg-white dark:bg-gray-900 px-4 py-2 rounded-lg border-2 border-dashed border-[#FF69B4] dark:border-[#FF1493] text-center">
+											{community.baseFeePercentage ? Number(community.baseFeePercentage).toFixed(2) : '0.00'} SOL
+										</div>
+										<div className="absolute -right-1 -top-1 text-2xl animate-bounce delay-300">💸</div>
 									</div>
 								</div>
 							</div>
 
-							<div className="text-sm text-gray-500 dark:text-gray-400">
+							<div className="text-base text-gray-600 dark:text-gray-300 bg-pink-50 dark:bg-pink-900/20 p-4 rounded-xl border-2 border-dashed border-[rgba(255,182,193,0.5)] font-medium">
 								{community.contractAddress && (
-									<div>
-										컨트랙트 주소: <span className="font-mono">{community.contractAddress}</span>
+									<div className="mb-1">
+										<span className="font-bold text-[#FF69B4] dark:text-[#FF69B4]">Contract:</span> <span className="font-mono">{community.contractAddress}</span>
 									</div>
 								)}
-								<div>Created at: {new Date(community.createdAt).toLocaleString()}</div>
+								<div className="mb-1">
+									<span className="font-bold text-[#FF69B4] dark:text-[#FF69B4]">Created:</span> {new Date(community.createdAt).toLocaleString()}
+								</div>
 								<div className="flex items-center">
-									Latest activity:
+									<span className="font-bold text-[#FF69B4] dark:text-[#FF69B4]">Latest meme:</span>
 									<span className="font-medium ml-1">
 										{community.lastMessageTime
 											? new Date(community.lastMessageTime).toLocaleString()
-											: 'No messages yet'}
+											: 'No memes posted yet'}
 									</span>
 									{isConnected && (
-										<span className="flex h-2 w-2 ml-2">
-											<span className="animate-ping absolute inline-flex h-2 w-2 rounded-full bg-green-400 opacity-75"></span>
-											<span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
+										<span className="flex h-3 w-3 ml-2">
+											<span className="animate-ping absolute inline-flex h-3 w-3 rounded-full bg-green-400 opacity-75"></span>
+											<span className="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>
 										</span>
 									)}
 								</div>
 							</div>
 						</div>
 
-						<div className="bg-white dark:bg-gray-800 border-2 border-[rgba(255,182,193,0.5)] p-6 shadow-[0_4px_0_rgba(255,182,193,0.5)] rounded-[20px]">
-							<div className="flex items-center gap-4 mb-6">
-								<h2 className="text-2xl font-bold">messages</h2>
-								{parseInt(remainingTimeText) < 15 && (
-									<div className="text-red-500 font-bold animate-pulse text-3xl">
-										Hurry up! Submit your message before time runs out!
-									</div>
-								)}
+						<div className="bg-white dark:bg-gray-800 border-4 border-dashed border-[#FF69B4] dark:border-[#FF1493] p-6 shadow-xl rounded-xl transform rotate-0">
+							<div className="flex items-center gap-4 mb-8">
+								<div className="w-8 h-8 bg-[#FF69B4] rounded-full mr-1 transform rotate-0"></div>
+								<h2 className="text-2xl font-extrabold text-[#FF69B4] dark:text-[#FF69B4] uppercase">Meme Feed</h2>
+								<div className="w-8 h-8 bg-[#FF69B4] rounded-full ml-1 transform rotate-0"></div>
 							</div>
+							
+							{parseInt(remainingTimeText) < 15 && !isExpired() && (
+								<div className="mb-6 bg-red-100 dark:bg-red-900/30 border-4 border-dashed border-red-400 dark:border-red-600 p-4 rounded-xl text-center font-extrabold text-xl">
+									<span className="text-red-600 dark:text-red-400 animate-pulse flex items-center justify-center">
+										⚠️ HURRY UP! Post your meme before time runs out! ⚠️
+									</span>
+								</div>
+							)}
+							
 							{isExpired() ? (
-								<div className="bg-red-50 dark:bg-red-900/30 border-2 border-red-200 dark:border-red-700 p-4 text-red-800 dark:text-red-300 mb-6">
-									This community has expired
+								<div className="bg-red-100 dark:bg-red-900/30 border-4 border-dashed border-red-400 dark:border-red-600 p-6 rounded-xl text-center mb-6">
+									<div className="text-2xl font-extrabold text-red-600 dark:text-red-400 mb-2">This meme community has expired! 💀</div>
+									<div className="text-lg font-bold">Too late for the memes... Better luck next time!</div>
 								</div>
 							) : (
 								<>
-									<div className="mb-6 flex items-center gap-4">
-										<div className="w-32 h-32 bg-white rounded-[20px] border-2 border-[rgba(255,182,193,0.5)] p-4 shadow-[0_4px_0_rgba(255,182,193,0.5)] flex items-center justify-center group relative animate-pulse hover:scale-110 transition-transform duration-300">
+									<div className="mb-8 flex flex-col md:flex-row items-center gap-6">
+										<div className="w-40 h-40 bg-gradient-to-br from-pink-100 to-purple-100 dark:from-pink-900 dark:to-purple-900 rounded-xl border-4 border-dashed border-[#FF69B4] dark:border-[#FF1493] flex items-center justify-center relative transform hover:scale-105 transition-all">
 											<div
-												className={`text-2xl font-bold ${
-													parseInt(remainingTimeText) < 15 ? 'text-red-500' : 'text-pink-primary'
+												className={`text-4xl font-extrabold ${
+													parseInt(remainingTimeText) < 15 ? 'text-red-600 dark:text-red-400 animate-pulse' : 'text-[#FF69B4] dark:text-[#FF69B4]'
 												}`}
 											>
 												{remainingTimeText}
 											</div>
+											<div className="absolute -top-3 -right-3 text-3xl animate-bounce">⏱️</div>
 										</div>
 										<div className="flex-1">
 											<CreateMessageForm communityId={community.id} onMessageSent={handleRefresh} />
@@ -342,6 +381,9 @@ export default function CommunityPage() {
 									</div>
 								</>
 							)}
+							
+							<hr className="border-[#FF69B4] dark:border-[#FF1493] border-2 border-dashed mb-6" />
+							
 							<MessageList messages={community.messages} currentUserId={user?.id} />
 						</div>
 
@@ -358,7 +400,6 @@ export default function CommunityPage() {
 							onClose={() => setIsClaimDialogOpen(false)}
 							communityId={community.id}
 							contractAddress={community.contractAddress}
-							onBountyDeposited={handleRefresh}
 						/>
 					</div>
 				</div>

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { toast } from 'react-hot-toast';
@@ -46,6 +46,25 @@ export default function CreateCommunityDialog({ isOpen, onClose, userWalletAddre
 	const { connected, publicKey, sendTransaction } = useWallet();
 
 	const isWalletLinked = !!userWalletAddress;
+
+	// Handle clicking outside the dialog to close it
+	const handleBackdropClick = (e: React.MouseEvent<HTMLDivElement>) => {
+		if (e.target === e.currentTarget) {
+			onClose();
+		}
+	};
+
+	// Add escape key support
+	useEffect(() => {
+		const handleEscKey = (e: KeyboardEvent) => {
+			if (isOpen && e.key === 'Escape') {
+				onClose();
+			}
+		};
+		
+		window.addEventListener('keydown', handleEscKey);
+		return () => window.removeEventListener('keydown', handleEscKey);
+	}, [isOpen, onClose]);
 
 	const uploadToPinata = async (file: File): Promise<string> => {
 		try {
@@ -284,14 +303,21 @@ export default function CreateCommunityDialog({ isOpen, onClose, userWalletAddre
 	}
 
 	return !isOpen ? null : (
-		<div className="fixed inset-0 z-50 overflow-y-auto bg-black bg-opacity-70 backdrop-blur-sm flex items-center justify-center p-4">
-			<div className="relative w-full max-w-2xl">
-				<div className="bg-white dark:bg-gray-800 rounded-xl border-4 border-dashed border-[#FF69B4] dark:border-[#FF1493] p-6 shadow-2xl transform rotate-[-0.5deg] animate-fadeIn">
+		<div 
+			className="fixed inset-0 z-50 overflow-y-auto bg-black bg-opacity-80 backdrop-blur-sm flex items-center justify-center p-4 animate-fadeIn"
+			onClick={handleBackdropClick}
+		>
+			<div 
+				className="relative w-full max-w-2xl" 
+				onClick={(e) => e.stopPropagation()}
+			>
+				<div className="bg-white dark:bg-gray-800 rounded-xl border-4 border-dashed border-[#FF69B4] dark:border-[#FF1493] p-6 shadow-2xl transform transition-all duration-300 animate-scaleIn">
 					<div className="absolute -top-4 -right-4">
 						<button
 							type="button"
 							onClick={onClose}
-							className="bg-[#FF69B4] text-white rounded-full w-10 h-10 flex items-center justify-center hover:bg-[#FF1493] transition-colors shadow-lg transform hover:rotate-12"
+							className="bg-[#FF69B4] text-white rounded-full w-11 h-11 flex items-center justify-center hover:bg-[#FF1493] transition-all duration-300 shadow-lg transform hover:scale-110 hover:rotate-90"
+							title="Close dialog"
 						>
 							<svg
 								xmlns="http://www.w3.org/2000/svg"
@@ -305,7 +331,7 @@ export default function CreateCommunityDialog({ isOpen, onClose, userWalletAddre
 						</button>
 					</div>
 
-					<h2 className="text-3xl font-extrabold tracking-wider mb-6 text-center text-transparent bg-clip-text bg-gradient-to-r from-[#FF69B4] to-purple-500 dark:from-[#FF1493] dark:to-purple-400 uppercase transform -rotate-1">
+					<h2 className="text-3xl font-extrabold tracking-wider mb-6 text-center text-transparent bg-clip-text bg-gradient-to-r from-[#FF69B4] to-purple-500 dark:from-[#FF1493] dark:to-purple-400 uppercase">
 						Create a Dank Meme Community
 					</h2>
 
@@ -335,7 +361,7 @@ export default function CreateCommunityDialog({ isOpen, onClose, userWalletAddre
 									border-3 border-dashed border-[#FF69B4] dark:border-[#FF1493] 
 									focus:border-[#FF1493] focus:outline-none focus:ring-2 focus:ring-[#FF69B4] 
 									text-gray-700 dark:text-gray-200 placeholder-gray-500 dark:placeholder-gray-400 
-									font-medium transform hover:-rotate-[0.5deg] transition-all"
+									font-medium transform hover:scale-[1.01] transition-all"
 								/>
 							</div>
 
@@ -356,7 +382,7 @@ export default function CreateCommunityDialog({ isOpen, onClose, userWalletAddre
 									border-3 border-dashed border-[#FF69B4] dark:border-[#FF1493] 
 									focus:border-[#FF1493] focus:outline-none focus:ring-2 focus:ring-[#FF69B4] 
 									text-gray-700 dark:text-gray-200 placeholder-gray-500 dark:placeholder-gray-400 
-									font-medium transform hover:rotate-[0.5deg] transition-all"
+									font-medium transform hover:scale-[1.01] transition-all"
 								></textarea>
 							</div>
 
@@ -381,7 +407,7 @@ export default function CreateCommunityDialog({ isOpen, onClose, userWalletAddre
 											border-3 border-dashed border-[#FF69B4] dark:border-[#FF1493] 
 											focus:border-[#FF1493] focus:outline-none focus:ring-2 focus:ring-[#FF69B4] 
 											text-gray-700 dark:text-gray-200 
-											font-medium transform hover:rotate-[0.5deg] transition-all text-center"
+											font-medium transform hover:scale-[1.01] transition-all text-center"
 										/>
 									</div>
 								</div>
@@ -406,7 +432,7 @@ export default function CreateCommunityDialog({ isOpen, onClose, userWalletAddre
 											border-3 border-dashed border-[#FF69B4] dark:border-[#FF1493] 
 											focus:border-[#FF1493] focus:outline-none focus:ring-2 focus:ring-[#FF69B4] 
 											text-gray-700 dark:text-gray-200 
-											font-medium transform hover:-rotate-[0.5deg] transition-all text-center"
+											font-medium transform hover:scale-[1.01] transition-all text-center"
 										/>
 									</div>
 								</div>
@@ -419,7 +445,7 @@ export default function CreateCommunityDialog({ isOpen, onClose, userWalletAddre
 								<div className="flex justify-center">
 									<label
 										htmlFor="image"
-										className="cursor-pointer flex flex-col items-center justify-center w-40 h-40 border-4 border-dashed border-[#FF69B4] dark:border-[#FF1493] rounded-2xl overflow-hidden bg-pink-50 dark:bg-gray-700 hover:bg-pink-100 dark:hover:bg-gray-600 transition-colors transform hover:rotate-3"
+										className="cursor-pointer flex flex-col items-center justify-center w-40 h-40 border-4 border-dashed border-[#FF69B4] dark:border-[#FF1493] rounded-2xl overflow-hidden bg-pink-50 dark:bg-gray-700 hover:bg-pink-100 dark:hover:bg-gray-600 transition-colors transform hover:scale-105"
 									>
 										{imagePreview ? (
 											<img src={imagePreview} alt="Preview" className="w-full h-full object-cover" />
@@ -460,7 +486,7 @@ export default function CreateCommunityDialog({ isOpen, onClose, userWalletAddre
 												setImage(null);
 												setImagePreview(null);
 											}}
-											className="bg-red-500 text-white rounded-full p-3 hover:bg-red-600 shadow-lg transform hover:rotate-12 transition-all border-2 border-white dark:border-gray-700 font-bold"
+											className="bg-red-500 text-white rounded-full p-3 hover:bg-red-600 shadow-lg transform hover:scale-105 transition-all border-2 border-white dark:border-gray-700 font-bold"
 										>
 											Remove Image
 										</button>
@@ -485,14 +511,14 @@ export default function CreateCommunityDialog({ isOpen, onClose, userWalletAddre
 							<button
 								type="button"
 								onClick={onClose}
-								className="px-6 py-3 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-800 dark:text-white font-bold border-4 border-dashed border-gray-400 dark:border-gray-500 rounded-full disabled:opacity-50 disabled:cursor-not-allowed transition-all transform hover:-rotate-2 hover:scale-105 uppercase tracking-wider text-lg shadow-md"
+								className="px-6 py-3 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-800 dark:text-white font-bold border-4 border-dashed border-gray-400 dark:border-gray-500 rounded-full disabled:opacity-50 disabled:cursor-not-allowed transition-all transform hover:scale-105 uppercase tracking-wider text-lg shadow-md"
 							>
 								Cancel
 							</button>
 							<button
 								type="submit"
 								disabled={loading || !name.trim() || !connected || !isWalletLinked}
-								className="px-6 py-3 bg-gradient-to-r from-[#FF69B4] to-[#FF1493] hover:from-[#FF1493] hover:to-[#FF69B4] text-white font-extrabold border-4 border-dashed border-white dark:border-gray-700 rounded-full disabled:opacity-50 disabled:cursor-not-allowed transition-all transform hover:rotate-2 hover:scale-105 uppercase tracking-wider text-lg shadow-md"
+								className="px-6 py-3 bg-gradient-to-r from-[#FF69B4] to-[#FF1493] hover:from-[#FF1493] hover:to-[#FF69B4] text-white font-extrabold border-4 border-dashed border-white dark:border-gray-700 rounded-full disabled:opacity-50 disabled:cursor-not-allowed transition-all transform hover:scale-105 uppercase tracking-wider text-lg shadow-md"
 							>
 								{loading ? 'Creating...' : '🚀 Create Community 🚀'}
 							</button>

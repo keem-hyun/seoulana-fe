@@ -117,7 +117,7 @@ export default function CommunityCard({
 
 	return (
 		<Link href={`/communities/${id}`}>
-			<div className="bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-lg hover:shadow-xl group transition-all duration-300 h-full flex flex-col border-4 border-dashed border-[#FF69B4] dark:border-[#FF1493] transform hover:-rotate-1 hover:scale-[1.02]">
+			<div className="bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-lg hover:shadow-xl group transition-all duration-300 h-full flex flex-col border-4 border-dashed border-[#FF69B4] dark:border-[#FF1493] transform hover:scale-[1.01]">
 				<div className="flex flex-row h-full">
 					{/* Image Section - Larger and on the left */}
 					{imageURL ? (
@@ -130,7 +130,7 @@ export default function CommunityCard({
 						</div>
 					) : (
 						<div className="w-1/3 min-w-[180px] bg-gradient-to-br from-pink-100 to-purple-100 dark:from-pink-900 dark:to-purple-900 flex items-center justify-center">
-							<div className="w-24 h-24 rounded-full bg-[#FF69B4] flex items-center justify-center transform rotate-3 hover:rotate-6 transition-transform duration-300 border-4 border-white dark:border-gray-700 shadow-lg">
+							<div className="w-24 h-24 rounded-full bg-[#FF69B4] flex items-center justify-center transform hover:scale-105 transition-transform duration-300 border-4 border-white dark:border-gray-700 shadow-lg">
 								<span className="text-3xl font-extrabold text-white">{name.charAt(0).toUpperCase()}</span>
 							</div>
 						</div>
@@ -158,7 +158,7 @@ export default function CommunityCard({
 											bountyAmount !== undefined
 												? 'bg-yellow-200 text-yellow-800 dark:bg-yellow-800 dark:text-yellow-200'
 												: 'bg-gray-200 text-gray-600 dark:bg-gray-700 dark:text-gray-400'
-										} px-3 py-1.5 text-sm font-bold rounded-full mt-1 text-center transform -rotate-2 border-2 border-yellow-400 dark:border-yellow-600`}
+										} px-3 py-1.5 text-sm font-bold rounded-full mt-1 text-center border-2 border-yellow-400 dark:border-yellow-600`}
 									>
 										{bountyAmount !== undefined ? `${bountyAmount} SOL` : 'no stonks'}
 									</span>
@@ -170,7 +170,7 @@ export default function CommunityCard({
 									</span>
 									{timeLimit !== undefined && (
 										<span
-											className={`px-3 py-1.5 text-sm font-bold rounded-full mt-1 text-center transform rotate-1 border-2 ${
+											className={`px-3 py-1.5 text-sm font-bold rounded-full mt-1 text-center border-2 ${
 												displayedLastMessageTime
 													? remainingTimeText === 'Expired'
 														? 'bg-red-200 text-red-800 dark:bg-red-800 dark:text-red-200 border-red-400 dark:border-red-600'
@@ -194,7 +194,7 @@ export default function CommunityCard({
 											baseFeePercentage !== undefined
 												? 'bg-blue-200 text-blue-800 dark:bg-blue-800 dark:text-blue-200'
 												: 'bg-gray-200 text-gray-600 dark:bg-gray-700 dark:text-gray-400'
-										} px-3 py-1.5 text-sm font-bold rounded-full mt-1 text-center transform rotate-2 border-2 border-blue-400 dark:border-blue-600`}
+										} px-3 py-1.5 text-sm font-bold rounded-full mt-1 text-center border-2 border-blue-400 dark:border-blue-600`}
 									>
 										{baseFeePercentage !== undefined && baseFeePercentage !== null ? `${baseFeePercentage} SOL` : 'free memes'}
 									</span>

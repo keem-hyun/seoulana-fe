@@ -128,11 +128,11 @@ export default function CommunitysPage() {
 				<Toaster position="top-right" />
 				<div className="flex justify-between items-center mb-8">
 					<div className="flex items-center gap-4">
-						<h1 className="text-4xl font-extrabold uppercase tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-[#FF69B4] to-purple-500 dark:from-[#FF1493] dark:to-purple-400 transform -rotate-1">MEME COMMUNITIES</h1>
+						<h1 className="text-4xl font-extrabold uppercase tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-[#FF69B4] to-purple-500 dark:from-[#FF1493] dark:to-purple-400">MEME COMMUNITIES</h1>
 						{user && (
 							<button
 								onClick={() => setIsCreateDialogOpen(true)}
-								className="flex items-center gap-2 bg-[#FF69B4] hover:bg-[#FF1493] text-white px-5 py-3 border-4 border-dashed border-white dark:border-gray-700 rounded-full text-sm font-extrabold transition-all transform hover:scale-105 hover:rotate-1 shadow-lg"
+								className="flex items-center gap-2 bg-[#FF69B4] hover:bg-[#FF1493] text-white px-5 py-3 border-4 border-dashed border-white dark:border-gray-700 rounded-full text-sm font-extrabold transition-all transform hover:scale-105 shadow-lg"
 							>
 								<span className="text-xl">+</span>
 								<span>CREATE DANK MEME COMMUNITY</span>
@@ -145,9 +145,9 @@ export default function CommunitysPage() {
 					{/* 커뮤니티 목록 직접 표시 */}
 					<div className="bg-white dark:bg-gray-800 border-4 border-dashed border-[#FF69B4] dark:border-[#FF1493] p-8 rounded-xl shadow-xl">
 						<div className="mb-6 flex items-center">
-							<span className="w-8 h-8 bg-[#FF69B4] rounded-full mr-3 transform rotate-12"></span>
+							<span className="w-8 h-8 bg-[#FF69B4] rounded-full mr-3"></span>
 							<h2 className="text-3xl font-extrabold tracking-widest uppercase mb-0 text-[#FF69B4] dark:text-[#FF69B4]">Trending Meme Communities</h2>
-							<span className="w-8 h-8 bg-[#FF69B4] rounded-full ml-3 transform -rotate-12"></span>
+							<span className="w-8 h-8 bg-[#FF69B4] rounded-full ml-3"></span>
 						</div>
 						<hr className="border-[#FF69B4] dark:border-[#FF1493] border-2 border-dashed mb-6" />
 

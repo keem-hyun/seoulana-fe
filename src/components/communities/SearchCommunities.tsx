@@ -36,7 +36,7 @@ export default function SearchCommunities({ onSearch }: SearchCommunitiesProps) 
 					border-4 border-dashed border-[#FF69B4] dark:border-[#FF1493] 
 					focus:border-[#FF1493] focus:outline-none focus:ring-2 focus:ring-[#FF69B4] dark:focus:ring-[#FF1493] 
 					shadow-inner text-gray-700 dark:text-gray-200 font-medium placeholder-gray-500 dark:placeholder-gray-400 
-					transform hover:-rotate-1 transition-all text-lg"
+					transform hover:scale-[1.01] transition-all text-lg"
 				/>
 				<div className="absolute left-5 top-1/2 -translate-y-1/2 text-[#FF69B4] dark:text-[#FF1493]">
 					<Search size={22} className="animate-pulse" />
@@ -47,7 +47,7 @@ export default function SearchCommunities({ onSearch }: SearchCommunitiesProps) 
 					bg-gradient-to-r from-[#FF69B4] to-[#FF1493] dark:from-[#FF1493] dark:to-[#FF69B4] 
 					text-white px-6 py-2 text-base font-bold rounded-full shadow-md 
 					hover:shadow-lg transition-all hover:opacity-90 transform hover:scale-105 
-					hover:rotate-1 border-2 border-white dark:border-gray-700 flex items-center"
+					border-2 border-white dark:border-gray-700 flex items-center"
 				>
 					<Sparkles size={16} className="mr-1" />
 					Find
