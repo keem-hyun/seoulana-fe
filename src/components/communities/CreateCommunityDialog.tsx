@@ -61,7 +61,7 @@ export default function CreateCommunityDialog({ isOpen, onClose, userWalletAddre
 				onClose();
 			}
 		};
-		
+
 		window.addEventListener('keydown', handleEscKey);
 		return () => window.removeEventListener('keydown', handleEscKey);
 	}, [isOpen, onClose]);
@@ -238,7 +238,7 @@ export default function CreateCommunityDialog({ isOpen, onClose, userWalletAddre
 			const signature = await sendTransaction(transaction, connection);
 
 			// Wait for confirmation
-			
+
 			await connection.confirmTransaction(
 				{
 					signature,
@@ -303,25 +303,22 @@ export default function CreateCommunityDialog({ isOpen, onClose, userWalletAddre
 	}
 
 	return !isOpen ? null : (
-		<div 
-			className="fixed inset-0 z-50 overflow-y-auto bg-black bg-opacity-80 backdrop-blur-sm flex items-center justify-center p-4 animate-fadeIn"
+		<div
+			className="fixed inset-0 z-50 overflow-y-auto bg-black/70 backdrop-blur-sm flex items-center justify-center p-8 animate-fadeIn"
 			onClick={handleBackdropClick}
 		>
-			<div 
-				className="relative w-full max-w-2xl" 
-				onClick={(e) => e.stopPropagation()}
-			>
-				<div className="bg-white dark:bg-gray-800 rounded-xl border-4 border-dashed border-[#FF69B4] dark:border-[#FF1493] p-6 shadow-2xl transform transition-all duration-300 animate-scaleIn">
-					<div className="absolute -top-4 -right-4">
+			<div className="relative w-full max-w-2xl my-8" onClick={(e) => e.stopPropagation()}>
+				<div className="bg-white dark:bg-gray-800 rounded-xl border-4 border-dashed border-[#FF69B4] dark:border-[#FF1493] p-6 shadow-2xl transform transition-all duration-300 animate-scaleIn max-h-[90vh] overflow-y-auto">
+					<div className="absolute top-2 right-2">
 						<button
 							type="button"
 							onClick={onClose}
-							className="bg-[#FF69B4] text-white rounded-full w-11 h-11 flex items-center justify-center hover:bg-[#FF1493] transition-all duration-300 shadow-lg transform hover:scale-110 hover:rotate-90"
+							className="bg-[#FF69B4] text-white rounded-full w-10 h-10 flex items-center justify-center hover:bg-[#FF1493] transition-all duration-300 shadow-lg transform hover:scale-110 hover:rotate-90"
 							title="Close dialog"
 						>
 							<svg
 								xmlns="http://www.w3.org/2000/svg"
-								className="h-6 w-6"
+								className="h-5 w-5"
 								fill="none"
 								viewBox="0 0 24 24"
 								stroke="currentColor"
