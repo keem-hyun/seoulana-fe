@@ -3,6 +3,15 @@ import { useWallet } from '@solana/wallet-adapter-react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { toast } from 'react-hot-toast';
 import { api } from '@/api';
+import { Program, AnchorProvider, web3 } from '@coral-xyz/anchor';
+import * as anchor from '@coral-xyz/anchor';
+import { Connection, PublicKey, clusterApiUrl } from '@solana/web3.js';
+
+// Import from contract target types
+import { Kasoro } from '../../../../contract/target/types/kasoro';
+import kasoroIdl from '../../../../contract/target/idl/kasoro.json';
+// Placeholder for program ID - replace with actual ID from lib.rs
+const PROGRAM_ID = new PublicKey('38cVbT7EHqPwfXR1VgXA5jJiBe3DSAFr6cdCEPx4fbAv');
 
 interface DepositBountyDialogProps {
 	isOpen: boolean;
