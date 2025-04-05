@@ -304,7 +304,14 @@ export default function CommunityPage() {
 						</div>
 
 						<div className="bg-white dark:bg-gray-800 border-2 border-[rgba(255,182,193,0.5)] p-6 shadow-[0_4px_0_rgba(255,182,193,0.5)] rounded-[20px]">
-							<h2 className="text-2xl font-bold mb-6">messages</h2>
+							<div className="flex items-center gap-4 mb-6">
+								<h2 className="text-2xl font-bold">messages</h2>
+								{parseInt(remainingTimeText) < 15 && (
+									<div className="text-red-500 font-bold animate-pulse text-3xl">
+										Hurry up! Submit your message before time runs out!
+									</div>
+								)}
+							</div>
 							{isExpired() ? (
 								<div className="bg-red-50 dark:bg-red-900/30 border-2 border-red-200 dark:border-red-700 p-4 text-red-800 dark:text-red-300 mb-6">
 									This community has expired
@@ -313,7 +320,13 @@ export default function CommunityPage() {
 								<>
 									<div className="mb-6 flex items-center gap-4">
 										<div className="w-32 h-32 bg-white rounded-[20px] border-2 border-[rgba(255,182,193,0.5)] p-4 shadow-[0_4px_0_rgba(255,182,193,0.5)] flex items-center justify-center group relative animate-pulse hover:scale-110 transition-transform duration-300">
-											<div className="text-2xl font-bold text-pink-primary">{remainingTimeText}</div>
+											<div
+												className={`text-2xl font-bold ${
+													parseInt(remainingTimeText) < 15 ? 'text-red-500' : 'text-pink-primary'
+												}`}
+											>
+												{remainingTimeText}
+											</div>
 										</div>
 										<div className="flex-1">
 											<CreateMessageForm communityId={community.id} onMessageSent={handleRefresh} />
