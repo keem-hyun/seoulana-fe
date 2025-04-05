@@ -35,7 +35,7 @@ export default function DepositBountyDialog({
 	const [initializerAddress, setInitializerAddress] = useState<string | null>(null);
 
 	const { connected, publicKey, sendTransaction } = useWallet();
-	
+
 	// 커뮤니티 이름 가져오기
 	useEffect(() => {
 		const fetchCommunityName = async () => {
@@ -48,7 +48,7 @@ export default function DepositBountyDialog({
 					creatorId: string;
 					walletAddress: string;
 				}
-				
+
 				const { data } = await api.get<CommunityResponse>(`/communities/${communityId}`);
 				setCommunityName(data.name);
 				setInitializerAddress(data.walletAddress);
@@ -59,18 +59,18 @@ export default function DepositBountyDialog({
 				toast.error('커뮤니티 데이터를 불러오는데 실패했습니다');
 			}
 		};
-		
+
 		if (communityId) {
 			fetchCommunityName();
 		}
 	}, [communityId]);
-	
+
 	const handleDeposit = async () => {
 		if (!connected || !publicKey) {
 			toast.error('지갑을 연결해주세요');
 			return;
 		}
-		
+
 		if (!communityName) {
 			toast.error('커뮤니티 정보를 불러오는 중입니다. 잠시 후 다시 시도해주세요');
 			return;
@@ -85,31 +85,22 @@ export default function DepositBountyDialog({
 
 		try {
 			const connection = new Connection(clusterApiUrl('devnet'), 'confirmed');
-			console.log("Connection structure:", connection);
+			console.log('Connection structure:', connection);
 
 			// PDA 주소 계산
 			const [communityPda] = anchor.web3.PublicKey.findProgramAddressSync(
-				[
-					Buffer.from("community"),
-					initializerPubkey.toBuffer(),
-					Buffer.from(communityName)
-				],
+				[Buffer.from('community'), initializerPubkey.toBuffer(), Buffer.from(communityName)],
 				PROGRAM_ID
 			);
 
-			console.log("Community PDA:", communityPda.toString());
-			
+			console.log('Community PDA:', communityPda.toString());
+
 			const [vaultPda] = anchor.web3.PublicKey.findProgramAddressSync(
-				[
-					Buffer.from("vault"),
-					initializerPubkey.toBuffer(),
-					Buffer.from(communityName)
-				],
+				[Buffer.from('vault'), initializerPubkey.toBuffer(), Buffer.from(communityName)],
 				PROGRAM_ID
 			);
-			console.log("Vault PDA:", vaultPda.toString());
-			
-			
+			console.log('Vault PDA:', vaultPda.toString());
+
 			// Create a provider from connection and wallet
 			const provider = new AnchorProvider(
 				connection,
@@ -136,16 +127,12 @@ export default function DepositBountyDialog({
 			const transaction = new web3.Transaction();
 			console.log('Transaction structure:', transaction);
 			// Find PDA for community and vault
-			
-		    console.log("parameter:", communityPda.toString(), vaultPda.toString(), amount);
+
+			console.log('parameter:', communityPda.toString(), vaultPda.toString(), amount);
 			// Add initialize instruction to transaction
 			transaction.add(
 				await program.methods
-					.deposit(
-						communityPda,
-						vaultPda,
-						new anchor.BN(amount * web3.LAMPORTS_PER_SOL)
-					)
+					.deposit(communityPda, vaultPda, new anchor.BN(amount * web3.LAMPORTS_PER_SOL))
 					.accounts({
 						payer: publicKey,
 						community: communityPda,
@@ -160,28 +147,30 @@ export default function DepositBountyDialog({
 
 			// Wait for confirmation
 			const latestBlockhash = await connection.getLatestBlockhash();
-			await connection.confirmTransaction({
-				signature,
-				blockhash: latestBlockhash.blockhash,
-				lastValidBlockHeight: latestBlockhash.lastValidBlockHeight
-			}, 'confirmed');
+			await connection.confirmTransaction(
+				{
+					signature,
+					blockhash: latestBlockhash.blockhash,
+					lastValidBlockHeight: latestBlockhash.lastValidBlockHeight,
+				},
+				'confirmed'
+			);
 
 			// const communityAccount = await program.account.communityState.fetch(communityPda);
 			// console.log('CommunityState account pubkey:', communityPda.toString());
-			
-			
+
 			// 백엔드 API 호출하여 바운티 정보 업데이트
 			await api.post(`/communities/${communityId}/deposit`, {
 				amount,
 				walletAddress: publicKey.toString(),
 			});
 
-			toast.success('바운티가 성공적으로 입금되었습니다!');
+			toast.success('Bounty deposited successfully!');
 			onBountyDeposited();
 			onClose();
 		} catch (error) {
 			console.error('Error depositing bounty:', error);
-			toast.error(error instanceof Error ? error.message : '바운티 입금에 실패했습니다');
+			toast.error(error instanceof Error ? error.message : 'Bounty deposit failed');
 		} finally {
 			setLoading(false);
 		}
