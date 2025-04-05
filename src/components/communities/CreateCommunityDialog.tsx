@@ -29,13 +29,14 @@ interface CommunityResponse {
 	description: string;
 	createdAt: string;
 	creatorId: string;
+	baseFeePercentage: number;
 }
 
 export default function CreateCommunityDialog({ isOpen, onClose, userWalletAddress }: CreateCommunityDialogProps) {
 	const [name, setName] = useState('');
 	const [description, setDescription] = useState('');
 	const [timeLimit, setTimeLimit] = useState(30);
-	const [baseFee, setBaseFee] = useState(0);
+	const [baseFee, setBaseFee] = useState(0.1);
 	const [loading, setLoading] = useState(false);
 	const [error, setError] = useState<string | null>(null);
 	const [image, setImage] = useState<File | null>(null);
@@ -43,7 +44,7 @@ export default function CreateCommunityDialog({ isOpen, onClose, userWalletAddre
 	const [uploadingImage, setUploadingImage] = useState(false);
 	const router = useRouter();
 	const { connected, publicKey, sendTransaction } = useWallet();
-
+	console.log('basefee:', baseFee);
 	const isWalletLinked = !!userWalletAddress;
 
 	const uploadToPinata = async (file: File): Promise<string> => {
@@ -247,7 +248,7 @@ export default function CreateCommunityDialog({ isOpen, onClose, userWalletAddre
 				name,
 				description,
 				timeLimit,
-				baseFee,
+				baseFeePercentage: baseFee,
 				walletAddress: publicKey.toString(),
 				imageURL: imageURL,
 			};
@@ -262,7 +263,7 @@ export default function CreateCommunityDialog({ isOpen, onClose, userWalletAddre
 			setName('');
 			setDescription('');
 			setTimeLimit(30);
-			setBaseFee(0.0001);
+			setBaseFee(0.1);
 			setImage(null);
 			setImagePreview(null);
 

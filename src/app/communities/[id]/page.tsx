@@ -11,6 +11,7 @@ import DepositBountyDialog from '@/components/communities/DepositBountyDialog';
 import { useWebSocket } from '@/hooks/useWebSocket';
 import ClaimBasefeeDialog from '@/components/communities/ClaimBasefeeDialog';
 import DepositorsList from '@/components/communities/DepositorsList';
+import { LAMPORTS_PER_SOL } from '@solana/web3.js';
 
 interface Creator {
 	id: string;
@@ -146,6 +147,7 @@ export default function CommunityPage() {
 				}
 
 				setCommunity(communityResponse.data);
+				console.log('Community data:', communityResponse.data);
 				setUser(userResponse.data);
 			} catch (error) {
 				console.error('Error fetching data:', error);
@@ -280,7 +282,7 @@ export default function CommunityPage() {
 								<div className="relative overflow-hidden rounded-[20px] border-2 border-[rgba(255,182,193,0.5)] p-4 bg-white shadow-[0_4px_0_rgba(255,182,193,0.5)]">
 									<div className="relative">
 										<div className="text-sm font-bold mb-1">base fee</div>
-										<div className="text-2xl font-mono font-bold">{community.baseFeePercentage ?? 0} SOL</div>
+										<div className="text-2xl font-mono font-bold">{community.baseFeePercentage ? Number(community.baseFeePercentage).toFixed(2) : '_'} SOL</div>
 									</div>
 								</div>
 							</div>
