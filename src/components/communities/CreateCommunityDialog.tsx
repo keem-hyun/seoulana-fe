@@ -68,6 +68,24 @@ export default function CreateCommunityDialog({ isOpen, onClose, userWalletAddre
 		setError(null);
 
 		try {
+			// Check if community name already exists
+			try {
+				const response = await api.get('/communities');
+				const communities:any = response.data;
+				const existingCommunity = communities.find((community: any) => 
+					 community.name.toLowerCase() === name.toLowerCase()
+				);
+				
+				if (existingCommunity) {
+					 setLoading(false);
+					 setError(`A community with the name "${name}" already exists. Please choose a different name.`);
+					 toast.error(`A community with the name "${name}" already exists.`);
+					 return;
+				}
+		 } catch (error) {
+				console.error('Error checking community name:', error);
+				// Continue with community creation if the check fails
+		 }
 			// Create connection to the cluster
 			const connection = new Connection(clusterApiUrl('devnet'), 'confirmed');
 			console.log('Connection structure:', connection);
@@ -131,7 +149,12 @@ export default function CreateCommunityDialog({ isOpen, onClose, userWalletAddre
 			const signature = await sendTransaction(transaction, connection);
 
 			// Wait for confirmation
-			await connection.confirmTransaction(signature, 'confirmed');
+      const latestBlockhash = await connection.getLatestBlockhash();
+      await connection.confirmTransaction({
+        signature,
+        blockhash: latestBlockhash.blockhash,
+        lastValidBlockHeight: latestBlockhash.lastValidBlockHeight
+      }, 'confirmed');
 
 			const communityAccount = await program.account.communityState.fetch(communityPda);
 			console.log('CommunityState account pubkey:', communityPda.toString());
@@ -199,6 +222,11 @@ export default function CreateCommunityDialog({ isOpen, onClose, userWalletAddre
 							{error}
 						</div>
 					)}
+
+          <div className="pb-2">
+            <h1 className="text-2xl font-bold tracking-widest uppercase mb-4">New Community</h1>
+            <hr className="border-gray-200 dark:border-gray-700 mb-6" />
+          </div>
 
 					<div>
 						<label htmlFor="name" className="block font-bold text-sm uppercase tracking-widest mb-1">
