@@ -65,7 +65,7 @@ export default function AuthSuccess() {
 				setLinking(false);
 			}
 		}
-		router.push('/');
+		router.push('/communities');
 	};
 
 	return (
@@ -103,7 +103,7 @@ export default function AuthSuccess() {
 						<p className="text-center mb-6">Could not retrieve user information. Please try logging in again.</p>
 						<div className="flex justify-center">
 							<button
-								onClick={() => router.push('/')}
+								onClick={() => router.push('/communities')}
 								className="bg-black text-white px-4 py-2 rounded-full hover:bg-gray-800 transition-colors"
 							>
 								Back to Home
