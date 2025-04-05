@@ -64,40 +64,15 @@ export default function Home() {
 
 			{/* Main content - becomes visible after intro animation */}
 			<div className={`w-full transition-opacity duration-1000 ${introComplete ? 'opacity-100' : 'opacity-0'}`}>
-				{/* Animated Background */}
-				<div className="absolute inset-0 -z-10 overflow-hidden">
-					<div className="absolute inset-0 bg-gradient-to-br from-pink-light/40 via-white to-purple-light/40"></div>
-
-					{/* Floating bubbles */}
-					<div className="absolute top-[10%] left-[15%] w-52 h-52 rounded-full bg-pink-light/60 blur-2xl animate-float"></div>
-					<div
-						className="absolute bottom-[20%] right-[15%] w-64 h-64 rounded-full bg-purple-light/60 blur-2xl"
-						style={{ animationDelay: '2s' }}
-					></div>
-					<div
-						className="absolute top-[45%] right-[10%] w-40 h-40 rounded-full bg-pink-medium/50 blur-2xl animate-float"
-						style={{ animationDelay: '3s' }}
-					></div>
-					<div
-						className="absolute bottom-[30%] left-[10%] w-56 h-56 rounded-full bg-purple-light/50 blur-2xl animate-float"
-						style={{ animationDelay: '2.5s' }}
-					></div>
-					<div
-						className="absolute top-[70%] left-[30%] w-32 h-32 rounded-full bg-pink-primary/30 blur-xl animate-float"
-						style={{ animationDelay: '1.7s' }}
-					></div>
-					<div
-						className="absolute top-[20%] right-[25%] w-24 h-24 rounded-full bg-purple-primary/20 blur-xl animate-float"
-						style={{ animationDelay: '2.2s' }}
-					></div>
-				</div>
-
 				{/* Hero Section */}
-				<section className="relative pt-16 pb-24 px-4 flex flex-col items-center overflow-hidden">
-					<div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] rounded-full bg-gradient-to-br from-pink-light/30 to-purple-light/30 blur-3xl animate-pulse-soft"></div>
+				<section className="relative pt-24 pb-32 px-4 flex flex-col items-center overflow-hidden">
+					{/* 배경 이미지 */}
+					<div className="absolute inset-0 -z-10">
+						<Image src="/images/herosection_bg.png" alt="Hero Background" fill priority className="object-cover" />
+					</div>
 
 					<div className="max-w-5xl mx-auto text-center relative z-10">
-						<div className="mb-10 relative">
+						<div className="mb-12 relative">
 							<div className="absolute -top-8 -left-8 w-16 h-16 rounded-full bg-pink-light/80 animate-float blur-sm"></div>
 							<div
 								className="absolute -top-4 -right-4 w-12 h-12 rounded-full bg-purple-light/80 animate-float blur-sm"
@@ -105,18 +80,18 @@ export default function Home() {
 							></div>
 
 							<div className="relative inline-block">
-								<div className="relative w-32 h-32 mx-auto mb-6">
+								<div className="relative w-36 h-36 mx-auto mb-6">
 									<div className="absolute inset-0 bg-white/80 rounded-2xl rotate-45 shadow-pink"></div>
 									<Image
 										src="/images/kasoro_logo.png"
 										alt="Kasoro Logo"
-										width={120}
-										height={120}
+										width={140}
+										height={140}
 										className="relative z-10 p-2"
 									/>
 								</div>
 								<h1
-									className={`font-[bazzi] mt-13 text-6xl md:text-7xl font-bold text-purple-dark/80 bg-clip-text bg-gradient-to-r from-pink-primary to-purple-primary`}
+									className={`font-[bazzi] mt-8 text-6xl md:text-7xl font-bold text-purple-dark/80 bg-clip-text bg-gradient-to-r from-pink-primary to-purple-primary`}
 								>
 									KASORO
 								</h1>
@@ -124,11 +99,11 @@ export default function Home() {
 						</div>
 
 						<p className="text-2xl md:text-3xl text-purple-dark font-semibold mb-6">First CommuniFi on Solana</p>
-						<p className="text-xl text-gray-600 max-w-3xl mx-auto mb-14">
+						<p className="text-xl text-gray-600 max-w-3xl mx-auto mb-14 bg-white/60 p-4 rounded-xl backdrop-blur-sm shadow-sm">
 							The cutest community-driven platform for content creators and community builders
 						</p>
 
-						<div className="flex flex-col sm:flex-row justify-center gap-5 mb-20">
+						<div className="flex flex-col sm:flex-row justify-center gap-5 mb-10">
 							<Link
 								href="/communities"
 								className="px-10 py-5 bg-white/80 border-2 border-pink-light text-pink-dark rounded-full shadow-md text-xl font-semibold transition-all hover:bg-pink-light/20 hover:border-pink-primary"
@@ -143,57 +118,13 @@ export default function Home() {
 								Learn More
 							</a>
 						</div>
-
-						{/* Features carousel */}
-						<div className="relative mx-auto w-full max-w-4xl h-[400px] overflow-hidden rounded-3xl shadow-2xl">
-							{features.map((feature, index) => (
-								<div
-									key={index}
-									className={`absolute inset-0 transition-all duration-700 ease-in-out ${
-										index === activeFeature
-											? 'opacity-100 translate-x-0'
-											: index < activeFeature
-											? 'opacity-0 -translate-x-full'
-											: 'opacity-0 translate-x-full'
-									}`}
-								>
-									<div className="h-full bg-white flex flex-col md:flex-row items-center overflow-hidden">
-										<div className="md:w-1/2 h-full bg-gradient-to-br from-pink-light to-purple-light/50 p-8 flex items-center justify-center">
-											<div
-												className={`w-32 h-32 rounded-2xl bg-gradient-to-br ${feature.color} shadow-lg flex items-center justify-center text-5xl`}
-											>
-												{feature.icon}
-											</div>
-										</div>
-										<div className="md:w-1/2 p-10 flex flex-col items-center md:items-start justify-center">
-											<h3 className="text-3xl font-bold text-purple-dark mb-4">{feature.title}</h3>
-											<p className="text-xl text-gray-600">{feature.description}</p>
-										</div>
-									</div>
-								</div>
-							))}
-
-							{/* Carousel controls */}
-							<div className="absolute bottom-6 left-0 right-0 flex justify-center gap-3 z-10">
-								{features.map((_, index) => (
-									<button
-										key={index}
-										onClick={() => setActiveFeature(index)}
-										className={`w-3 h-3 rounded-full transition-all ${
-											index === activeFeature ? 'w-10 bg-black' : 'bg-gray-300'
-										}`}
-										aria-label={`Show feature ${index + 1}`}
-									/>
-								))}
-							</div>
-						</div>
 					</div>
 				</section>
 
 				{/* Features Section */}
 				<section
 					id="features"
-					className={`py-24 px-4 bg-white rounded-t-[3rem] mt-12 relative z-10 transition-all duration-1000 ease-out transform ${
+					className={`py-24 px-4 bg-white rounded-t-[3rem] mt-0 relative z-10 transition-all duration-1000 ease-out transform ${
 						scrollY > 200 ? 'translate-y-0 opacity-100' : 'translate-y-20 opacity-0'
 					}`}
 				>
@@ -210,7 +141,7 @@ export default function Home() {
 							</p>
 						</div>
 
-						<div className="grid md:grid-cols-3 gap-8 px-4">
+						<div className="grid md:grid-cols-3 gap-8 px-4 mb-20">
 							{features.map((feature, index) => (
 								<div
 									key={index}
@@ -232,6 +163,54 @@ export default function Home() {
 									</div>
 								</div>
 							))}
+						</div>
+
+						{/* Features carousel - Features 섹션으로 이동됨 */}
+						<div className="relative mx-auto w-full max-w-5xl h-[450px] overflow-hidden rounded-3xl shadow-2xl">
+							{features.map((feature, index) => (
+								<div
+									key={index}
+									className={`absolute inset-0 transition-all duration-700 ease-in-out ${
+										index === activeFeature
+											? 'opacity-100 translate-x-0'
+											: index < activeFeature
+											? 'opacity-0 -translate-x-full'
+											: 'opacity-0 translate-x-full'
+									}`}
+								>
+									<div className="h-full bg-white flex flex-col md:flex-row items-center overflow-hidden">
+										<div className="md:w-1/2 h-full bg-gradient-to-br from-pink-light to-purple-light/50 p-8 sm:p-12 flex items-center justify-center">
+											<div
+												className={`w-32 h-32 md:w-40 md:h-40 rounded-2xl bg-gradient-to-br ${feature.color} shadow-lg flex items-center justify-center text-5xl md:text-6xl transform hover:scale-105 transition-all duration-300`}
+											>
+												{feature.icon}
+											</div>
+										</div>
+										<div className="md:w-1/2 p-8 sm:p-12 flex flex-col items-center md:items-start justify-center">
+											<h3 className="text-3xl md:text-4xl font-bold text-purple-dark mb-6">{feature.title}</h3>
+											<p className="text-lg md:text-xl text-gray-600 leading-relaxed">{feature.description}</p>
+											<div className="mt-8 flex items-center text-pink-primary font-medium">
+												<span className="mr-2">Learn more</span>
+												<span className="w-7 h-7 rounded-full bg-pink-light flex items-center justify-center">→</span>
+											</div>
+										</div>
+									</div>
+								</div>
+							))}
+
+							{/* Carousel controls */}
+							<div className="absolute bottom-6 left-0 right-0 flex justify-center gap-3 z-10">
+								{features.map((_, index) => (
+									<button
+										key={index}
+										onClick={() => setActiveFeature(index)}
+										className={`w-3 h-3 rounded-full transition-all ${
+											index === activeFeature ? 'w-10 bg-pink-primary' : 'bg-gray-300'
+										}`}
+										aria-label={`Show feature ${index + 1}`}
+									/>
+								))}
+							</div>
 						</div>
 					</div>
 				</section>
