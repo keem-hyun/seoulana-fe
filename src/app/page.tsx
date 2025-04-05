@@ -65,20 +65,14 @@ export default function Home() {
 			{/* Main content - becomes visible after intro animation */}
 			<div className={`w-full transition-opacity duration-1000 ${introComplete ? 'opacity-100' : 'opacity-0'}`}>
 				{/* Hero Section */}
-				<section className="relative pt-24 pb-32 px-4 flex flex-col items-center overflow-hidden">
+				<section className="relative h-[calc(100vh-4rem)] flex flex-col items-center justify-center overflow-hidden">
 					{/* 배경 이미지 */}
 					<div className="absolute inset-0 -z-10">
 						<Image src="/images/herosection_bg.png" alt="Hero Background" fill priority className="object-cover" />
 					</div>
 
-					<div className="max-w-5xl mx-auto text-center relative z-10">
-						<div className="mb-12 relative">
-							<div className="absolute -top-8 -left-8 w-16 h-16 rounded-full bg-pink-light/80 animate-float blur-sm"></div>
-							<div
-								className="absolute -top-4 -right-4 w-12 h-12 rounded-full bg-purple-light/80 animate-float blur-sm"
-								style={{ animationDelay: '2s' }}
-							></div>
-
+					<div className="max-w-5xl mx-auto text-center relative z-10 px-4">
+						<div className="mb-8 md:mb-12 relative">
 							<div className="relative inline-block">
 								<div className="relative w-36 h-36 mx-auto mb-6">
 									<Image
@@ -90,7 +84,7 @@ export default function Home() {
 									/>
 								</div>
 								<h1
-									className={`font-[bazzi] mt-6 text-7xl md:text-8xl lg:text-9xl font-bold bg-clip-text bg-gradient-to-r from-pink-primary via-purple-primary to-pink-primary text-transparent drop-shadow-lg animate-pulse-soft`}
+									className={`font-[bazzi] mt-4 md:mt-6 text-6xl md:text-8xl lg:text-9xl font-bold bg-clip-text bg-gradient-to-r from-pink-primary via-purple-primary to-pink-primary text-transparent drop-shadow-lg animate-pulse-soft`}
 									style={{ textShadow: '0 0 15px rgba(255, 95, 158, 0.5)' }}
 								>
 									KASORO
@@ -98,14 +92,14 @@ export default function Home() {
 							</div>
 						</div>
 
-						<p className="text-2xl md:text-3xl text-white font-semibold mb-6 drop-shadow-md">
+						<p className="text-xl md:text-3xl text-white font-semibold mb-4 md:mb-6 drop-shadow-md">
 							First CommuniFi on Solana
 						</p>
-						<p className="text-xl text-white max-w-3xl mx-auto mb-16 drop-shadow-md font-medium backdrop-blur-sm px-4 py-2">
+						<p className="text-lg md:text-xl text-white max-w-3xl mx-auto mb-10 md:mb-16 drop-shadow-md font-medium backdrop-blur-sm px-4 py-2">
 							The cutest community-driven platform for content creators and community builders
 						</p>
 
-						<div className="flex flex-col sm:flex-row justify-center gap-6 mb-10">
+						<div className="flex flex-col sm:flex-row justify-center gap-4 md:gap-6">
 							<Link
 								href="/communities"
 								className="px-10 py-5 bg-gradient-to-r from-pink-primary to-purple-primary text-white rounded-full shadow-lg text-xl font-semibold transition-all hover:shadow-xl hover:scale-105 border-2 border-white/20"
@@ -276,7 +270,7 @@ export default function Home() {
 									<h3 className="text-3xl font-bold text-purple-dark mb-4">Ready to join our community?</h3>
 									<p className="text-xl text-gray-600 mb-6">Start building or challenging in our ecosystem today!</p>
 									<Link
-										href="/app"
+										href="/communities"
 										className="inline-block px-8 py-3 bg-gradient-to-r from-pink-primary to-purple-primary text-purple-black rounded-full shadow-md text-lg font-medium transition-all hover:shadow-lg hover:scale-105 border-2 border-white"
 									>
 										Join Community
