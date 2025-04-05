@@ -1,12 +1,10 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import CommunityCard from '@/components/communities/CommunityCard';
 import SearchCommunities from '@/components/communities/SearchCommunities';
 import CreateCommunityDialog from '@/components/communities/CreateCommunityDialog';
-import { WalletButton } from '@/components/wallet/WalletButton';
 import LinkWalletButton from '@/components/wallet/LinkWalletButton';
 import { toast, Toaster } from 'react-hot-toast';
 import { api } from '@/api';

@@ -1,14 +1,11 @@
 'use client';
 
 import Image from 'next/image';
-import { WalletButton } from '@/components/wallet/WalletButton';
 import Link from 'next/link';
 import { useState, useEffect, useRef } from 'react';
-import GlobalHeader from '@/components/global/GlobalHeader';
-import GlobalFooter from '@/components/global/GlobalFooter';
+import IntroAnimation from '@/components/global/IntroAnimation';
 
 export default function Home() {
-	const [isLoaded, setIsLoaded] = useState(false);
 	const [introComplete, setIntroComplete] = useState(false);
 	const [scrollY, setScrollY] = useState(0);
 	const [activeFeature, setActiveFeature] = useState(0);
@@ -37,23 +34,6 @@ export default function Home() {
 
 	// Animation effects when page loads
 	useEffect(() => {
-		// Check if this is the first visit
-		const isFirstVisit = localStorage.getItem('hasVisited') === null;
-
-		if (isFirstVisit) {
-			setIsLoaded(true);
-			localStorage.setItem('hasVisited', 'true');
-
-			// Intro animation timing
-			const introTimer = setTimeout(() => {
-				setIntroComplete(true);
-			}, 2500);
-		} else {
-			// If not first visit, skip animation
-			setIsLoaded(true);
-			setIntroComplete(true);
-		}
-
 		// Rotate through features
 		const featureInterval = setInterval(() => {
 			setActiveFeature((prev) => (prev + 1) % features.length);
@@ -72,45 +52,15 @@ export default function Home() {
 		};
 	}, []);
 
+	// Handle intro animation completion
+	const handleIntroComplete = () => {
+		setIntroComplete(true);
+	};
+
 	return (
 		<main className="flex flex-col items-center min-h-screen">
 			{/* Intro Animation Overlay - Shows only during intro sequence */}
-			{!introComplete && (
-				<div className="fixed inset-0 z-50 flex items-center justify-center bg-gradient-to-br from-pink-light/50 via-white to-purple-light/50">
-					<div className="flex flex-col items-center ">
-						<div
-							className={`transform transition-all duration-1000 ease-out ${
-								isLoaded ? 'scale-100 opacity-100' : 'scale-50 opacity-0'
-							}`}
-						>
-							<div className="relative w-32 h-32 flex items-center justify-center">
-								<div className="absolute inset-0 bg-white rounded-2xl rotate-45 shadow-pink animate-pulse-soft"></div>
-								<Image
-									src="/images/kasoro_logo.png"
-									alt="Kasoro Logo"
-									width={120}
-									height={120}
-									className="relative z-10"
-								/>
-							</div>
-						</div>
-						<h1
-							className={`font-[bazzi] mt-10 text-6xl font-bold text-purple-dark/80 bg-clip-text bg-gradient-to-r from-pink-primary to-purple-primary transition-all duration-1000 delay-300 ${
-								isLoaded ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0'
-							}`}
-						>
-							KASORO
-						</h1>
-						<p
-							className={`mt-4 text-xl text-purple-dark/80 transition-all duration-1000 delay-500 ${
-								isLoaded ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0'
-							}`}
-						>
-							First CommuniFi on Solana
-						</p>
-					</div>
-				</div>
-			)}
+			{!introComplete && <IntroAnimation onComplete={handleIntroComplete} />}
 
 			{/* Main content - becomes visible after intro animation */}
 			<div className={`w-full transition-opacity duration-1000 ${introComplete ? 'opacity-100' : 'opacity-0'}`}>
@@ -249,10 +199,10 @@ export default function Home() {
 				>
 					<div className="max-w-6xl mx-auto">
 						<div className="text-center mb-16">
-							<div className="inline-block px-5 py-2 rounded-full bg-white/80 text-pink-dark text-lg font-semibold mb-4 border border-pink-light">
+							<div className="inline-block px-6 py-3 rounded-full bg-white/90 text-pink-dark text-xl font-bold mb-6 border-2 border-pink-light shadow-sm transform hover:scale-105 transition-all duration-300">
 								Our Features
 							</div>
-							<h2 className="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-primary to-purple-primary mb-6">
+							<h2 className="text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-primary to-purple-primary mb-8">
 								Why Choose Kasoro
 							</h2>
 							<p className="text-xl text-purple-dark/80 max-w-3xl mx-auto">
@@ -270,11 +220,7 @@ export default function Home() {
 									style={{ transitionDelay: `${index * 200}ms` }}
 								>
 									<div
-										className={`w-20 h-20 bg-gradient-to-br ${
-											feature.color
-										} rounded-2xl shadow-md flex items-center justify-center text-3xl mb-6 ${
-											index % 2 === 0 ? 'rotate-3' : '-rotate-3'
-										}`}
+										className={`w-20 h-20 bg-gradient-to-br ${feature.color} rounded-2xl shadow-md flex items-center justify-center text-3xl mb-6 rotate-3`}
 									>
 										{feature.icon}
 									</div>
@@ -299,10 +245,10 @@ export default function Home() {
 				>
 					<div className="max-w-6xl mx-auto">
 						<div className="text-center mb-16">
-							<div className="inline-block px-5 py-2 rounded-full bg-white/80 text-pink-dark text-lg font-semibold mb-4 border border-pink-light">
+							<div className="inline-block px-6 py-3 rounded-full bg-white/90 text-pink-dark text-xl font-bold mb-6 border-2 border-pink-light shadow-sm transform hover:scale-105 transition-all duration-300">
 								How It Works
 							</div>
-							<h2 className="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-primary to-purple-primary mb-6">
+							<h2 className="text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-primary to-purple-primary mb-8">
 								Community as DeFi Itself
 							</h2>
 							<p className="text-xl text-purple-dark/80 max-w-3xl mx-auto">
@@ -331,12 +277,12 @@ export default function Home() {
 							</div>
 
 							<div
-								className={`bg-white rounded-3xl shadow-xl p-8 border-2 border-purple-medium transition-all duration-700 hover:-translate-y-3 hover:shadow-purple ${
+								className={`bg-white rounded-3xl shadow-xl p-8 border-2 border-purple-medium transition-all duration-700 hover:-translate-y-3 hover:shadow-pink ${
 									scrollY > 750 ? 'translate-y-0 opacity-100' : 'translate-y-20 opacity-0'
 								}`}
 								style={{ transitionDelay: '200ms' }}
 							>
-								<div className="w-20 h-20 bg-gradient-to-br from-purple-medium to-purple-primary rounded-2xl shadow-md flex items-center justify-center text-3xl mb-6 -rotate-3">
+								<div className="w-20 h-20 bg-gradient-to-br from-purple-medium to-purple-primary rounded-2xl shadow-md flex items-center justify-center text-3xl mb-6 rotate-3">
 									🏆
 								</div>
 								<h3 className="text-2xl font-bold text-purple-dark mb-4">Challengers</h3>
@@ -359,8 +305,8 @@ export default function Home() {
 						>
 							<div className="inline-block bg-gradient-to-r from-pink-primary to-purple-primary p-[3px] rounded-3xl shadow-lg">
 								<div className="bg-white rounded-3xl px-10 py-8">
-									<h3 className="text-2xl font-bold text-purple-dark mb-4">Ready to join our community?</h3>
-									<p className="text-gray-600 mb-6">Start building or challenging in our ecosystem today!</p>
+									<h3 className="text-3xl font-bold text-purple-dark mb-4">Ready to join our community?</h3>
+									<p className="text-xl text-gray-600 mb-6">Start building or challenging in our ecosystem today!</p>
 									<Link
 										href="/app"
 										className="inline-block px-8 py-3 bg-gradient-to-r from-pink-primary to-purple-primary text-purple-black rounded-full shadow-md text-lg font-medium transition-all hover:shadow-lg hover:scale-105 border-2 border-white"

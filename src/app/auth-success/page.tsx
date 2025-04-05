@@ -2,8 +2,6 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import Image from 'next/image';
-import Link from 'next/link';
 import { Twitter } from 'lucide-react';
 import { api } from '@/api';
 import { useWallet } from '@solana/wallet-adapter-react';

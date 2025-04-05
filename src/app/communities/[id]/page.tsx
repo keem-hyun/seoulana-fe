@@ -6,7 +6,6 @@ import Link from 'next/link';
 import { api } from '@/api';
 import MessageList from '@/components/MessageList';
 import CreateMessageForm from '@/components/CreateMessageForm';
-import { WalletButton } from '@/components/wallet/WalletButton';
 import { toast, Toaster } from 'react-hot-toast';
 import DepositBountyDialog from '@/components/communities/DepositBountyDialog';
 import { useWebSocket } from '@/hooks/useWebSocket';
