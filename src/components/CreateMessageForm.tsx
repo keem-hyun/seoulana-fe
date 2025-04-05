@@ -95,11 +95,6 @@ export default function CreateMessageForm({ communityId, onMessageSent }: Create
 			return;
 		}
 
-		if (!publicKey) {
-			toast.error('Please connect your wallet');
-			return;
-		}
-
 		setLoading(true);
 		setError(null);
 
@@ -112,11 +107,19 @@ export default function CreateMessageForm({ communityId, onMessageSent }: Create
 			toast.loading('Sending message...', { id: 'message' });
 
 			console.log('imageUrl', imageUrl);
-			await api.post(`/messages`, {
+			
+			// Create the message payload
+			const messageData = {
 				content,
-				communityId,
-				imageUrl,
-			});
+				communityId
+			};
+			
+			// Only add imageLink if we have an image URL
+			if (imageUrl) {
+				Object.assign(messageData, { imageLink: imageUrl });
+			}
+			
+			await api.post(`/messages`, messageData);
 
 			setContent('');
 			setImage(null);
@@ -179,7 +182,7 @@ export default function CreateMessageForm({ communityId, onMessageSent }: Create
 					</label>
 					<button
 						type="submit"
-						disabled={loading || !content.trim() || uploadingImage || !publicKey || !communityData}
+						disabled={loading || !content.trim() || uploadingImage || !communityData}
 						className="w-10 h-10 bg-[rgba(255,182,193,0.5)] hover:bg-[rgba(255,182,193,0.6)] rounded-md flex items-center justify-center border-2 border-[rgba(255,182,193,0.5)] disabled:opacity-50 disabled:cursor-not-allowed"
 					>
 						{loading ? (
