@@ -11,8 +11,8 @@ import axios from 'axios';
 import { Connection, LAMPORTS_PER_SOL, PublicKey, clusterApiUrl } from '@solana/web3.js';
 
 // Import from contract target types
-import { Kasoro } from '../../../../contract/target/types/kasoro';
-import kasoroIdl from '../../../../contract/target/idl/kasoro.json';
+import { Kasoro } from '../../../contract_idl/kasoro';
+import kasoroIdl from '../../../contract_idl/kasoro.json';
 
 // Placeholder for program ID - replace with actual ID from lib.rs
 const PROGRAM_ID = new PublicKey('CEnBjSSjuoL13LtgDeALeAMWqSg9W7t1J5rtjeKNarAM');

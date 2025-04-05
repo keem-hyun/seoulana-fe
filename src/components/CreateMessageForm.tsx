@@ -8,8 +8,8 @@ import axios from 'axios';
 import { Connection, PublicKey, clusterApiUrl } from '@solana/web3.js';
 import { Program, AnchorProvider, web3 } from '@coral-xyz/anchor';
 import * as anchor from '@coral-xyz/anchor';
-import { Kasoro } from '../../../contract/target/types/kasoro';
-import kasoroIdl from '../../../contract/target/idl/kasoro.json';
+import { Kasoro } from '../../contract_idl/kasoro';
+import kasoroIdl from '../../contract_idl/kasoro.json';
 
 type CreateMessageFormProps = {
 	communityId: string;
