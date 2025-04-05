@@ -50,6 +50,7 @@ export default function CreateCommunityDialog({ isOpen, onClose, userWalletAddre
 		try {
 			setUploadingImage(true);
 			toast.loading('Uploading image...', { id: 'upload' });
+			console.log('[이미지 업로드] 시작: ', file.name, file.size);
 
 			const formData = new FormData();
 			formData.append('file', file);
@@ -63,10 +64,11 @@ export default function CreateCommunityDialog({ isOpen, onClose, userWalletAddre
 			});
 
 			const url = `https://gateway.pinata.cloud/ipfs/${res.data.IpfsHash}`;
+			console.log('[이미지 업로드] 성공 - URL: ', url);
 			toast.success('Image uploaded successfully!', { id: 'upload' });
 			return url;
 		} catch (error) {
-			console.error('Error uploading to Pinata:', error);
+			console.error('[이미지 업로드] 실패: ', error);
 			toast.error('Failed to upload image', { id: 'upload' });
 			throw new Error('Failed to upload image');
 		} finally {
@@ -119,6 +121,20 @@ export default function CreateCommunityDialog({ isOpen, onClose, userWalletAddre
 		setError(null);
 
 		try {
+			// Upload image if one is selected
+			let imageURL = null;
+			if (image) {
+				try {
+					console.log('[커뮤니티 생성] 이미지 업로드 시작');
+					imageURL = await uploadToPinata(image);
+					console.log('[커뮤니티 생성] 이미지 업로드 완료 - URL:', imageURL);
+				} catch (error) {
+					console.error('[커뮤니티 생성] 이미지 업로드 실패:', error);
+					toast.error('Failed to upload image, but continuing with community creation');
+					// Continue with community creation even if image upload fails
+				}
+			}
+
 			// Check if community name already exists
 			try {
 				const response = await api.get('/communities');
@@ -227,19 +243,28 @@ export default function CreateCommunityDialog({ isOpen, onClose, userWalletAddre
 			//  console.log("CommunityState aiModeration:", communityAccount.ai_moderation);
 
 			// Call the backend API to register the community in the database
-			const { data } = await api.post<CommunityResponse>('/communities', {
+			const requestBody = {
 				name,
 				description,
 				timeLimit,
 				baseFee,
 				walletAddress: publicKey.toString(),
-			});
+				imageURL: imageURL,
+			};
+			console.log('[커뮤니티 생성] API 요청 데이터:', requestBody);
+
+			const { data } = await api.post<CommunityResponse>('/communities', requestBody);
+
+			console.log('[커뮤니티 생성] API 응답 데이터:', data);
+			console.log('[커뮤니티 생성] 이미지 URL 확인:', imageURL);
 
 			// Reset form
 			setName('');
 			setDescription('');
 			setTimeLimit(30);
 			setBaseFee(0.0001);
+			setImage(null);
+			setImagePreview(null);
 
 			toast.success('Community created successfully!');
 			onClose();

@@ -147,7 +147,11 @@ export default function CreateCommunityForm({ userWalletAddress }: FormProps) {
 						className="w-full mr-4 accent-blue-500"
 						disabled={!connected}
 					/>
-					<div className={`min-w-[80px] py-1 px-3 font-mono font-bold text-center border-2 border-black ${connected ? 'bg-yellow-300' : 'bg-gray-300'}`}>
+					<div
+						className={`min-w-[80px] py-1 px-3 font-mono font-bold text-center border-2 border-black ${
+							connected ? 'bg-yellow-300' : 'bg-gray-300'
+						}`}
+					>
 						{bountyAmount} SOL
 					</div>
 				</div>
