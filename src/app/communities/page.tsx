@@ -137,36 +137,6 @@ export default function CommunitysPage() {
 							</button>
 						)}
 					</div>
-					<div className="flex items-center gap-4">
-						{/* {user ? (
-							<>
-								<p className="text-sm">
-									Logged in as <span className="font-semibold">@{user.username}</span>
-								</p>
-								<Link
-									href="/auth/logout"
-									className="bg-gray-200 dark:bg-gray-700 px-4 py-2 border-2 border-black dark:border-white text-sm font-bold"
-								>
-									Logout
-								</Link>
-							</>
-						) : (
-							<Link
-								href={`${process.env.NEXT_PUBLIC_API_URL}/auth/login/twitter`}
-								className="bg-black text-white px-4 py-2 border-2 border-black text-sm font-bold"
-							>
-								Login with X
-							</Link>
-						)} */}
-						{/* <div className="ml-2">
-							<WalletButton />
-						</div> */}
-						{user && (
-							<div className="ml-2">
-								<LinkWalletButton user={user} onWalletLinked={handleWalletLinked} />
-							</div>
-						)}
-					</div>
 				</div>
 
 				<div className="flex-1">
