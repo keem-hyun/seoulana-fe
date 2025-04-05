@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { api } from '@/api';
 
 type CreateMessageFormProps = {
@@ -13,6 +13,7 @@ export default function CreateMessageForm({ communityId, onMessageSent }: Create
 	const [loading, setLoading] = useState(false);
 	const [error, setError] = useState<string | null>(null);
 	const [communityData, setCommunityData] = useState<any>(null);
+	const messageSentRef = useRef(false);
 
 	// Fetch the actual community data to get its UUID
 	useEffect(() => {
@@ -40,14 +41,13 @@ export default function CreateMessageForm({ communityId, onMessageSent }: Create
 
 		setLoading(true);
 		setError(null);
+		// Reset the message sent flag
+		messageSentRef.current = false;
 
 		try {
 			console.log('Sending message with data:', {
 				content,
 				communityId: communityData.id,
-				communityIdType: typeof communityData.id,
-				communityIdLength: communityData.id.length,
-				communityObject: communityData,
 			});
 
 			const { data } = await api.post('/messages', {
@@ -56,8 +56,16 @@ export default function CreateMessageForm({ communityId, onMessageSent }: Create
 			});
 
 			console.log('Message sent successfully:', data);
-			onMessageSent && onMessageSent();
 			setContent('');
+			
+			// Use a flag to ensure callback is only called once
+			if (!messageSentRef.current && onMessageSent) {
+				messageSentRef.current = true;
+				// Delay the callback to avoid React state updates during render
+				setTimeout(() => {
+					onMessageSent();
+				}, 0);
+			}
 		} catch (error) {
 			console.error('Error creating message:', error);
 			setError(error instanceof Error ? error.message : 'Failed to send message');

@@ -67,7 +67,7 @@ export default function LinkWalletButton({ user, onWalletLinked }: LinkWalletBut
 	if (!connected) {
 		return (
 			<div className="bg-yellow-50 border-2 border-black p-3 text-sm mb-4">
-				<p className="mb-2">Connect your wallet to continue</p>
+				<p className="mb-2">Connect your wallet to enable bounty features (optional)</p>
 			</div>
 		);
 	}
@@ -91,7 +91,7 @@ export default function LinkWalletButton({ user, onWalletLinked }: LinkWalletBut
 
 	return (
 		<div className="bg-yellow-50 border-2 border-black p-3 text-sm mb-4">
-			<p className="mb-2">Link your wallet to create communities</p>
+			<p className="mb-2">Link your wallet to enable bounty features (optional)</p>
 			<button
 				onClick={handleLinkWallet}
 				disabled={linking || !connected}

@@ -34,23 +34,25 @@ export default function CreateCommunityForm({ userWalletAddress }: FormProps) {
 	async function handleSubmit(e: React.FormEvent) {
 		e.preventDefault();
 
-		if (!connected || !publicKey) {
-			setError('Please connect your wallet first');
-			toast.error('Please connect your wallet first');
+		// Only require wallet connection if the user wants to add a bounty
+		if (bountyAmount > 0 && (!connected || !publicKey)) {
+			setError('Please connect your wallet to add a bounty');
+			toast.error('Please connect your wallet to add a bounty');
 			return;
 		}
 
-		if (!isWalletLinked) {
-			setError('Please link your wallet to your account first');
-			toast.error('Please link your wallet to your account first');
-			return;
-		}
-
-		// Check that connected wallet matches linked wallet
-		if (publicKey.toString() !== userWalletAddress) {
-			setError("The connected wallet doesn't match your linked wallet");
-			toast.error("The connected wallet doesn't match your linked wallet");
-			return;
+		// If user has a wallet connected but it doesn't match their linked wallet, warn them
+		if (connected && publicKey && isWalletLinked && publicKey.toString() !== userWalletAddress) {
+			setError("Warning: The connected wallet doesn't match your linked wallet");
+			toast("The connected wallet doesn't match your linked wallet", {
+				icon: '⚠️',
+				style: {
+					borderRadius: '10px',
+					background: '#FFF3CD',
+					color: '#856404',
+				},
+			});
+			// Don't return, allow them to continue
 		}
 
 		setLoading(true);
@@ -60,10 +62,10 @@ export default function CreateCommunityForm({ userWalletAddress }: FormProps) {
 			const { data } = await api.post<CommunityResponse>('/communities', {
 				name,
 				description,
-				bountyAmount,
+				bountyAmount: bountyAmount > 0 && connected ? bountyAmount : 0,
 				timeLimit,
 				baseFeePercentage,
-				walletAddress: publicKey.toString(),
+				walletAddress: connected && publicKey ? publicKey.toString() : null,
 			});
 
 			// Reset form
@@ -131,7 +133,7 @@ export default function CreateCommunityForm({ userWalletAddress }: FormProps) {
 
 			<div>
 				<label htmlFor="bounty" className="block font-bold text-sm uppercase tracking-widest mb-1">
-					Bounty (SOL)
+					Bounty (SOL) {!connected && <span className="text-red-500">(requires wallet)</span>}
 				</label>
 				<div className="border-2 border-black dark:border-white p-4 bg-blue-100 dark:bg-gray-800 flex items-center">
 					<input
@@ -143,8 +145,9 @@ export default function CreateCommunityForm({ userWalletAddress }: FormProps) {
 						value={bountyAmount}
 						onChange={(e) => setBountyAmount(parseFloat(e.target.value))}
 						className="w-full mr-4 accent-blue-500"
+						disabled={!connected}
 					/>
-					<div className="min-w-[80px] bg-yellow-300 py-1 px-3 font-mono font-bold text-center border-2 border-black">
+					<div className={`min-w-[80px] py-1 px-3 font-mono font-bold text-center border-2 border-black ${connected ? 'bg-yellow-300' : 'bg-gray-300'}`}>
 						{bountyAmount} SOL
 					</div>
 				</div>
@@ -192,21 +195,15 @@ export default function CreateCommunityForm({ userWalletAddress }: FormProps) {
 				</div>
 			</div>
 
-			{!connected && (
+			{bountyAmount > 0 && !connected && (
 				<div className="bg-yellow-50 dark:bg-yellow-900/30 border-2 border-yellow-200 dark:border-yellow-700 p-3 text-yellow-800 dark:text-yellow-300 text-sm">
-					Please connect your wallet to create a community
-				</div>
-			)}
-
-			{connected && !isWalletLinked && (
-				<div className="bg-yellow-50 dark:bg-yellow-900/30 border-2 border-yellow-200 dark:border-yellow-700 p-3 text-yellow-800 dark:text-yellow-300 text-sm">
-					Please link your wallet to your account first
+					Please connect your wallet to add a bounty to the community
 				</div>
 			)}
 
 			<button
 				type="submit"
-				disabled={loading || !name.trim() || !connected || !isWalletLinked}
+				disabled={loading || !name.trim()}
 				className="w-full bg-black hover:bg-gray-800 text-white font-bold py-2 px-4 border-2 border-black disabled:opacity-50 disabled:cursor-not-allowed transition-colors uppercase tracking-wider mt-6"
 			>
 				{loading ? 'Creating...' : 'Create Community'}

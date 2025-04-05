@@ -36,23 +36,26 @@ export default function CreateCommunityDialog({ isOpen, onClose, userWalletAddre
 	async function handleSubmit(e: React.FormEvent) {
 		e.preventDefault();
 
-		if (!connected || !publicKey) {
-			setError('Please connect your wallet first');
-			toast.error('Please connect your wallet first');
+		// Remove wallet requirement checks since it's now optional
+		// Only enforce wallet connection if the user wants to add bounty
+		if (bountyAmount > 0 && (!connected || !publicKey)) {
+			setError('Please connect your wallet to add a bounty');
+			toast.error('Please connect your wallet to add a bounty');
 			return;
 		}
 
-		if (!isWalletLinked) {
-			setError('Please link your wallet to your account first');
-			toast.error('Please link your wallet to your account first');
-			return;
-		}
-
-		// Check that connected wallet matches linked wallet
-		if (publicKey.toString() !== userWalletAddress) {
-			setError("The connected wallet doesn't match your linked wallet");
-			toast.error("The connected wallet doesn't match your linked wallet");
-			return;
+		// If user has a wallet connected but it doesn't match their linked wallet, warn them
+		if (connected && publicKey && isWalletLinked && publicKey.toString() !== userWalletAddress) {
+			setError("Warning: The connected wallet doesn't match your linked wallet");
+			toast("The connected wallet doesn't match your linked wallet", {
+				icon: '⚠️',
+				style: {
+					borderRadius: '10px',
+					background: '#FFF3CD',
+					color: '#856404',
+				},
+			});
+			// Don't return, allow them to continue
 		}
 
 		setLoading(true);
@@ -65,7 +68,7 @@ export default function CreateCommunityDialog({ isOpen, onClose, userWalletAddre
 				bountyAmount,
 				timeLimit,
 				baseFeePercentage,
-				walletAddress: publicKey.toString(),
+				walletAddress: publicKey?.toString(),
 			});
 
 			// Reset form
