@@ -118,7 +118,12 @@ export default function DepositBountyDialog({
 			console.log("Transaction signature:", signature);
 			
 			// 트랜잭션 확인 대기
-			await connection.confirmTransaction(signature, 'confirmed');
+			const latestBlockhash = await connection.getLatestBlockhash();
+      await connection.confirmTransaction({
+        signature,
+        blockhash: latestBlockhash.blockhash,
+        lastValidBlockHeight: latestBlockhash.lastValidBlockHeight
+      }, 'confirmed');
 			console.log("Transaction confirmed");
 			
 			// 백엔드 API 호출하여 바운티 정보 업데이트
