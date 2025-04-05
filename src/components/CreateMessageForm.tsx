@@ -5,11 +5,17 @@ import { useWallet } from '@solana/wallet-adapter-react';
 import { api } from '@/api';
 import { toast } from 'react-hot-toast';
 import axios from 'axios';
+import { Connection, PublicKey, clusterApiUrl } from '@solana/web3.js';
+import { Program, AnchorProvider, web3 } from '@coral-xyz/anchor';
+import * as anchor from '@coral-xyz/anchor';
+import { Kasoro } from '../../../contract/target/types/kasoro';
+import kasoroIdl from '../../../contract/target/idl/kasoro.json';
 
 type CreateMessageFormProps = {
 	communityId: string;
 	onMessageSent?: () => void;
 };
+const PROGRAM_ID = new PublicKey('CEnBjSSjuoL13LtgDeALeAMWqSg9W7t1J5rtjeKNarAM');
 
 export default function CreateMessageForm({ communityId, onMessageSent }: CreateMessageFormProps) {
 	const { publicKey, signTransaction } = useWallet();
@@ -20,6 +26,37 @@ export default function CreateMessageForm({ communityId, onMessageSent }: Create
 	const [image, setImage] = useState<File | null>(null);
 	const [imagePreview, setImagePreview] = useState<string | null>(null);
 	const [uploadingImage, setUploadingImage] = useState(false);
+	const [communityName, setCommunityName] = useState<string | null>(null);
+	const [initializerAddress, setInitializerAddress] = useState<string | null>(null);
+	const { connected, sendTransaction } = useWallet();
+
+	useEffect(() => {
+		const fetchCommunityName = async () => {
+			try {
+				interface CommunityResponse {
+					id: string;
+					name: string;
+					description: string;
+					createdAt: string;
+					creatorId: string;
+					walletAddress: string;
+				}
+				
+				const { data } = await api.get<CommunityResponse>(`/communities/${communityId}`);
+				setCommunityName(data.name);
+				setInitializerAddress(data.walletAddress);
+				console.log('Initializer address loaded:', data.walletAddress);
+				console.log('Community name loaded:', data.name);
+			} catch (err) {
+				console.error('Error fetching community data:', err);
+				toast.error('커뮤니티 데이터를 불러오는데 실패했습니다');
+			}
+		};
+		
+		if (communityId) {
+			fetchCommunityName();
+		}
+	}, [communityId]);
 
 	// Fetch the actual community data to get its UUID
 	useEffect(() => {
@@ -28,6 +65,7 @@ export default function CreateMessageForm({ communityId, onMessageSent }: Create
 				const { data } = await api.get(`/communities/${communityId}/messages`);
 				setCommunityData(data);
 				console.log('Community data loaded:', data);
+
 			} catch (err) {
 				console.error('Error fetching community data:', err);
 				setError('Could not load community data. Please refresh the page.');
@@ -36,6 +74,8 @@ export default function CreateMessageForm({ communityId, onMessageSent }: Create
 
 		fetchCommunityData();
 	}, [communityId]);
+
+
 
 	const uploadToPinata = async (file: File): Promise<string> => {
 		try {
@@ -95,6 +135,18 @@ export default function CreateMessageForm({ communityId, onMessageSent }: Create
 			return;
 		}
 
+		if (!communityName) {
+			toast.error('커뮤니티 정보를 불러오는 중입니다. 잠시 후 다시 시도해주세요');
+			return;
+		}
+
+		if (!initializerAddress) {
+			toast.error('커뮤니티 정보를 불러오는 중입니다. 잠시 후 다시 시도해주세요');
+			return;
+		}
+
+		const initializerPubkey = new PublicKey(initializerAddress);
+
 		setLoading(true);
 		setError(null);
 
@@ -120,6 +172,92 @@ export default function CreateMessageForm({ communityId, onMessageSent }: Create
 				console.log('Sending message with image URL:', imageUrl);
 			}
 			
+			const connection = new Connection(clusterApiUrl('devnet'), 'confirmed');
+			console.log("Connection structure:", connection);
+
+			// PDA 주소 계산
+			const [communityPda] = anchor.web3.PublicKey.findProgramAddressSync(
+				[
+					Buffer.from("community"),
+					initializerPubkey.toBuffer(),
+					Buffer.from(communityName)
+				],
+				PROGRAM_ID
+			);
+
+			console.log("Community PDA:", communityPda.toString());
+			
+			const [vaultPda] = anchor.web3.PublicKey.findProgramAddressSync(
+				[
+					Buffer.from("vault"),
+					initializerPubkey.toBuffer(),
+					Buffer.from(communityName)
+				],
+				PROGRAM_ID
+			);
+			console.log("Vault PDA:", vaultPda.toString());
+			
+			
+			// Create a provider from connection and wallet
+			const provider = new AnchorProvider(
+				connection,
+				{
+					publicKey: publicKey as PublicKey,	
+					signTransaction: async (tx: web3.Transaction) => {
+						tx.feePayer = publicKey;
+						tx.recentBlockhash = (await connection.getLatestBlockhash()).blockhash;
+						return await sendTransaction(tx, connection);
+					},
+				},
+				{ preflightCommitment: 'processed' }
+			);
+			// Load program from IDL
+			// console.log('IDL structure:', kasoroIdl);
+			// console.log('Provider structure:', provider);
+			// console.log('publickey:', publicKey.toString());
+			// console.log('programId:', PROGRAM_ID.toString());
+			// console.log('provider:', provider.publicKey.toString());
+
+			const program = new Program(kasoroIdl as Kasoro, provider);
+			console.log('Program structure:', program.programId.toString());
+			// Create a transaction to initialize community
+			const transaction = new web3.Transaction();
+			console.log('Transaction structure:', transaction);
+			// Find PDA for community and vault
+			
+		    console.log("parameter:", communityPda.toString(), vaultPda.toString(), content, imageUrl);
+			// Add initialize instruction to transaction
+			transaction.add(
+				await program.methods
+					.submitContent(
+						content,
+						imageUrl
+					)
+					.accounts({
+						authority: publicKey as PublicKey,
+						community: communityPda,
+						vault: vaultPda,
+						systemProgram: web3.SystemProgram.programId,
+					})
+					.instruction()
+			);
+
+			// Send transaction to the network
+			const signature = await sendTransaction(transaction, connection);
+
+			// Wait for confirmation
+			const latestBlockhash = await connection.getLatestBlockhash();
+			await connection.confirmTransaction({
+				signature,
+				blockhash: latestBlockhash.blockhash,
+				lastValidBlockHeight: latestBlockhash.lastValidBlockHeight
+			}, 'confirmed');
+
+
+			const message = await program.account.communityState.fetch(communityPda);
+			console.log('Message:', message.content);
+			console.log('Message:', message.imageLink);
+
 			await api.post(`/messages`, messageData);
 
 			setContent('');
