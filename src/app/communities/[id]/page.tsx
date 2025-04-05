@@ -175,7 +175,7 @@ export default function CommunityPage() {
 								</p>
 							</div>
 							<div className="flex items-center space-x-4">
-								<WalletButton />
+								{/* <WalletButton /> */}
 								{!expired && (
 									<button
 										onClick={() => setIsDepositDialogOpen(true)}
