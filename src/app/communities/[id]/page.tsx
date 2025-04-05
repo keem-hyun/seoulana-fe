@@ -55,6 +55,13 @@ export default function CommunityPage() {
 					api.get<User>('/auth/user'),
 				]);
 
+				console.log('Community data loaded:', communityResponse.data);
+				console.log('User data loaded:', userResponse.data);
+				
+				if (communityResponse.data.messages && communityResponse.data.messages.length > 0) {
+					console.log('Message structure sample:', communityResponse.data.messages[0]);
+				}
+
 				setCommunity(communityResponse.data);
 				setUser(userResponse.data);
 			} catch (error) {
@@ -99,6 +106,10 @@ export default function CommunityPage() {
 		try {
 			const { data } = await api.get<Community>(`/communities/${id}/messages`);
 			setCommunity(data);
+			// Debug message structure
+			if (data.messages && data.messages.length > 0) {
+				console.log('Message structure sample:', data.messages[0]);
+			}
 		} catch (error) {
 			console.error('Error refreshing community:', error);
 			toast.error('커뮤니티 정보를 새로고침하는데 실패했습니다');
@@ -206,7 +217,10 @@ export default function CommunityPage() {
 						</div>
 					</>
 				)}
-				<MessageList messages={community.messages} currentUserId={user?.id} />
+				<MessageList 
+					messages={community.messages} 
+					currentUserId={user?.id} 
+				/>
 			</div>
 
 			<DepositBountyDialog
