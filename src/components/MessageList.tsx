@@ -33,34 +33,34 @@ export default function MessageList({ messages, currentUserId }: MessageListProp
 
 	return (
 		<div className="space-y-4">
-			{messages.map((message) => {
-				// Get user info regardless of field structure
-				const messageUser = message.sender || message.user;
-				const messageUserId = message.senderId || message.userId;
-				const username = messageUser?.username || 'unknown';
-				
-				const isCurrentUser = currentUserId === messageUserId;
+			{[...messages]
+				.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+				.map((message) => {
+					// Get user info regardless of field structure
+					const messageUser = message.sender || message.user;
+					const messageUserId = message.senderId || message.userId;
+					const username = messageUser?.username || 'unknown';
 
-				return (
-					<div key={message.id} className={`flex ${isCurrentUser ? 'justify-end' : 'justify-start'}`}>
-						<div
-							className={`max-w-[75%] rounded-lg px-4 py-2 ${
-								isCurrentUser ? 'bg-blue-600 text-white' : 'bg-gray-100 dark:bg-gray-700'
-							}`}
-						>
-							{!isCurrentUser && (
-								<div className="font-medium text-xs text-gray-500 dark:text-gray-400 mb-1">
-									@{username}
+					const isCurrentUser = currentUserId === messageUserId;
+
+					return (
+						<div key={message.id} className={`flex ${isCurrentUser ? 'justify-end' : 'justify-start'}`}>
+							<div
+								className={`max-w-[75%] rounded-lg px-4 py-2 ${
+									isCurrentUser ? 'bg-blue-600 text-white' : 'bg-gray-100 dark:bg-gray-700'
+								}`}
+							>
+								{!isCurrentUser && (
+									<div className="font-medium text-xs text-gray-500 dark:text-gray-400 mb-1">@{username}</div>
+								)}
+								<div>{message.content}</div>
+								<div className="text-xs text-right mt-1 opacity-70">
+									{new Date(message.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
 								</div>
-							)}
-							<div>{message.content}</div>
-							<div className="text-xs text-right mt-1 opacity-70">
-								{new Date(message.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
 							</div>
 						</div>
-					</div>
-				);
-			})}
+					);
+				})}
 		</div>
 	);
 }
