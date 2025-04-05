@@ -15,6 +15,7 @@ interface CommunityCardProps {
 	timeLimit?: number;
 	baseFeePercentage?: number;
 	lastMessageTime?: string | null;
+	imageURL?: string | null;
 }
 
 export default function CommunityCard({
@@ -27,6 +28,7 @@ export default function CommunityCard({
 	timeLimit,
 	baseFeePercentage,
 	lastMessageTime: initialLastMessageTime,
+	imageURL,
 }: CommunityCardProps) {
 	// Use the WebSocket hook to get real-time updates
 	const { lastMessageTime: wsLastMessageTime } = useWebSocket(id);
@@ -117,7 +119,14 @@ export default function CommunityCard({
 		<Link href={`/communities/${id}`}>
 			<div className="bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-sm hover:shadow-md group transition-all duration-300 h-full flex flex-col border border-gray-200 dark:border-gray-700">
 				<div className="bg-pink-50 p-5 transition-all duration-300">
-					<h3 className="font-bold text-lg line-clamp-1 text-gray-800 dark:text-white">{name}</h3>
+					{imageURL ? (
+						<div className="flex items-center space-x-3">
+							<img src={imageURL} alt={name} className="w-10 h-10 rounded-full object-cover border-2 border-[rgba(255,182,193,0.5)]" />
+							<h3 className="font-bold text-lg line-clamp-1 text-gray-800 dark:text-white">{name}</h3>
+						</div>
+					) : (
+						<h3 className="font-bold text-lg line-clamp-1 text-gray-800 dark:text-white">{name}</h3>
+					)}
 				</div>
 
 				<div className="p-5 flex-grow flex flex-col">

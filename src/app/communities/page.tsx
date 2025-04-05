@@ -25,6 +25,7 @@ interface Community {
 	timeLimit?: number;
 	baseFeePercentage?: number;
 	lastMessageTime?: string | null;
+	imageURL?: string | null;
 }
 
 export default function CommunitysPage() {
@@ -174,6 +175,7 @@ export default function CommunitysPage() {
 										timeLimit={community.timeLimit}
 										baseFeePercentage={community.baseFeePercentage}
 										lastMessageTime={community.lastMessageTime}
+										imageURL={community.imageURL}
 									/>
 								))}
 							</div>
