@@ -37,12 +37,12 @@ export default function DepositBountyDialog({
 				walletAddress: publicKey.toString(),
 			});
 
-			toast.success('바운티가 성공적으로 입금되었습니다!');
+			toast.success('Bounty successfully deposited!');
 			onBountyDeposited();
 			onClose();
 		} catch (error) {
 			console.error('Error depositing bounty:', error);
-			toast.error(error instanceof Error ? error.message : '바운티 입금에 실패했습니다');
+			toast.error(error instanceof Error ? error.message : 'Failed to deposit bounty');
 		} finally {
 			setLoading(false);
 		}
@@ -64,7 +64,7 @@ export default function DepositBountyDialog({
 
 					<div className="mb-6">
 						<label className="block font-bold text-sm uppercase tracking-widest mb-2">amount to deposit (SOL)</label>
-						<div className="border-2 border-black dark:border-white p-4 bg-blue-100 dark:bg-gray-800 flex items-center">
+						<div className="border-2 border-[rgba(255,182,193,0.5)] p-4 bg-white dark:bg-gray-800 flex items-center rounded-[20px]">
 							<input
 								type="range"
 								min="0.1"
@@ -72,9 +72,9 @@ export default function DepositBountyDialog({
 								step="0.1"
 								value={amount}
 								onChange={(e) => setAmount(parseFloat(e.target.value))}
-								className="w-full mr-4 accent-blue-500"
+								className="w-full mr-4 accent-[rgba(255,182,193,0.5)]"
 							/>
-							<div className="min-w-[80px] bg-yellow-300 py-1 px-3 font-mono font-bold text-center border-2 border-black">
+							<div className="min-w-[80px] bg-white py-1 px-3 font-mono font-bold text-center border-2 border-[rgba(255,182,193,0.5)] rounded-[20px]">
 								{amount} SOL
 							</div>
 						</div>
