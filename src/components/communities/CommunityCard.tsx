@@ -2,6 +2,8 @@
 
 import Link from 'next/link';
 import { Clock, Percent, Coins, NotebookTabs } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { useWebSocket } from '@/hooks/useWebSocket';
 
 interface CommunityCardProps {
 	id: string;
@@ -24,8 +26,91 @@ export default function CommunityCard({
 	bountyAmount,
 	timeLimit,
 	baseFeePercentage,
-	lastMessageTime,
+	lastMessageTime: initialLastMessageTime,
 }: CommunityCardProps) {
+	// Use the WebSocket hook to get real-time updates
+	const { lastMessageTime: wsLastMessageTime } = useWebSocket(id);
+	const [displayedLastMessageTime, setDisplayedLastMessageTime] = useState<string | null>(initialLastMessageTime || null);
+	const [secondsCounter, setSecondsCounter] = useState<number>(0);
+	const [remainingTimeText, setRemainingTimeText] = useState<string>('');
+
+	// Update displayed time when WebSocket updates come in
+	useEffect(() => {
+		if (wsLastMessageTime) {
+			setDisplayedLastMessageTime(wsLastMessageTime);
+		}
+	}, [wsLastMessageTime]);
+
+	// Update timer every second for real-time countdown
+	useEffect(() => {
+		const timer = setInterval(() => {
+			setSecondsCounter(prev => prev + 1);
+			updateRemainingTime();
+		}, 1000);
+		
+		return () => clearInterval(timer);
+	}, [displayedLastMessageTime, timeLimit]);
+
+	// Calculate and update the remaining time text
+	const updateRemainingTime = () => {
+		if (!timeLimit || !displayedLastMessageTime) {
+			setRemainingTimeText(timeLimit ? `${timeLimit}m (inactive)` : '-');
+			return;
+		}
+		
+		const lastMessageDate = new Date(displayedLastMessageTime);
+		const now = new Date();
+		const elapsedMsSinceLastMessage = now.getTime() - lastMessageDate.getTime();
+		
+		// Convert time limit from minutes to milliseconds
+		const timeLimitMs = timeLimit * 60 * 1000;
+		
+		// Calculate remaining time in milliseconds
+		const remainingMs = Math.max(0, timeLimitMs - elapsedMsSinceLastMessage);
+		
+		if (remainingMs <= 0) {
+			setRemainingTimeText('Expired');
+			return;
+		}
+		
+		// Convert to minutes and seconds
+		const remainingMins = Math.floor(remainingMs / 60000);
+		const remainingSecs = Math.floor((remainingMs % 60000) / 1000);
+		
+		// Format the time string
+		if (remainingMins > 0) {
+			setRemainingTimeText(`${remainingMins}m ${remainingSecs}s`);
+		} else {
+			setRemainingTimeText(`${remainingSecs}s`);
+		}
+	};
+
+	// Initialize remaining time on mount
+	useEffect(() => {
+		updateRemainingTime();
+	}, [displayedLastMessageTime, timeLimit]);
+
+	const formatTimestamp = (timestamp: string | null) => {
+		if (!timestamp) return 'No messages yet';
+		
+		const messageDate = new Date(timestamp);
+		const now = new Date();
+		const diffMs = now.getTime() - messageDate.getTime();
+		const diffMins = Math.floor(diffMs / 60000);
+		
+		if (diffMins < 1) return 'Just now';
+		if (diffMins < 60) return `${diffMins}m ago`;
+		
+		const diffHours = Math.floor(diffMins / 60);
+		if (diffHours < 24) return `${diffHours}h ago`;
+		
+		return messageDate.toLocaleDateString('en-US', {
+			year: 'numeric',
+			month: 'short',
+			day: 'numeric',
+		});
+	};
+
 	return (
 		<Link href={`/communities/${id}`}>
 			<div className="bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-sm hover:shadow-md group transition-all duration-300 h-full flex flex-col border border-gray-200 dark:border-gray-700">
@@ -57,17 +142,22 @@ export default function CommunityCard({
 
 						<div className="flex items-center justify-between">
 							<span className="text-sm text-gray-500 dark:text-gray-400 flex items-center">
-								<Clock size={14} className="mr-1.5 text-green-500" /> time limit:
+								<Clock size={14} className="mr-1.5 text-green-500" /> time left:
 							</span>
-							<span
-								className={`${
-									timeLimit !== undefined
-										? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-200'
-										: 'bg-gray-100 text-gray-500 dark:bg-gray-700 dark:text-gray-400'
-								} px-3 py-1 text-xs font-medium rounded-full`}
-							>
-								{timeLimit !== undefined ? `${timeLimit} MIN` : '-'}
-							</span>
+							{timeLimit !== undefined && (
+								<span
+									className={`px-3 py-1 text-xs font-medium rounded-full ${
+										displayedLastMessageTime ? 
+											(remainingTimeText === 'Expired' ? 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-200' : 
+											remainingTimeText.includes('m') && parseInt(remainingTimeText.split('m')[0]) <= 5 ? 
+											'bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-200' : 
+											'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-200') : 
+											'bg-gray-100 text-gray-500 dark:bg-gray-700 dark:text-gray-400'
+									}`}
+								>
+									{remainingTimeText}
+								</span>
+							)}
 						</div>
 
 						<div className="flex items-center justify-between">
@@ -101,13 +191,7 @@ export default function CommunityCard({
 						<div className="flex items-center justify-between text-xs text-gray-500 dark:text-gray-400 mt-1">
 							<span>last activity:</span>
 							<span>
-								{lastMessageTime
-									? new Date(lastMessageTime).toLocaleDateString('en-US', {
-											year: 'numeric',
-											month: 'short',
-											day: 'numeric',
-									  })
-									: '-'}
+								{formatTimestamp(displayedLastMessageTime)}
 							</span>
 						</div>
 					</div>

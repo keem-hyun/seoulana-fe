@@ -10,6 +10,7 @@ import { WalletButton } from '@/components/wallet/WalletButton';
 import { toast, Toaster } from 'react-hot-toast';
 import DepositBountyDialog from '@/components/communities/DepositBountyDialog';
 import { useWebSocket } from '@/hooks/useWebSocket';
+
 interface Creator {
 	id: string;
 	xId: string;
@@ -47,19 +48,72 @@ export default function CommunityPage() {
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState<string | null>(null);
 	const [isDepositDialogOpen, setIsDepositDialogOpen] = useState(false);
+	const [secondsCounter, setSecondsCounter] = useState<number>(0);
+	const [remainingTimeText, setRemainingTimeText] = useState<string>('');
 
 	// Connect to WebSocket for real-time updates
 	const { isConnected, lastMessageTime } = useWebSocket(id as string);
 
+	// Update community data when a new message is received
 	useEffect(() => {
-		// Update community data when a new message is received
 		if (lastMessageTime && community) {
 			setCommunity({
 				...community,
 				lastMessageTime,
 			});
 		}
-	}, [lastMessageTime]);
+	}, [lastMessageTime, community]);
+
+	// Update timer every second for real-time countdown
+	useEffect(() => {
+		const timer = setInterval(() => {
+			setSecondsCounter(prev => prev + 1);
+			updateRemainingTime();
+		}, 1000);
+		
+		return () => clearInterval(timer);
+	}, [community?.lastMessageTime, community?.timeLimit]);
+
+	// Calculate and update the remaining time text
+	const updateRemainingTime = () => {
+		if (!community?.timeLimit || !community?.lastMessageTime) {
+			setRemainingTimeText(community?.timeLimit ? `${community.timeLimit}m (inactive)` : '-');
+			return;
+		}
+		
+		const lastMessageDate = new Date(community.lastMessageTime);
+		const now = new Date();
+		const elapsedMsSinceLastMessage = now.getTime() - lastMessageDate.getTime();
+		
+		// Convert time limit from minutes to milliseconds
+		const timeLimitMs = community.timeLimit * 60 * 1000;
+		
+		// Calculate remaining time in milliseconds
+		const remainingMs = Math.max(0, timeLimitMs - elapsedMsSinceLastMessage);
+		
+		if (remainingMs <= 0) {
+			setRemainingTimeText('Expired');
+			return;
+		}
+		
+		// Convert to minutes and seconds
+		const remainingMins = Math.floor(remainingMs / 60000);
+		const remainingSecs = Math.floor((remainingMs % 60000) / 1000);
+		
+		// Format the time string
+		if (remainingMins > 0) {
+			setRemainingTimeText(`${remainingMins}m ${remainingSecs}s`);
+		} else {
+			setRemainingTimeText(`${remainingSecs}s`);
+		}
+	};
+
+	// Initialize remaining time when community data changes
+	useEffect(() => {
+		if (community) {
+			updateRemainingTime();
+		}
+	}, [community]);
 
 	useEffect(() => {
 		async function fetchData() {
@@ -90,20 +144,15 @@ export default function CommunityPage() {
 		fetchData();
 	}, [id, isConnected]);
 
-	const getRemainingTime = () => {
-		if (!community?.timeLimit || !community?.createdAt) return null;
-
-		return `${community.timeLimit} minutes left`;
-	};
-
 	const isExpired = () => {
-		if (!community?.timeLimit || !community?.createdAt) return false;
-		const createdTime = new Date(community.createdAt).getTime();
-		const currentTime = new Date().getTime();
+		if (!community?.timeLimit || !community?.lastMessageTime) return false;
+		
+		const lastMessageDate = new Date(community.lastMessageTime);
+		const now = new Date();
+		const elapsedMsSinceLastMessage = now.getTime() - lastMessageDate.getTime();
 		const timeLimitMs = community.timeLimit * 60 * 1000;
-		const expirationTime = createdTime + timeLimitMs;
-		// return currentTime > expirationTime;
-		return false;
+		
+		return elapsedMsSinceLastMessage >= timeLimitMs;
 	};
 
 	const handleRefresh = async () => {
@@ -139,7 +188,6 @@ export default function CommunityPage() {
 	}
 
 	const expired = isExpired();
-	const remainingTime = getRemainingTime();
 
 	return (
 		<div className="min-h-screen">
@@ -198,15 +246,21 @@ export default function CommunityPage() {
 								<div
 									className={`relative overflow-hidden rounded-[20px] border-2 border-[rgba(255,182,193,0.5)] p-4 shadow-[0_4px_0_rgba(255,182,193,0.5)] ${
 										expired
-											? 'bg-white'
-											: remainingTime?.includes('분') && !remainingTime?.includes('시간')
-											? 'bg-white'
-											: 'bg-white'
+											? 'bg-red-100'
+											: !community.lastMessageTime
+											? 'bg-gray-100'
+											: remainingTimeText.includes('m') && parseInt(remainingTimeText.split('m')[0]) <= 5
+											? 'bg-orange-100'
+											: 'bg-green-100'
 									}`}
 								>
 									<div className="relative">
-										<div className="text-sm font-bold mb-1">time limit</div>
-										<div className="text-2xl font-mono font-bold">{remainingTime}</div>
+										<div className="text-sm font-bold mb-1">time remaining</div>
+										<div className="text-2xl font-mono font-bold">
+											{remainingTimeText}
+											{/* This hidden span forces re-render every second */}
+											<span className="hidden">{secondsCounter}</span>
+										</div>
 									</div>
 								</div>
 								<div className="relative overflow-hidden rounded-[20px] border-2 border-[rgba(255,182,193,0.5)] p-4 bg-white shadow-[0_4px_0_rgba(255,182,193,0.5)]">
