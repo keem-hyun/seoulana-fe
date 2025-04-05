@@ -10,6 +10,7 @@ import { toast, Toaster } from 'react-hot-toast';
 import DepositBountyDialog from '@/components/communities/DepositBountyDialog';
 import { useWebSocket } from '@/hooks/useWebSocket';
 import ClaimBasefeeDialog from '@/components/communities/ClaimBasefeeDialog';
+import DepositorsList from '@/components/communities/DepositorsList';
 
 interface Creator {
 	id: string;
@@ -205,7 +206,7 @@ export default function CommunityPage() {
 					<div className="w-64 bg-white dark:bg-gray-800 border-2 border-[rgba(255,182,193,0.5)] p-4 shadow-[0_4px_0_rgba(255,182,193,0.5)] rounded-[20px]">
 						<div className="mb-6">
 							<h2 className="text-xl font-bold mb-4">staker list</h2>
-							<div className="space-y-2">{/* 여기에 커뮤니티 목록이 들어갈 예정 */}</div>
+							<DepositorsList communityId={id as string} />
 						</div>
 					</div>
 
@@ -248,7 +249,11 @@ export default function CommunityPage() {
 								<div className="relative overflow-hidden rounded-[20px] border-2 border-[rgba(255,182,193,0.5)] p-4 bg-white shadow-[0_4px_0_rgba(255,182,193,0.5)]">
 									<div className="relative">
 										<div className="text-sm font-bold mb-1">total bounty</div>
-										<div className="text-2xl font-mono font-bold">{community.bountyAmount} SOL</div>
+										<div className="text-2xl font-mono font-bold">
+											{community.bountyAmount !== null && community.bountyAmount !== undefined 
+												? Number(community.bountyAmount).toFixed(2) 
+												: "0.00"} SOL
+										</div>
 									</div>
 								</div>
 								<div

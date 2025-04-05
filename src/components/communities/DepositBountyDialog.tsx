@@ -127,11 +127,19 @@ export default function DepositBountyDialog({
 				walletAddress: publicKey.toString(),
 			});
 
+			// Call the onBountyDeposited callback to refresh the parent component
+			if (onBountyDeposited) {
+				await onBountyDeposited();
+			}
 			
-
-			toast.success('바운티가 성공적으로 입금되었습니다!');
-			onBountyDeposited();
+			// Success message
+			toast.success('Deposit successful!');
+			
+			// Close the dialog
 			onClose();
+			
+			// Force a full page refresh to update all components
+			window.location.reload();
 		} catch (error) {
 			console.error('Error depositing bounty:', error);
 			toast.error(error instanceof Error ? error.message : '바운티 입금에 실패했습니다');
