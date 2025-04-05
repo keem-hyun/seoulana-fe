@@ -274,7 +274,7 @@ export default function CommunityPage() {
 								<div className="relative overflow-hidden rounded-[20px] border-2 border-[rgba(255,182,193,0.5)] p-4 bg-white shadow-[0_4px_0_rgba(255,182,193,0.5)]">
 									<div className="relative">
 										<div className="text-sm font-bold mb-1">base fee</div>
-										<div className="text-2xl font-mono font-bold">{community.baseFeePercentage}%</div>
+										<div className="text-2xl font-mono font-bold">{community.baseFeePercentage ?? 0} SOL</div>
 									</div>
 								</div>
 							</div>
@@ -339,7 +339,6 @@ export default function CommunityPage() {
 							contractAddress={community.contractAddress}
 							onBountyDeposited={handleRefresh}
 						/>
-
 					</div>
 				</div>
 			</div>

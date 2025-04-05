@@ -191,33 +191,20 @@ export default function CommunitysPage() {
 							</p>
 						) : (
 							<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-								{filteredCommunitys.map((community) => {
-									console.log('Community Data:', {
-										id: community.id,
-										name: community.name,
-										description: community.description,
-										createdAt: community.createdAt,
-										creatorId: community.creatorId,
-										bountyAmount: community.bountyAmount,
-										timeLimit: community.timeLimit,
-										baseFeePercentage: community.baseFeePercentage,
-										lastMessageTime: community.lastMessageTime,
-									});
-									return (
-										<CommunityCard
-											key={community.id}
-											id={community.id}
-											name={community.name}
-											description={community.description}
-											createdAt={community.createdAt}
-											creatorId={community.creatorId}
-											bountyAmount={community.bountyAmount}
-											timeLimit={community.timeLimit}
-											baseFeePercentage={community.baseFeePercentage}
-											lastMessageTime={community.lastMessageTime}
-										/>
-									);
-								})}
+								{filteredCommunitys.map((community) => (
+									<CommunityCard
+										key={community.id}
+										id={community.id}
+										name={community.name}
+										description={community.description}
+										createdAt={community.createdAt}
+										creatorId={community.creatorId}
+										bountyAmount={community.bountyAmount}
+										timeLimit={community.timeLimit}
+										baseFeePercentage={community.baseFeePercentage}
+										lastMessageTime={community.lastMessageTime}
+									/>
+								))}
 							</div>
 						)}
 					</div>
