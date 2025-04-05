@@ -9,6 +9,7 @@ import CreateMessageForm from '@/components/CreateMessageForm';
 import { toast, Toaster } from 'react-hot-toast';
 import DepositBountyDialog from '@/components/communities/DepositBountyDialog';
 import { useWebSocket } from '@/hooks/useWebSocket';
+import ClaimBasefeeDialog from '@/components/communities/ClaimBasefeeDialog';
 
 interface Creator {
 	id: string;
@@ -47,6 +48,7 @@ export default function CommunityPage() {
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState<string | null>(null);
 	const [isDepositDialogOpen, setIsDepositDialogOpen] = useState(false);
+	const [isClaimDialogOpen, setIsClaimDialogOpen] = useState(false);
 	const [secondsCounter, setSecondsCounter] = useState<number>(0);
 	const [remainingTimeText, setRemainingTimeText] = useState<string>('');
 
@@ -224,6 +226,15 @@ export default function CommunityPage() {
 									{/* <WalletButton /> */}
 									{!isExpired() && (
 										<button
+											onClick={() => setIsClaimDialogOpen(true)}
+											className="bg-[rgba(255,182,193,0.5)] hover:bg-[rgba(255,182,193,0.6)] text-black px-4 py-2 border-2 border-[rgba(255,182,193,0.5)] font-bold transition-colors rounded-[20px]"
+										>
+											claim
+										</button>
+									)}
+
+									{!isExpired() && (
+										<button
 											onClick={() => setIsDepositDialogOpen(true)}
 											className="bg-[rgba(255,182,193,0.5)] hover:bg-[rgba(255,182,193,0.6)] text-black px-4 py-2 border-2 border-[rgba(255,182,193,0.5)] font-bold transition-colors rounded-[20px]"
 										>
@@ -320,6 +331,15 @@ export default function CommunityPage() {
 							contractAddress={community.contractAddress}
 							onBountyDeposited={handleRefresh}
 						/>
+
+						<ClaimBasefeeDialog
+							isOpen={isClaimDialogOpen}
+							onClose={() => setIsClaimDialogOpen(false)}
+							communityId={community.id}
+							contractAddress={community.contractAddress}
+							onBountyDeposited={handleRefresh}
+						/>
+
 					</div>
 				</div>
 			</div>
