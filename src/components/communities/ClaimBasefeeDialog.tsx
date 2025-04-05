@@ -118,8 +118,12 @@ export default function ClaimBasefeeDialog({
 			console.log("Transaction signature:", signature);
 			
 			// 트랜잭션 확인 대기
-			await connection.confirmTransaction(signature, 'confirmed');
-			console.log("Transaction confirmed");
+      const latestBlockhash = await connection.getLatestBlockhash();
+      await connection.confirmTransaction({
+        signature,
+        blockhash: latestBlockhash.blockhash,
+        lastValidBlockHeight: latestBlockhash.lastValidBlockHeight
+      }, 'confirmed');
 			
 			// 백엔드 API 호출하여 바운티 정보 업데이트
 			await api.post(`/communities/${communityId}/deposit`, {
