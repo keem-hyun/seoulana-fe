@@ -20,7 +20,7 @@ interface DepositBountyDialogProps {
 	contractAddress: string;
 	onBountyDeposited: () => void;
 }
-const PROGRAM_ID = new PublicKey('38cVbT7EHqPwfXR1VgXA5jJiBe3DSAFr6cdCEPx4fbAv');
+const PROGRAM_ID = new PublicKey('CEnBjSSjuoL13LtgDeALeAMWqSg9W7t1J5rtjeKNarAM');
 
 export default function DepositBountyDialog({
 	isOpen,
@@ -87,12 +87,10 @@ export default function DepositBountyDialog({
 			const connection = new Connection(clusterApiUrl('devnet'), 'confirmed');
 			console.log("Connection structure:", connection);
 
-
-			
 			// PDA 주소 계산
 			const [communityPda] = anchor.web3.PublicKey.findProgramAddressSync(
 				[
-					Buffer.from("vault"),
+					Buffer.from("community"),
 					initializerPubkey.toBuffer(),
 					Buffer.from(communityName)
 				],
@@ -111,25 +109,55 @@ export default function DepositBountyDialog({
 			);
 			console.log("Vault PDA:", vaultPda.toString());
 			
-			// SOL을 lamports로 변환 (1 SOL = 10^9 lamports)
-			const lamports = amount * 1_000_000_000;
 			
-			// 트랜잭션 생성
-			const transaction = new web3.Transaction();
-			
-			// 트랜잭션에 송금 명령 추가
-			transaction.add(
-				web3.SystemProgram.transfer({
-					fromPubkey: publicKey,
-					toPubkey: vaultPda,
-					lamports,
-				})
+			// Create a provider from connection and wallet
+			const provider = new AnchorProvider(
+				connection,
+				{
+					publicKey,
+					signTransaction: async (tx: web3.Transaction) => {
+						tx.feePayer = publicKey;
+						tx.recentBlockhash = (await connection.getLatestBlockhash()).blockhash;
+						return await sendTransaction(tx, connection);
+					},
+				},
+				{ preflightCommitment: 'processed' }
 			);
+			// Load program from IDL
+			console.log('IDL structure:', kasoroIdl);
+			console.log('Provider structure:', provider);
+			console.log('publickey:', publicKey.toString());
+			console.log('programId:', PROGRAM_ID.toString());
+			console.log('provider:', provider.publicKey.toString());
+
+			const program = new Program(kasoroIdl as Kasoro, provider);
+			console.log('Program structure:', program.programId.toString());
+			// Create a transaction to initialize community
+			const transaction = new web3.Transaction();
+			console.log('Transaction structure:', transaction);
+			// Find PDA for community and vault
 			
-			// 트랜잭션 전송
+		    console.log("parameter:", communityPda.toString(), vaultPda.toString(), amount);
+			// Add initialize instruction to transaction
+			transaction.add(
+				await program.methods
+					.deposit(
+						communityPda,
+						vaultPda,
+						new anchor.BN(amount * web3.LAMPORTS_PER_SOL)
+					)
+					.accounts({
+						payer: publicKey,
+						community: communityPda,
+						vault: vaultPda,
+						systemProgram: web3.SystemProgram.programId,
+					})
+					.instruction()
+			);
+
+			// Send transaction to the network
 			const signature = await sendTransaction(transaction, connection);
-			console.log("Transaction signature:", signature);
-			
+
 			// Wait for confirmation
 			const latestBlockhash = await connection.getLatestBlockhash();
 			await connection.confirmTransaction({
@@ -137,6 +165,10 @@ export default function DepositBountyDialog({
 				blockhash: latestBlockhash.blockhash,
 				lastValidBlockHeight: latestBlockhash.lastValidBlockHeight
 			}, 'confirmed');
+
+			// const communityAccount = await program.account.communityState.fetch(communityPda);
+			// console.log('CommunityState account pubkey:', communityPda.toString());
+			
 			
 			// 백엔드 API 호출하여 바운티 정보 업데이트
 			await api.post(`/communities/${communityId}/deposit`, {

@@ -32,6 +32,7 @@ export default function ClaimBasefeeDialog({
 	const [amount, setAmount] = useState(1);
 	const [loading, setLoading] = useState(false);
 	const [communityName, setCommunityName] = useState<string | null>(null);
+	const [initializerAddress, setInitializerAddress] = useState<string | null>(null);
 	const { connected, publicKey, sendTransaction } = useWallet();
 	
 	// 커뮤니티 이름 가져오기
@@ -44,10 +45,12 @@ export default function ClaimBasefeeDialog({
 					description: string;
 					createdAt: string;
 					creatorId: string;
+					initializerAddress: string;
 				}
 				
 				const { data } = await api.get<CommunityResponse>(`/communities/${communityId}`);
 				setCommunityName(data.name);
+				setInitializerAddress(data.initializerAddress);
 				console.log('Community name loaded:', data.name);
 			} catch (err) {
 				console.error('Error fetching community data:', err);
@@ -71,6 +74,13 @@ export default function ClaimBasefeeDialog({
 			return;
 		}
 
+		if (!initializerAddress) {
+			toast.error('커뮤니티 정보를 불러오는 중입니다. 잠시 후 다시 시도해주세요');
+			return;
+		}
+
+		const initializerPubkey = new PublicKey(initializerAddress);
+
 		setLoading(true);
 
 		try {
@@ -81,7 +91,7 @@ export default function ClaimBasefeeDialog({
 			const [communityPda] = anchor.web3.PublicKey.findProgramAddressSync(
 				[
 					Buffer.from("community"),
-					publicKey.toBuffer(),
+					initializerPubkey.toBuffer(),
 					Buffer.from(communityName)
 				],
 				PROGRAM_ID
@@ -91,7 +101,7 @@ export default function ClaimBasefeeDialog({
 			const [vaultPda] = anchor.web3.PublicKey.findProgramAddressSync(
 				[
 					Buffer.from("vault"),
-					publicKey.toBuffer(),
+					initializerPubkey.toBuffer(),
 					Buffer.from(communityName)
 				],
 				PROGRAM_ID
