@@ -14,7 +14,7 @@ import { Kasoro } from '../../../../contract/target/types/kasoro';
 import kasoroIdl from '../../../../contract/target/idl/kasoro.json';
 
 // Placeholder for program ID - replace with actual ID from lib.rs
-const PROGRAM_ID = new PublicKey('38cVbT7EHqPwfXR1VgXA5jJiBe3DSAFr6cdCEPx4fbAv');
+const PROGRAM_ID = new PublicKey('CEnBjSSjuoL13LtgDeALeAMWqSg9W7t1J5rtjeKNarAM');
 
 interface CreateCommunityDialogProps {
 	isOpen: boolean;
@@ -134,7 +134,8 @@ export default function CreateCommunityDialog({ isOpen, onClose, userWalletAddre
 						new anchor.BN(100000), // Base fee percentage
 						2, // fee_multiplier (example value)
 						new PublicKey('5oVNBeEEQvYi1cX3ir8Dx5n1P7pdxydbGF2X4TxVusJm'), // lst_addr (using user's public key as placeholder)
-						false // ai_moderation
+						false, // ai_moderation
+						[0.4, 0.3, 0.2, 0.1]
 					)
 					.accounts({
 						initializer: publicKey,
@@ -158,17 +159,17 @@ export default function CreateCommunityDialog({ isOpen, onClose, userWalletAddre
 
 			const communityAccount = await program.account.communityState.fetch(communityPda);
 			console.log('CommunityState account pubkey:', communityPda.toString());
-			console.log('vault account pubkey:', vaultPda.toString());
-			console.log('CommunityState account:', communityAccount);
+			// console.log('vault account pubkey:', vaultPda.toString());
+			// console.log('CommunityState account:', communityAccount);
 
-			console.log('CommunityState name:', communityAccount.communityName);
-			console.log('CommunityState timeLimit:', communityAccount.timeLimit);
-			console.log('CommunityState baseFeePercentage:', communityAccount.initBaseFee);
-			//  console.log("CommunityState fee_multiplier:", communityAccount.fee_multiplier);
-			console.log('CommunityState prize_ratio:', communityAccount.prizeRatio);
-			console.log('CommunityState active:', communityAccount.active);
-			console.log('CommunityState lstAddr:', communityAccount.lstAddr.toString());
-			console.log('CommunityState basefee_vault:', communityAccount.basefeeVault.toString());
+			// console.log('CommunityState name:', communityAccount.communityName);
+			// console.log('CommunityState timeLimit:', communityAccount.timeLimit);
+			// console.log('CommunityState baseFeePercentage:', communityAccount.initBaseFee);
+			// //  console.log("CommunityState fee_multiplier:", communityAccount.fee_multiplier);
+			// console.log('CommunityState prize_ratio:', communityAccount.prizeRatio);
+			// console.log('CommunityState active:', communityAccount.active);
+			// console.log('CommunityState lstAddr:', communityAccount.lstAddr.toString());
+			// console.log('CommunityState basefee_vault:', communityAccount.basefeeVault.toString());
 			//  console.log("CommunityState aiModeration:", communityAccount.ai_moderation);
 
 			// Call the backend API to register the community in the database

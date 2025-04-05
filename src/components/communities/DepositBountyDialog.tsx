@@ -32,6 +32,8 @@ export default function DepositBountyDialog({
 	const [amount, setAmount] = useState(1);
 	const [loading, setLoading] = useState(false);
 	const [communityName, setCommunityName] = useState<string | null>(null);
+	const [initializerAddress, setInitializerAddress] = useState<string | null>(null);
+
 	const { connected, publicKey, sendTransaction } = useWallet();
 	
 	// 커뮤니티 이름 가져오기
@@ -44,10 +46,13 @@ export default function DepositBountyDialog({
 					description: string;
 					createdAt: string;
 					creatorId: string;
+					walletAddress: string;
 				}
 				
 				const { data } = await api.get<CommunityResponse>(`/communities/${communityId}`);
 				setCommunityName(data.name);
+				setInitializerAddress(data.walletAddress);
+				console.log('Initializer address loaded:', data.walletAddress);
 				console.log('Community name loaded:', data.name);
 			} catch (err) {
 				console.error('Error fetching community data:', err);
@@ -71,27 +76,35 @@ export default function DepositBountyDialog({
 			return;
 		}
 
+		if (!initializerAddress) {
+			toast.error('커뮤니티 정보를 불러오는 중입니다. 잠시 후 다시 시도해주세요');
+			return;
+		}
+		const initializerPubkey = new PublicKey(initializerAddress);
 		setLoading(true);
 
 		try {
 			const connection = new Connection(clusterApiUrl('devnet'), 'confirmed');
 			console.log("Connection structure:", connection);
+
+
 			
 			// PDA 주소 계산
 			const [communityPda] = anchor.web3.PublicKey.findProgramAddressSync(
 				[
-					Buffer.from("community"),
-					publicKey.toBuffer(),
+					Buffer.from("vault"),
+					initializerPubkey.toBuffer(),
 					Buffer.from(communityName)
 				],
 				PROGRAM_ID
 			);
+
 			console.log("Community PDA:", communityPda.toString());
 			
 			const [vaultPda] = anchor.web3.PublicKey.findProgramAddressSync(
 				[
 					Buffer.from("vault"),
-					publicKey.toBuffer(),
+					initializerPubkey.toBuffer(),
 					Buffer.from(communityName)
 				],
 				PROGRAM_ID
@@ -117,14 +130,13 @@ export default function DepositBountyDialog({
 			const signature = await sendTransaction(transaction, connection);
 			console.log("Transaction signature:", signature);
 			
-			// 트랜잭션 확인 대기
+			// Wait for confirmation
 			const latestBlockhash = await connection.getLatestBlockhash();
-      await connection.confirmTransaction({
-        signature,
-        blockhash: latestBlockhash.blockhash,
-        lastValidBlockHeight: latestBlockhash.lastValidBlockHeight
-      }, 'confirmed');
-			console.log("Transaction confirmed");
+			await connection.confirmTransaction({
+				signature,
+				blockhash: latestBlockhash.blockhash,
+				lastValidBlockHeight: latestBlockhash.lastValidBlockHeight
+			}, 'confirmed');
 			
 			// 백엔드 API 호출하여 바운티 정보 업데이트
 			await api.post(`/communities/${communityId}/deposit`, {
@@ -132,19 +144,9 @@ export default function DepositBountyDialog({
 				walletAddress: publicKey.toString(),
 			});
 
-			// Call the onBountyDeposited callback to refresh the parent component
-			if (onBountyDeposited) {
-				await onBountyDeposited();
-			}
-			
-			// Success message
-			toast.success('Deposit successful!');
-			
-			// Close the dialog
+			toast.success('바운티가 성공적으로 입금되었습니다!');
+			onBountyDeposited();
 			onClose();
-			
-			// Force a full page refresh to update all components
-			window.location.reload();
 		} catch (error) {
 			console.error('Error depositing bounty:', error);
 			toast.error(error instanceof Error ? error.message : '바운티 입금에 실패했습니다');
