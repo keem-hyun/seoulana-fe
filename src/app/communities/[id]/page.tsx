@@ -9,6 +9,7 @@ import CreateMessageForm from '@/components/CreateMessageForm';
 import { WalletButton } from '@/components/wallet/WalletButton';
 import { toast, Toaster } from 'react-hot-toast';
 import DepositBountyDialog from '@/components/communities/DepositBountyDialog';
+import { useWebSocket } from '@/hooks/useWebSocket';
 interface Creator {
 	id: string;
 	xId: string;
@@ -46,6 +47,19 @@ export default function CommunityPage() {
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState<string | null>(null);
 	const [isDepositDialogOpen, setIsDepositDialogOpen] = useState(false);
+	
+	// Connect to WebSocket for real-time updates
+	const { isConnected, lastMessageTime } = useWebSocket(id as string);
+
+	useEffect(() => {
+		// Update community data when a new message is received
+		if (lastMessageTime && community) {
+			setCommunity({
+				...community,
+				lastMessageTime
+			});
+		}
+	}, [lastMessageTime]);
 
 	useEffect(() => {
 		async function fetchData() {
@@ -57,6 +71,7 @@ export default function CommunityPage() {
 
 				console.log('Community data loaded:', communityResponse.data);
 				console.log('User data loaded:', userResponse.data);
+				console.log('WebSocket connected:', isConnected);
 
 				if (communityResponse.data.messages && communityResponse.data.messages.length > 0) {
 					console.log('Message structure sample:', communityResponse.data.messages[0]);
@@ -73,7 +88,7 @@ export default function CommunityPage() {
 		}
 
 		fetchData();
-	}, [id]);
+	}, [id, isConnected]);
 
 	const getRemainingTime = () => {
 		if (!community?.timeLimit || !community?.createdAt) return null;
@@ -202,7 +217,21 @@ export default function CommunityPage() {
 								</div>
 							)}
 							<div>Created at: {new Date(community.createdAt).toLocaleString()}</div>
-							<div>Latest message: {new Date(community.lastMessageTime).toLocaleString()}</div>
+							<div className="flex items-center">
+								Latest activity: 
+								<span className="font-medium ml-1">
+									{community.lastMessageTime 
+										? new Date(community.lastMessageTime).toLocaleString() 
+										: 'No messages yet'
+									}
+								</span>
+								{isConnected && (
+									<span className="flex h-2 w-2 ml-2">
+										<span className="animate-ping absolute inline-flex h-2 w-2 rounded-full bg-green-400 opacity-75"></span>
+										<span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
+									</span>
+								)}
+							</div>
 						</div>
 					</div>
 

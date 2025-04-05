@@ -1,9 +1,9 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import Link from 'next/link';
 import { api } from '@/api';
 import SearchCommunities from './SearchCommunities';
+import CommunityCard from './CommunityCard';
 
 interface Community {
 	id: string;
@@ -14,6 +14,7 @@ interface Community {
 	bountyAmount?: number;
 	timeLimit?: number;
 	baseFeePercentage?: number;
+	lastMessageTime?: string | null;
 }
 
 export default function CommunityList() {
@@ -28,7 +29,7 @@ export default function CommunityList() {
 			setCommunitys(data);
 			setFilteredCommunitys(data);
 		} catch (error) {
-			console.error('Error fetching comunities:', error);
+			console.error('Error fetching communities:', error);
 			setError(error instanceof Error ? error.message : 'Failed to load communities');
 		} finally {
 			setLoading(false);
@@ -102,60 +103,19 @@ export default function CommunityList() {
 				</p>
 			) : (
 				<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-					{filteredCommunitys.map((room) => (
-						<Link key={room.id} href={`/communities/${room.id}`}>
-							<div className="border-2 border-black dark:border-white hover:bg-blue-50 dark:hover:bg-gray-700 p-4 transition-colors cursor-pointer h-full flex flex-col">
-								<div className="flex justify-between items-start mb-4">
-									<h3 className="font-bold text-lg line-clamp-1">{room.name}</h3>
-								</div>
-
-								{room.description && (
-									<p className="text-gray-600 dark:text-gray-300 text-sm line-clamp-2 mb-4 flex-grow">
-										{room.description}
-									</p>
-								)}
-
-								<div className="space-y-2">
-									{room.bountyAmount !== undefined && (
-										<div className="flex items-center justify-between">
-											<span className="text-sm text-gray-500">total bounty:</span>
-											<span className="bg-yellow-300 text-black px-2 py-1 text-xs font-mono font-bold border-2 border-black">
-												{room.bountyAmount} SOL
-											</span>
-										</div>
-									)}
-
-									{room.timeLimit !== undefined && (
-										<div className="flex items-center justify-between">
-											<span className="text-sm text-gray-500">time limit:</span>
-											<span className="bg-green-300 text-black px-2 py-1 text-xs font-mono font-bold border-2 border-black">
-												{room.timeLimit} MIN
-											</span>
-										</div>
-									)}
-
-									{room.baseFeePercentage !== undefined && (
-										<div className="flex items-center justify-between">
-											<span className="text-sm text-gray-500">base fee:</span>
-											<span className="bg-blue-300 text-black px-2 py-1 text-xs font-mono font-bold border-2 border-black">
-												{room.baseFeePercentage}%
-											</span>
-										</div>
-									)}
-
-									<div className="flex items-center justify-between pt-2 border-t border-gray-200 dark:border-gray-700">
-										<span className="text-xs text-gray-500">created at:</span>
-										<span className="text-xs text-gray-500">
-											{new Date(room.createdAt).toLocaleDateString('en-US', {
-												year: 'numeric',
-												month: 'short',
-												day: 'numeric',
-											})}
-										</span>
-									</div>
-								</div>
-							</div>
-						</Link>
+					{filteredCommunitys.map((community) => (
+						<CommunityCard
+							key={community.id}
+							id={community.id}
+							name={community.name}
+							description={community.description}
+							createdAt={community.createdAt}
+							creatorId={community.creatorId}
+							bountyAmount={community.bountyAmount}
+							timeLimit={community.timeLimit}
+							baseFeePercentage={community.baseFeePercentage}
+							lastMessageTime={community.lastMessageTime}
+						/>
 					))}
 				</div>
 			)}
