@@ -312,8 +312,8 @@ export default function CommunityPage() {
 							) : (
 								<>
 									<div className="mb-6 flex items-center gap-4">
-										<div className="w-32 h-32 bg-white rounded-[20px] border-2 border-[rgba(255,182,193,0.5)] p-4 shadow-[0_4px_0_rgba(255,182,193,0.5)] flex items-center justify-center">
-											<div className="text-2xl font-bold">{remainingTimeText}</div>
+										<div className="w-32 h-32 bg-white rounded-[20px] border-2 border-[rgba(255,182,193,0.5)] p-4 shadow-[0_4px_0_rgba(255,182,193,0.5)] flex items-center justify-center group relative animate-pulse hover:scale-110 transition-transform duration-300">
+											<div className="text-2xl font-bold text-pink-primary">{remainingTimeText}</div>
 										</div>
 										<div className="flex-1">
 											<CreateMessageForm communityId={community.id} onMessageSent={handleRefresh} />
