@@ -59,6 +59,7 @@ export default function CommunitysPage() {
 		async function fetchCommunities() {
 			try {
 				const { data } = await api.get<Community[]>('/communities');
+				console.log('communitys data', data);
 				setCommunitys(data);
 				setFilteredCommunitys(data);
 			} catch (error) {

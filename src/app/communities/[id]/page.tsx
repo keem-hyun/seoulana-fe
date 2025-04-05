@@ -250,9 +250,10 @@ export default function CommunityPage() {
 									<div className="relative">
 										<div className="text-sm font-bold mb-1">total bounty</div>
 										<div className="text-2xl font-mono font-bold">
-											{community.bountyAmount !== null && community.bountyAmount !== undefined 
-												? Number(community.bountyAmount).toFixed(2) 
-												: "0.00"} SOL
+											{community.bountyAmount !== null && community.bountyAmount !== undefined
+												? Number(community.bountyAmount).toFixed(2)
+												: '0.00'}{' '}
+											SOL
 										</div>
 									</div>
 								</div>
