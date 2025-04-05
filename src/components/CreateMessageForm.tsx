@@ -171,7 +171,7 @@ export default function CreateMessageForm({ communityId, onMessageSent }: Create
 						</div>
 						<input
 							type="file"
-							accept="image/*"
+							accept=".jpg,.jpeg,.png,.gif"
 							onChange={handleImageChange}
 							disabled={uploadingImage}
 							className="hidden"
