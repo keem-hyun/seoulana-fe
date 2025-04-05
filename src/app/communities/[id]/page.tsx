@@ -9,6 +9,7 @@ import CreateMessageForm from '@/components/CreateMessageForm';
 import { toast, Toaster } from 'react-hot-toast';
 import DepositBountyDialog from '@/components/communities/DepositBountyDialog';
 import { useWebSocket } from '@/hooks/useWebSocket';
+import ClaimBasefeeDialog from '@/components/communities/ClaimBasefeeDialog';
 
 interface Creator {
 	id: string;
@@ -47,6 +48,7 @@ export default function CommunityPage() {
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState<string | null>(null);
 	const [isDepositDialogOpen, setIsDepositDialogOpen] = useState(false);
+	const [isClaimDialogOpen, setIsClaimDialogOpen] = useState(false);
 	const [secondsCounter, setSecondsCounter] = useState<number>(0);
 	const [remainingTimeText, setRemainingTimeText] = useState<string>('');
 
@@ -224,6 +226,15 @@ export default function CommunityPage() {
 									{/* <WalletButton /> */}
 									{!isExpired() && (
 										<button
+											onClick={() => setIsClaimDialogOpen(true)}
+											className="bg-[rgba(255,182,193,0.5)] hover:bg-[rgba(255,182,193,0.6)] text-black px-4 py-2 border-2 border-[rgba(255,182,193,0.5)] font-bold transition-colors rounded-[20px]"
+										>
+											claim
+										</button>
+									)}
+
+									{!isExpired() && (
+										<button
 											onClick={() => setIsDepositDialogOpen(true)}
 											className="bg-[rgba(255,182,193,0.5)] hover:bg-[rgba(255,182,193,0.6)] text-black px-4 py-2 border-2 border-[rgba(255,182,193,0.5)] font-bold transition-colors rounded-[20px]"
 										>
@@ -263,7 +274,7 @@ export default function CommunityPage() {
 								<div className="relative overflow-hidden rounded-[20px] border-2 border-[rgba(255,182,193,0.5)] p-4 bg-white shadow-[0_4px_0_rgba(255,182,193,0.5)]">
 									<div className="relative">
 										<div className="text-sm font-bold mb-1">base fee</div>
-										<div className="text-2xl font-mono font-bold">{community.baseFeePercentage}%</div>
+										<div className="text-2xl font-mono font-bold">{community.baseFeePercentage ?? 0} SOL</div>
 									</div>
 								</div>
 							</div>
@@ -316,6 +327,14 @@ export default function CommunityPage() {
 						<DepositBountyDialog
 							isOpen={isDepositDialogOpen}
 							onClose={() => setIsDepositDialogOpen(false)}
+							communityId={community.id}
+							contractAddress={community.contractAddress}
+							onBountyDeposited={handleRefresh}
+						/>
+
+						<ClaimBasefeeDialog
+							isOpen={isClaimDialogOpen}
+							onClose={() => setIsClaimDialogOpen(false)}
 							communityId={community.id}
 							contractAddress={community.contractAddress}
 							onBountyDeposited={handleRefresh}

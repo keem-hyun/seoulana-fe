@@ -130,7 +130,7 @@ export default function CommunitysPage() {
 						{user && (
 							<button
 								onClick={() => setIsCreateDialogOpen(true)}
-								className="flex items-center gap-2 bg-black dark:bg-white text-white dark:text-black px-4 py-2 border-2 border-black dark:border-white text-sm font-bold hover:bg-gray-800 dark:hover:bg-gray-200 transition-colors"
+								className="flex items-center gap-2 bg-[rgba(255,182,193,0.5)] hover:bg-[rgba(255,182,193,0.6)] text-black px-4 py-2 border-2 border-[rgba(255,182,193,0.5)] rounded-[20px] text-sm font-bold transition-colors"
 							>
 								<span>+</span>
 								<span>Create Community</span>
