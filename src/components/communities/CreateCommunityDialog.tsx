@@ -184,19 +184,24 @@ export default function CreateCommunityDialog({ isOpen, onClose, userWalletAddre
 	if (!isOpen) return null;
 
 	return (
-		<div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-			<div className="bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-sm hover:shadow-md group transition-all duration-300 h-full flex flex-col border border-gray-200 dark:border-gray-700 p-6 w-full max-w-md">
+		<div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+			<div className="bg-white dark:bg-gray-800 rounded-[20px] overflow-hidden shadow-[0_4px_0_rgba(255,182,193,0.5)] group transition-all duration-300 flex flex-col border-2 border-[rgba(255,182,193,0.5)] p-6 w-full max-w-md">
+				<div className="flex justify-between items-center mb-4">
+					<h2 className="text-xl font-bold">Create New Community</h2>
+					<button
+						onClick={onClose}
+						className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+					>
+						✕
+					</button>
+				</div>
+
 				<form onSubmit={handleSubmit} className="space-y-4">
 					{error && (
-						<div className="bg-red-50 dark:bg-red-900/30 border border-red-200 dark:border-red-700 p-3 text-red-800 dark:text-red-300 text-sm rounded-lg">
+						<div className="bg-red-50 dark:bg-red-900/30 border-2 border-red-200 dark:border-red-700 p-3 text-red-800 dark:text-red-300 text-sm rounded-lg">
 							{error}
 						</div>
 					)}
-
-					<div className="pb-2">
-						<h1 className="text-2xl font-bold tracking-widest uppercase mb-4">New Community</h1>
-						<hr className="border-gray-200 dark:border-gray-700 mb-6" />
-					</div>
 
 					<div>
 						<label htmlFor="name" className="block font-bold text-sm uppercase tracking-widest mb-1">
@@ -208,8 +213,8 @@ export default function CreateCommunityDialog({ isOpen, onClose, userWalletAddre
 							value={name}
 							onChange={(e) => setName(e.target.value)}
 							required
-							className="w-full px-3 py-2 border border-gray-200 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
-							placeholder="Enter room name"
+							className="w-full px-3 py-2 border-2 border-[rgba(255,182,193,0.5)] rounded-lg bg-white dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-pink-primary"
+							placeholder="Enter community name"
 						/>
 					</div>
 
@@ -222,8 +227,8 @@ export default function CreateCommunityDialog({ isOpen, onClose, userWalletAddre
 							value={description}
 							onChange={(e) => setDescription(e.target.value)}
 							rows={3}
-							className="w-full px-3 py-2 border border-gray-200 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
-							placeholder="Enter room description"
+							className="w-full px-3 py-2 border-2 border-[rgba(255,182,193,0.5)] rounded-lg bg-white dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-pink-primary"
+							placeholder="Enter community description"
 						/>
 					</div>
 
@@ -231,7 +236,7 @@ export default function CreateCommunityDialog({ isOpen, onClose, userWalletAddre
 						<label htmlFor="timeLimit" className="block font-bold text-sm uppercase tracking-widest mb-1">
 							Time Limit (MIN)
 						</label>
-						<div className="border border-gray-200 dark:border-gray-700 p-4 bg-white dark:bg-gray-800 rounded-lg flex items-center">
+						<div className="border-2 border-[rgba(255,182,193,0.5)] p-4 bg-white dark:bg-gray-800 rounded-lg flex items-center">
 							<input
 								id="timeLimit"
 								type="range"
@@ -240,9 +245,9 @@ export default function CreateCommunityDialog({ isOpen, onClose, userWalletAddre
 								step="1"
 								value={timeLimit}
 								onChange={(e) => setTimeLimit(parseInt(e.target.value))}
-								className="w-full mr-4 accent-blue-500"
+								className="w-full mr-4 accent-pink-primary"
 							/>
-							<div className="min-w-[80px] bg-green-100 dark:bg-green-900 py-1 px-3 font-mono font-bold text-center border border-gray-200 dark:border-gray-700 rounded-lg">
+							<div className="min-w-[80px] bg-pink-light py-1 px-3 font-mono font-bold text-center border-2 border-[rgba(255,182,193,0.5)] rounded-lg">
 								{timeLimit} MIN
 							</div>
 						</div>
@@ -252,7 +257,7 @@ export default function CreateCommunityDialog({ isOpen, onClose, userWalletAddre
 						<label htmlFor="baseFee" className="block font-bold text-sm uppercase tracking-widest mb-1">
 							Base Fee (SOL)
 						</label>
-						<div className="border border-gray-200 dark:border-gray-700 p-4 bg-white dark:bg-gray-800 rounded-lg flex items-center">
+						<div className="border-2 border-[rgba(255,182,193,0.5)] p-4 bg-white dark:bg-gray-800 rounded-lg flex items-center">
 							<input
 								id="baseFee"
 								type="range"
@@ -261,22 +266,22 @@ export default function CreateCommunityDialog({ isOpen, onClose, userWalletAddre
 								step="0.1"
 								value={baseFee}
 								onChange={(e) => setBaseFee(parseFloat(e.target.value))}
-								className="w-full mr-4 accent-blue-500"
+								className="w-full mr-4 accent-pink-primary"
 							/>
-							<div className="min-w-[80px] bg-red-100 dark:bg-red-900 py-1 px-3 font-mono font-bold text-center border border-gray-200 dark:border-gray-700 rounded-lg">
+							<div className="min-w-[80px] bg-pink-light py-1 px-3 font-mono font-bold text-center border-2 border-[rgba(255,182,193,0.5)] rounded-lg">
 								{baseFee} SOL
 							</div>
 						</div>
 					</div>
 
 					{!connected && (
-						<div className="bg-yellow-50 dark:bg-yellow-900/30 border border-yellow-200 dark:border-yellow-700 p-3 text-yellow-800 dark:text-yellow-300 text-sm rounded-lg">
+						<div className="bg-yellow-50 dark:bg-yellow-900/30 border-2 border-yellow-200 dark:border-yellow-700 p-3 text-yellow-800 dark:text-yellow-300 text-sm rounded-lg">
 							Please connect your wallet to create a community
 						</div>
 					)}
 
 					{connected && !isWalletLinked && (
-						<div className="bg-yellow-50 dark:bg-yellow-900/30 border border-yellow-200 dark:border-yellow-700 p-3 text-yellow-800 dark:text-yellow-300 text-sm rounded-lg">
+						<div className="bg-yellow-50 dark:bg-yellow-900/30 border-2 border-yellow-200 dark:border-yellow-700 p-3 text-yellow-800 dark:text-yellow-300 text-sm rounded-lg">
 							Please link your wallet to your account first
 						</div>
 					)}
@@ -285,7 +290,7 @@ export default function CreateCommunityDialog({ isOpen, onClose, userWalletAddre
 						<button
 							type="button"
 							onClick={onClose}
-							className="px-4 py-2 border border-gray-200 dark:border-gray-700 text-sm font-bold uppercase tracking-wider rounded-[20px] hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+							className="px-4 py-2 border-2 border-[rgba(255,182,193,0.5)] text-sm font-bold uppercase tracking-wider rounded-[20px] hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
 						>
 							Cancel
 						</button>
