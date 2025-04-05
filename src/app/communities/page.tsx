@@ -140,7 +140,7 @@ export default function CommunitysPage() {
 						)}
 					</div>
 					<div className="flex items-center gap-4">
-						{user ? (
+						{/* {user ? (
 							<>
 								<p className="text-sm">
 									Logged in as <span className="font-semibold">@{user.username}</span>
@@ -159,10 +159,10 @@ export default function CommunitysPage() {
 							>
 								Login with X
 							</Link>
-						)}
-						<div className="ml-2">
+						)} */}
+						{/* <div className="ml-2">
 							<WalletButton />
-						</div>
+						</div> */}
 						{user && (
 							<div className="ml-2">
 								<LinkWalletButton user={user} onWalletLinked={handleWalletLinked} />

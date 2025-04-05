@@ -1,10 +1,13 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Twitter } from 'lucide-react';
 import { api } from '@/api';
+import { useWallet } from '@solana/wallet-adapter-react';
+import { toast } from 'react-hot-toast';
 
 // Define user type for TypeScript
 interface User {
@@ -12,11 +15,15 @@ interface User {
 	username: string;
 	oauth_token?: string;
 	oauth_token_secret?: string;
+	walletAddress?: string | null;
 }
 
 export default function AuthSuccess() {
+	const router = useRouter();
+	const { connected, publicKey } = useWallet();
 	const [user, setUser] = useState<User | null>(null);
 	const [loading, setLoading] = useState(true);
+	const [linking, setLinking] = useState(false);
 
 	useEffect(() => {
 		async function fetchUser() {
@@ -40,6 +47,29 @@ export default function AuthSuccess() {
 		fetchUser();
 	}, []);
 
+	const handleBackToHome = async () => {
+		if (connected && publicKey && user) {
+			setLinking(true);
+			try {
+				const walletAddress = publicKey.toString();
+				const { data } = await api.put<{ walletAddress: string }>('/users/wallet', {
+					walletAddress: walletAddress,
+				});
+				setUser({
+					...user,
+					walletAddress: data.walletAddress,
+				});
+				toast.success('Wallet linked successfully!');
+			} catch (error) {
+				console.error('Error linking wallet:', error);
+				toast.error(error instanceof Error ? error.message : 'Failed to link wallet');
+			} finally {
+				setLinking(false);
+			}
+		}
+		router.push('/');
+	};
+
 	return (
 		<div className="flex flex-col items-center justify-center min-h-screen p-8">
 			<div className="bg-white dark:bg-gray-800 p-8 rounded-lg shadow-md max-w-md w-full">
@@ -60,9 +90,13 @@ export default function AuthSuccess() {
 							</p>
 						</div>
 						<div className="flex justify-center">
-							<Link href="/" className="bg-black text-white px-4 py-2 rounded-full hover:bg-gray-800 transition-colors">
-								Back to Home
-							</Link>
+							<button
+								onClick={handleBackToHome}
+								disabled={linking}
+								className="bg-black text-white px-4 py-2 rounded-full hover:bg-gray-800 transition-colors disabled:opacity-50"
+							>
+								{linking ? 'Linking Wallet...' : 'Back to Home'}
+							</button>
 						</div>
 					</>
 				) : (
@@ -70,9 +104,12 @@ export default function AuthSuccess() {
 						<h1 className="text-2xl font-bold text-center mb-6 text-red-500">Auth Error</h1>
 						<p className="text-center mb-6">Could not retrieve user information. Please try logging in again.</p>
 						<div className="flex justify-center">
-							<Link href="/" className="bg-black text-white px-4 py-2 rounded-full hover:bg-gray-800 transition-colors">
+							<button
+								onClick={() => router.push('/')}
+								className="bg-black text-white px-4 py-2 rounded-full hover:bg-gray-800 transition-colors"
+							>
 								Back to Home
-							</Link>
+							</button>
 						</div>
 					</>
 				)}
