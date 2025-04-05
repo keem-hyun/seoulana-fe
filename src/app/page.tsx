@@ -81,41 +81,44 @@ export default function Home() {
 
 							<div className="relative inline-block">
 								<div className="relative w-36 h-36 mx-auto mb-6">
-									<div className="absolute inset-0 bg-white/80 rounded-2xl rotate-45 shadow-pink"></div>
 									<Image
 										src="/images/kasoro_logo.png"
 										alt="Kasoro Logo"
-										width={140}
-										height={140}
-										className="relative z-10 p-2"
+										width={160}
+										height={160}
+										className="relative z-10"
 									/>
 								</div>
 								<h1
-									className={`font-[bazzi] mt-8 text-6xl md:text-7xl font-bold text-purple-dark/80 bg-clip-text bg-gradient-to-r from-pink-primary to-purple-primary`}
+									className={`font-[bazzi] mt-6 text-7xl md:text-8xl lg:text-9xl font-bold bg-clip-text bg-gradient-to-r from-pink-primary via-purple-primary to-pink-primary text-transparent drop-shadow-lg animate-pulse-soft`}
+									style={{ textShadow: '0 0 15px rgba(255, 95, 158, 0.5)' }}
 								>
 									KASORO
 								</h1>
 							</div>
 						</div>
 
-						<p className="text-2xl md:text-3xl text-purple-dark font-semibold mb-6">First CommuniFi on Solana</p>
-						<p className="text-xl text-gray-600 max-w-3xl mx-auto mb-14 bg-white/60 p-4 rounded-xl backdrop-blur-sm shadow-sm">
+						<p className="text-2xl md:text-3xl text-white font-semibold mb-6 drop-shadow-md">
+							First CommuniFi on Solana
+						</p>
+						<p className="text-xl text-white max-w-3xl mx-auto mb-16 drop-shadow-md font-medium backdrop-blur-sm px-4 py-2">
 							The cutest community-driven platform for content creators and community builders
 						</p>
 
-						<div className="flex flex-col sm:flex-row justify-center gap-5 mb-10">
+						<div className="flex flex-col sm:flex-row justify-center gap-6 mb-10">
 							<Link
 								href="/communities"
-								className="px-10 py-5 bg-white/80 border-2 border-pink-light text-pink-dark rounded-full shadow-md text-xl font-semibold transition-all hover:bg-pink-light/20 hover:border-pink-primary"
+								className="px-10 py-5 bg-gradient-to-r from-pink-primary to-purple-primary text-white rounded-full shadow-lg text-xl font-semibold transition-all hover:shadow-xl hover:scale-105 border-2 border-white/20"
 							>
-								<span>Launch App</span>
-								<span className="group-hover:translate-x-1 transition-transform">→</span>
+								<span className="mr-2">Launch App</span>
+								<span className="inline-block">→</span>
 							</Link>
 							<a
 								href="#how-it-works"
-								className="px-10 py-5 bg-white/80 border-2 border-pink-light text-pink-dark rounded-full shadow-md text-xl font-semibold transition-all hover:bg-pink-light/20 hover:border-pink-primary"
+								className="px-10 py-5 bg-white/20 backdrop-blur-sm border-2 border-white/30 text-white rounded-full shadow-md text-xl font-semibold transition-all hover:bg-white/30 hover:scale-105"
 							>
-								Learn More
+								<span className="mr-2">Learn More</span>
+								<span className="inline-block">↓</span>
 							</a>
 						</div>
 					</div>
@@ -197,20 +200,6 @@ export default function Home() {
 									</div>
 								</div>
 							))}
-
-							{/* Carousel controls */}
-							<div className="absolute bottom-6 left-0 right-0 flex justify-center gap-3 z-10">
-								{features.map((_, index) => (
-									<button
-										key={index}
-										onClick={() => setActiveFeature(index)}
-										className={`w-3 h-3 rounded-full transition-all ${
-											index === activeFeature ? 'w-10 bg-pink-primary' : 'bg-gray-300'
-										}`}
-										aria-label={`Show feature ${index + 1}`}
-									/>
-								))}
-							</div>
 						</div>
 					</div>
 				</section>
