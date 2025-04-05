@@ -50,7 +50,7 @@ export default function IntroAnimation({ onComplete }: IntroAnimationProps) {
 						isLoaded ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0'
 					}`}
 				>
-					KASORO
+					Pulse
 				</h1>
 				<p
 					className={`mt-4 text-xl text-purple-dark/80 transition-all duration-1000 delay-500 ${

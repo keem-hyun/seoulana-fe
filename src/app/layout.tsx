@@ -6,7 +6,7 @@ import GlobalFooter from '@/components/global/GlobalFooter';
 import { Quicksand } from 'next/font/google';
 
 export const metadata: Metadata = {
-	title: 'Kasoro | First CommuniFi on Solana',
+	title: 'Pulse | First CommuniFi on Solana',
 	description: 'The cutest community-driven platform for content creators and community builders on Solana',
 };
 
