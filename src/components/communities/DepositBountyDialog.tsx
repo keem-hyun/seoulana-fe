@@ -52,18 +52,18 @@ export default function DepositBountyDialog({
 		<Dialog open={isOpen} onOpenChange={onClose}>
 			<DialogContent>
 				<DialogHeader>
-					<DialogTitle className="text-xl font-bold">바운티 입금</DialogTitle>
+					<DialogTitle className="text-xl font-bold">Bounty Deposit</DialogTitle>
 				</DialogHeader>
 
 				<div className="mt-4">
 					<div className="mb-4">
 						<p className="text-sm text-gray-600 dark:text-gray-400 mb-2">
-							컨트랙트 주소: <span className="font-mono">{contractAddress}</span>
+							contract address: <span className="font-mono">{contractAddress}</span>
 						</p>
 					</div>
 
 					<div className="mb-6">
-						<label className="block font-bold text-sm uppercase tracking-widest mb-2">입금할 금액 (SOL)</label>
+						<label className="block font-bold text-sm uppercase tracking-widest mb-2">amount to deposit (SOL)</label>
 						<div className="border-2 border-black dark:border-white p-4 bg-blue-100 dark:bg-gray-800 flex items-center">
 							<input
 								type="range"
@@ -85,7 +85,7 @@ export default function DepositBountyDialog({
 						disabled={loading || !connected}
 						className="w-full bg-black hover:bg-gray-800 text-white font-bold py-2 px-4 border-2 border-black disabled:opacity-50 disabled:cursor-not-allowed transition-colors uppercase tracking-wider"
 					>
-						{loading ? '입금 중...' : '입금하기'}
+						{loading ? 'depositing...' : 'deposit'}
 					</button>
 
 					{!connected && (
