@@ -18,7 +18,7 @@ interface ClaimBasefeeDialogProps {
 	onClose: () => void;
 	communityId: string;
 	contractAddress: string;
-	onBountyDeposited: () => void;
+	// onBountyDeposited: () => void;
 }
 const PROGRAM_ID = new PublicKey('CEnBjSSjuoL13LtgDeALeAMWqSg9W7t1J5rtjeKNarAM');
 
@@ -27,7 +27,7 @@ export default function ClaimBasefeeDialog({
 	onClose,
 	communityId,
 	contractAddress,
-	onBountyDeposited,
+	// onBountyDeposited,
 }: ClaimBasefeeDialogProps) {
 	const [amount, setAmount] = useState(1);
 	const [loading, setLoading] = useState(false);

@@ -7,7 +7,7 @@ import { toast } from 'react-hot-toast';
 import { api } from '@/api';
 import { Program, AnchorProvider, web3 } from '@coral-xyz/anchor';
 import * as anchor from '@coral-xyz/anchor';
-import { Connection, LAMPORTS_PER_SOL, PublicKey, clusterApiUrl } from '@solana/web3.js';
+import { Connection, PublicKey, clusterApiUrl } from '@solana/web3.js';
 
 // Import from contract target types
 import { Kasoro } from '../../../../contract/target/types/kasoro';
@@ -131,7 +131,7 @@ export default function CreateCommunityDialog({ isOpen, onClose, userWalletAddre
 					.initialize(
 						name,
 						new anchor.BN(timeLimit), // Convert minutes to seconds
-						new anchor.BN(baseFee*LAMPORTS_PER_SOL), // Base fee percentage
+						new anchor.BN(100000), // Base fee percentage
 						2, // fee_multiplier (example value)
 						new PublicKey('5oVNBeEEQvYi1cX3ir8Dx5n1P7pdxydbGF2X4TxVusJm'), // lst_addr (using user's public key as placeholder)
 						false, // ai_moderation
@@ -177,11 +177,9 @@ export default function CreateCommunityDialog({ isOpen, onClose, userWalletAddre
 				name,
 				description,
 				timeLimit,
-				baseFeeAmount: baseFee,
+				baseFee,
 				walletAddress: publicKey.toString(),
 			});
-
-			console.log('Community created:', data);
 
 			// Reset form
 			setName('');
