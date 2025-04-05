@@ -127,6 +127,8 @@ export default function DepositBountyDialog({
 				walletAddress: publicKey.toString(),
 			});
 
+			
+
 			toast.success('바운티가 성공적으로 입금되었습니다!');
 			onBountyDeposited();
 			onClose();
