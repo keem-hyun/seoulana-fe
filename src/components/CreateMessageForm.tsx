@@ -47,14 +47,14 @@ export default function CreateMessageForm({ communityId, onMessageSent }: Create
 				communityId: communityData.id,
 				communityIdType: typeof communityData.id,
 				communityIdLength: communityData.id.length,
-				communityObject: communityData
+				communityObject: communityData,
 			});
-			
+
 			const { data } = await api.post('/messages', {
 				content,
-				communityId: communityData.id // Use the real UUID
+				communityId: communityData.id, // Use the real UUID
 			});
-			
+
 			console.log('Message sent successfully:', data);
 			onMessageSent && onMessageSent();
 			setContent('');
@@ -86,7 +86,7 @@ export default function CreateMessageForm({ communityId, onMessageSent }: Create
 				<button
 					type="submit"
 					disabled={loading || !content.trim() || !communityData}
-					className="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-r-md disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+					className="bg-[rgba(255,182,193,0.5)] hover:bg-[rgba(255,182,193,0.6)] text-black font-medium py-2 px-4 rounded-r-md disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
 				>
 					{loading ? 'Sending...' : 'Send'}
 				</button>
