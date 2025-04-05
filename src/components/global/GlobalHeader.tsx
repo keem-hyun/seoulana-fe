@@ -52,10 +52,10 @@ export default function GlobalHeader() {
 					<Link href="/communities" className="font-bold text-gray-700 dark:text-gray-300 hover:text-[#5fb3ff] dark:hover:text-[#5fb3ff] transition-colors">
 						Communities
 					</Link>
-					<a href="#features" className="font-bold text-gray-700 dark:text-gray-300 hover:text-[#5fb3ff] dark:hover:text-[#5fb3ff] transition-colors">
+					<a href="/#features" className="font-bold text-gray-700 dark:text-gray-300 hover:text-[#5fb3ff] dark:hover:text-[#5fb3ff] transition-colors">
 						Features
 					</a>
-					<a href="#how-it-works" className="font-bold text-gray-700 dark:text-gray-300 hover:text-[#5fb3ff] dark:hover:text-[#5fb3ff] transition-colors">
+					<a href="/#how-it-works" className="font-bold text-gray-700 dark:text-gray-300 hover:text-[#5fb3ff] dark:hover:text-[#5fb3ff] transition-colors">
 						How It Works
 					</a>
 				</nav>
