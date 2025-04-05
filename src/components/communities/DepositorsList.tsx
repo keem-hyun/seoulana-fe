@@ -59,50 +59,61 @@ export default function DepositorsList({ communityId }: DepositorListProps) {
 
   return (
     <div>
-      <div className="mb-2 text-sm font-medium text-gray-500 border-b pb-2 flex justify-between items-center">
-        <div>
-          {depositors.length} staker{depositors.length !== 1 ? 's' : ''} · {totalStaked.toFixed(2)} SOLs total
+      <div className="mb-6 flex flex-col">
+        <div className="flex items-center justify-between mb-2">
+          <div className="flex items-center gap-2">
+            <span className="w-4 h-4 bg-[#FF69B4] dark:bg-[#FF1493] rounded-full"></span>
+            <h3 className="text-lg font-extrabold tracking-widest uppercase text-[#FF69B4] dark:text-[#FF69B4]">Meme Stakers</h3>
+            <span className="w-4 h-4 bg-[#FF69B4] dark:bg-[#FF1493] rounded-full"></span>
+          </div>
+          <button 
+            onClick={() => fetchDepositors()} 
+            className="text-xs bg-[#FF69B4] hover:bg-[#FF1493] text-white px-2 py-1 rounded-full border-2 border-dashed border-white dark:border-gray-700 transition-all transform hover:scale-110 font-bold"
+            title="Refresh list"
+          >
+            ↻ Refresh
+          </button>
         </div>
-        <button 
-          onClick={() => fetchDepositors()} 
-          className="text-xs text-pink-500 hover:text-pink-700"
-          title="Refresh list"
-        >
-          ↻
-        </button>
+        <div className="text-sm font-medium text-gray-600 dark:text-gray-400 border-b-4 border-dashed border-[#FF69B4] dark:border-[#FF1493] pb-2">
+          {depositors.length} staker{depositors.length !== 1 ? 's' : ''} · {totalStaked.toFixed(2)} SOL total
+        </div>
       </div>
       
       {loading ? (
         <div className="py-2 px-3 text-sm text-gray-500">
           <div className="animate-pulse flex space-x-2 items-center">
-            <div className="h-4 w-4 bg-gray-200 rounded-full"></div>
-            <div className="h-4 w-full bg-gray-200 rounded"></div>
+            <div className="h-4 w-4 bg-[#FF69B4]/30 rounded-full"></div>
+            <div className="h-4 w-full bg-[#FF69B4]/20 rounded"></div>
           </div>
         </div>
       ) : error ? (
-        <div className="py-2 px-3 text-sm text-red-500">{error}</div>
+        <div className="py-3 px-4 text-sm text-red-500 bg-red-100 dark:bg-red-900/30 border-4 border-dashed border-red-400 dark:border-red-600 rounded-xl font-bold">
+          {error}
+        </div>
       ) : depositors.length === 0 ? (
-        <div className="py-2 px-3 text-sm text-gray-500 italic">No stakers yet. Be the first to deposit!</div>
+        <div className="py-3 px-4 text-sm text-[#FF69B4] dark:text-[#FF69B4] italic bg-[#FF69B4]/10 border-4 border-dashed border-[#FF69B4] dark:border-[#FF1493] rounded-xl font-bold text-center">
+          No stakers yet. Be the first to deposit! 🚀
+        </div>
       ) : (
-        <div className="space-y-2">
+        <div className="space-y-3">
           {depositors.map((depositor) => (
             <div 
               key={depositor.id} 
-              className="border-2 border-[rgba(255,182,193,0.5)] rounded-lg p-2 bg-white flex justify-between items-center"
+              className="border-4 border-dashed border-[#FF69B4] dark:border-[#FF1493] rounded-lg p-3.5 bg-white dark:bg-gray-800 hover:shadow-lg transition-all transform hover:scale-[1.02]"
             >
-              <div className="flex items-center">
-                <div className="w-8 h-8 mr-2 bg-[rgba(255,182,193,0.3)] rounded-full flex items-center justify-center">
-                  {depositor.user.username.charAt(0).toUpperCase()}
+              <div className="flex-grow">
+                <div className="font-extrabold text-[#FF69B4] dark:text-[#FF69B4]">
+                  @{depositor.user.username}
                 </div>
-                <div>
-                  <div className="font-medium">@{depositor.user.username}</div>
-                  <div className="text-xs text-gray-500">
-                    Last deposit: {new Date(depositor.depositedAt).toLocaleDateString()}
-                  </div>
+                <div 
+                  className="font-mono font-bold text-gray-600 dark:text-gray-400 text-sm mt-1 flex items-center"
+                  title={`Last deposit: ${new Date(depositor.depositedAt).toLocaleString()}`}
+                >
+                  <span>{depositor.amount.toFixed(2)} SOL</span>
+                  <span className="ml-2 bg-[#FF69B4]/10 dark:bg-[#FF69B4]/20 px-1.5 py-0.5 rounded text-xs">
+                    {totalStaked > 0 ? ((depositor.amount / totalStaked) * 100).toFixed(1) : '0'}%
+                  </span>
                 </div>
-              </div>
-              <div className="font-mono font-bold" title={`Last deposit: ${new Date(depositor.depositedAt).toLocaleString()}`}>
-                {depositor.amount.toFixed(2)} {depositor.amount === 1 ? 'SOL' : 'SOLs'}
               </div>
             </div>
           ))}
