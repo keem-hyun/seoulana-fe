@@ -16,10 +16,10 @@
 }
 
 :root {
-	--pink-light: #ffcce0;
-	--pink-medium: #ff9ec6;
-	--pink-primary: #ff5f9e;
-	--pink-dark: #e84a8a;
+	--blue-light: #c9e6ff;
+	--blue-medium: #99d0ff;
+	--blue-primary: #5fb3ff;
+	--blue-dark: #4a9ce8;
 	--purple-light: #e9d2ff;
 	--purple-medium: #c89bff;
 	--purple-primary: #9965de;
@@ -130,8 +130,8 @@ body {
 }
 
 /* Shadow Styles */
-.shadow-pink {
-	box-shadow: 0 10px 25px -5px rgba(255, 95, 158, 0.5);
+.shadow-blue {
+	box-shadow: 0 10px 25px -5px rgba(95, 179, 255, 0.5);
 }
 
 .shadow-purple {
@@ -139,12 +139,12 @@ body {
 }
 
 /* Custom utility classes */
-.pink-gradient {
-	background: linear-gradient(135deg, var(--pink-primary) 0%, var(--purple-primary) 100%);
+.blue-gradient {
+	background: linear-gradient(135deg, var(--blue-primary) 0%, var(--purple-primary) 100%);
 }
 
-.pink-text-gradient {
-	background: linear-gradient(135deg, var(--pink-primary) 0%, var(--purple-primary) 100%);
+.blue-text-gradient {
+	background: linear-gradient(135deg, var(--blue-primary) 0%, var(--purple-primary) 100%);
 	-webkit-background-clip: text;
 	background-clip: text;
 	color: transparent;
@@ -160,48 +160,48 @@ body {
 
 /* Bubble button */
 .bubble-button {
-	background: linear-gradient(135deg, var(--pink-primary) 0%, var(--purple-primary) 100%);
+	background: linear-gradient(135deg, var(--blue-primary) 0%, var(--purple-primary) 100%);
 	color: white;
 	border-radius: 9999px;
 	padding: 0.75rem 1.5rem;
 	font-weight: 600;
 	transition: all 0.3s ease;
-	box-shadow: 0 6px 20px -5px rgba(255, 95, 158, 0.4);
+	box-shadow: 0 6px 20px -5px rgba(95, 179, 255, 0.4);
 }
 
 .bubble-button:hover {
 	transform: translateY(-3px) scale(1.02);
-	box-shadow: 0 10px 25px -5px rgba(255, 95, 158, 0.5);
+	box-shadow: 0 10px 25px -5px rgba(95, 179, 255, 0.5);
 }
 
 .bubble-card {
 	background: white;
 	border-radius: 24px;
-	border: 2px solid var(--pink-light);
+	border: 2px solid var(--blue-light);
 	padding: 2rem;
 	transition: all 0.3s ease;
 }
 
 .bubble-card:hover {
 	transform: translateY(-5px);
-	box-shadow: 0 15px 30px -10px rgba(255, 95, 158, 0.2);
+	box-shadow: 0 15px 30px -10px rgba(95, 179, 255, 0.2);
 }
 
 /* Wallet Button Styles */
 .wallet-button {
-	background: linear-gradient(135deg, var(--pink-primary) 0%, var(--purple-primary) 100%) !important;
+	background: linear-gradient(135deg, var(--blue-primary) 0%, var(--purple-primary) 100%) !important;
 	color: white !important;
 	transition: all 0.3s ease !important;
 	font-size: 0.875rem !important;
 	padding: 0.5rem 1rem !important;
 	border-radius: 9999px !important;
 	height: auto !important;
-	box-shadow: 0 4px 12px -2px rgba(255, 95, 158, 0.3) !important;
+	box-shadow: 0 4px 12px -2px rgba(95, 179, 255, 0.3) !important;
 }
 
 .wallet-button:hover {
 	transform: translateY(-2px) !important;
-	box-shadow: 0 6px 16px -2px rgba(255, 95, 158, 0.4) !important;
+	box-shadow: 0 6px 16px -2px rgba(95, 179, 255, 0.4) !important;
 }
 
 .dark {
