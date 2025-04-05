@@ -18,16 +18,16 @@ interface ClaimBasefeeDialogProps {
 	onClose: () => void;
 	communityId: string;
 	contractAddress: string;
-	onBountyDeposited: () => void;
+	// onBountyDeposited: () => void;
 }
-const PROGRAM_ID = new PublicKey('38cVbT7EHqPwfXR1VgXA5jJiBe3DSAFr6cdCEPx4fbAv');
+const PROGRAM_ID = new PublicKey('CEnBjSSjuoL13LtgDeALeAMWqSg9W7t1J5rtjeKNarAM');
 
 export default function ClaimBasefeeDialog({
 	isOpen,
 	onClose,
 	communityId,
 	contractAddress,
-	onBountyDeposited,
+	// onBountyDeposited,
 }: ClaimBasefeeDialogProps) {
 	const [amount, setAmount] = useState(1);
 	const [loading, setLoading] = useState(false);
@@ -45,12 +45,13 @@ export default function ClaimBasefeeDialog({
 					description: string;
 					createdAt: string;
 					creatorId: string;
-					initializerAddress: string;
+					walletAddress: string;
 				}
 				
 				const { data } = await api.get<CommunityResponse>(`/communities/${communityId}`);
 				setCommunityName(data.name);
-				setInitializerAddress(data.initializerAddress);
+				setInitializerAddress(data.walletAddress);
+				console.log('Initializer address loaded:', data.walletAddress);
 				console.log('Community name loaded:', data.name);
 			} catch (err) {
 				console.error('Error fetching community data:', err);
@@ -75,7 +76,7 @@ export default function ClaimBasefeeDialog({
 		}
 
 		if (!initializerAddress) {
-			toast.error('커뮤니티 정보를 불러오는 중입니다. 잠시 후 다시 시도해주세요');
+			toast.error('커뮤니티 222정보를 불러오는 중입니다. 잠시 후 다시 시도해주세요');
 			return;
 		}
 
@@ -108,45 +109,81 @@ export default function ClaimBasefeeDialog({
 			);
 			console.log("Vault PDA:", vaultPda.toString());
 			
-			// SOL을 lamports로 변환 (1 SOL = 10^9 lamports)
-			const lamports = amount * 1_000_000_000;
-			
-			// 트랜잭션 생성
-			const transaction = new web3.Transaction();
-			
-			// 트랜잭션에 송금 명령 추가
-			transaction.add(
-				web3.SystemProgram.transfer({
-					fromPubkey: publicKey,
-					toPubkey: vaultPda,
-					lamports,
-				})
+			const provider = new AnchorProvider(
+				connection,
+				{
+					publicKey,
+					signTransaction: async (tx: web3.Transaction) => {
+						tx.feePayer = publicKey;
+						tx.recentBlockhash = (await connection.getLatestBlockhash()).blockhash;
+						return await sendTransaction(tx, connection);
+					},
+				},
+				{ preflightCommitment: 'processed' }
 			);
-			
-			// 트랜잭션 전송
-			const signature = await sendTransaction(transaction, connection);
-			console.log("Transaction signature:", signature);
-			
-			// 트랜잭션 확인 대기
-      const latestBlockhash = await connection.getLatestBlockhash();
-      await connection.confirmTransaction({
-        signature,
-        blockhash: latestBlockhash.blockhash,
-        lastValidBlockHeight: latestBlockhash.lastValidBlockHeight
-      }, 'confirmed');
-			
-			// 백엔드 API 호출하여 바운티 정보 업데이트
-			await api.post(`/communities/${communityId}/deposit`, {
-				amount,
-				walletAddress: publicKey.toString(),
-			});
+			// Load program from IDL
 
-			toast.success('바운티가 성공적으로 입금되었습니다!');
-			onBountyDeposited();
+
+			const program = new Program(kasoroIdl as Kasoro, provider);
+			console.log('Program structure:', program.programId.toString());
+			// Create a transaction to initialize community
+			const transaction = new web3.Transaction();
+			console.log('Transaction structure:', transaction);
+			// Find PDA for community and vault
+			
+		    // console.log("parameter:", );
+			// Add initialize instruction to transaction
+			const beforeBalance = await connection.getBalance(publicKey);
+			console.log('beforeBalance:', beforeBalance);
+			const beforeVaultBalance = await connection.getBalance(vaultPda);
+			console.log('beforeVaultBalance:', beforeVaultBalance);
+			transaction.add(
+				await program.methods
+					.claim(
+						
+					)
+					.accounts({
+						depositor: publicKey,
+						community: communityPda,
+						vault: vaultPda,
+						systemProgram: web3.SystemProgram.programId,
+					})
+					.instruction()
+			);
+
+			// Send transaction to the network
+			const signature = await sendTransaction(transaction, connection);
+
+			// Wait for confirmation
+			const latestBlockhash = await connection.getLatestBlockhash();
+			await connection.confirmTransaction({
+				signature,
+				blockhash: latestBlockhash.blockhash,
+				lastValidBlockHeight: latestBlockhash.lastValidBlockHeight
+			}, 'confirmed');
+			
+			// // 백엔드 API 호출하여 바운티 정보 업데이트
+			// await api.post(`/communities/${communityId}/deposit`, {
+			// 	amount,
+			// 	walletAddress: publicKey.toString(),
+			// });
+
+			
+
+			const afterBalance = await connection.getBalance(publicKey);
+			console.log('afterBalance:', afterBalance);
+
+			
+
+			const afterVaultBalance = await connection.getBalance(vaultPda);
+			console.log('afterVaultBalance:', afterVaultBalance);
+
+			toast.success('base fee 클레임 성공!');
+			// onBountyDeposited();
 			onClose();
 		} catch (error) {
-			console.error('Error depositing bounty:', error);
-			toast.error(error instanceof Error ? error.message : '바운티 입금에 실패했습니다');
+			console.error('Error claiming bounty:', error);
+			toast.error(error instanceof Error ? error.message : '클레임에 실패했습니다');
 		} finally {
 			setLoading(false);
 		}
