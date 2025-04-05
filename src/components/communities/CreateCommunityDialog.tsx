@@ -33,7 +33,6 @@ interface CommunityResponse {
 export default function CreateCommunityDialog({ isOpen, onClose, userWalletAddress }: CreateCommunityDialogProps) {
 	const [name, setName] = useState('');
 	const [description, setDescription] = useState('');
-	const [bountyAmount, setBountyAmount] = useState(1);
 	const [timeLimit, setTimeLimit] = useState(30);
 	const [baseFee, setBaseFee] = useState(0);
 	const [loading, setLoading] = useState(false);
@@ -153,7 +152,6 @@ export default function CreateCommunityDialog({ isOpen, onClose, userWalletAddre
 			const { data } = await api.post<CommunityResponse>('/communities', {
 				name,
 				description,
-				bountyAmount,
 				timeLimit,
 				baseFee,
 				walletAddress: publicKey.toString(),
@@ -162,7 +160,6 @@ export default function CreateCommunityDialog({ isOpen, onClose, userWalletAddre
 			// Reset form
 			setName('');
 			setDescription('');
-			setBountyAmount(1);
 			setTimeLimit(30);
 			setBaseFee(0.0001);
 
