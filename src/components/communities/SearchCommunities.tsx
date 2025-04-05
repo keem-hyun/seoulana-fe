@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Search } from 'lucide-react';
+import { Search, Sparkles } from 'lucide-react';
 
 interface SearchCommunitiesProps {
 	onSearch: (term: string) => void;
@@ -25,23 +25,32 @@ export default function SearchCommunities({ onSearch }: SearchCommunitiesProps) 
 			<div className="relative">
 				<input
 					type="text"
-					placeholder="Search communities..."
+					placeholder="Find dank meme communities..."
 					value={searchTerm}
 					onChange={(e) => {
 						setSearchTerm(e.target.value);
 						onSearch(e.target.value); // 실시간 검색을 위해 즉시 검색어 전달
 					}}
 					onKeyPress={handleKeyPress}
-					className="w-full px-4 py-3 pl-12 rounded-full bg-gray-50 dark:bg-gray-700/40 border border-gray-200 dark:border-gray-600 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-gray-400 dark:focus:ring-gray-500 shadow-inner transition-all"
+					className="w-full px-4 py-4 pl-14 rounded-full bg-gradient-to-r from-pink-50 to-purple-50 dark:from-gray-800 dark:to-gray-900 
+					border-4 border-dashed border-[#FF69B4] dark:border-[#FF1493] 
+					focus:border-[#FF1493] focus:outline-none focus:ring-2 focus:ring-[#FF69B4] dark:focus:ring-[#FF1493] 
+					shadow-inner text-gray-700 dark:text-gray-200 font-medium placeholder-gray-500 dark:placeholder-gray-400 
+					transform hover:-rotate-1 transition-all text-lg"
 				/>
-				<div className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-500">
-					<Search size={18} />
+				<div className="absolute left-5 top-1/2 -translate-y-1/2 text-[#FF69B4] dark:text-[#FF1493]">
+					<Search size={22} className="animate-pulse" />
 				</div>
 				<button
 					onClick={handleSearch}
-					className="absolute right-2 top-1/2 -translate-y-1/2 bg-gradient-to-r from-pink-500 to-rose-500 dark:from-pink-600 dark:to-rose-600 text-white px-5 py-1.5 text-sm font-medium rounded-full shadow-sm hover:shadow transition-all hover:opacity-90"
+					className="absolute right-3 top-1/2 -translate-y-1/2 
+					bg-gradient-to-r from-[#FF69B4] to-[#FF1493] dark:from-[#FF1493] dark:to-[#FF69B4] 
+					text-white px-6 py-2 text-base font-bold rounded-full shadow-md 
+					hover:shadow-lg transition-all hover:opacity-90 transform hover:scale-105 
+					hover:rotate-1 border-2 border-white dark:border-gray-700 flex items-center"
 				>
-					Search
+					<Sparkles size={16} className="mr-1" />
+					Find
 				</button>
 			</div>
 		</div>

@@ -283,123 +283,151 @@ export default function CreateCommunityDialog({ isOpen, onClose, userWalletAddre
 		}
 	}
 
-	if (!isOpen) return null;
+	return !isOpen ? null : (
+		<div className="fixed inset-0 z-50 overflow-y-auto bg-black bg-opacity-70 backdrop-blur-sm flex items-center justify-center p-4">
+			<div className="relative w-full max-w-2xl">
+				<div className="bg-white dark:bg-gray-800 rounded-xl border-4 border-dashed border-[#FF69B4] dark:border-[#FF1493] p-6 shadow-2xl transform rotate-[-0.5deg] animate-fadeIn">
+					<div className="absolute -top-4 -right-4">
+						<button
+							type="button"
+							onClick={onClose}
+							className="bg-[#FF69B4] text-white rounded-full w-10 h-10 flex items-center justify-center hover:bg-[#FF1493] transition-colors shadow-lg transform hover:rotate-12"
+						>
+							<svg
+								xmlns="http://www.w3.org/2000/svg"
+								className="h-6 w-6"
+								fill="none"
+								viewBox="0 0 24 24"
+								stroke="currentColor"
+							>
+								<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M6 18L18 6M6 6l12 12" />
+							</svg>
+						</button>
+					</div>
 
-	return (
-		<div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-			<div className="bg-white dark:bg-gray-800 rounded-[20px] overflow-hidden shadow-[0_4px_0_rgba(255,182,193,0.5)] group transition-all duration-300 flex flex-col border-2 border-[rgba(255,182,193,0.5)] p-6 w-full max-w-md max-h-[90vh]">
-				<div className="flex justify-between items-center mb-4">
-					<h2 className="text-xl font-bold">Create New Community</h2>
-					<button
-						onClick={onClose}
-						className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
-					>
-						✕
-					</button>
-				</div>
+					<h2 className="text-3xl font-extrabold tracking-wider mb-6 text-center text-transparent bg-clip-text bg-gradient-to-r from-[#FF69B4] to-purple-500 dark:from-[#FF1493] dark:to-purple-400 uppercase transform -rotate-1">
+						Create a Dank Meme Community
+					</h2>
 
-				<div className="overflow-y-auto pr-2">
-					<form onSubmit={handleSubmit} className="space-y-4">
-						{error && (
-							<div className="bg-red-50 dark:bg-red-900/30 border-2 border-red-200 dark:border-red-700 p-3 text-red-800 dark:text-red-300 text-sm rounded-lg">
-								{error}
-							</div>
-						)}
-
-						<div className="pb-2">
-							<h1 className="text-2xl font-bold tracking-widest uppercase mb-4">New Community</h1>
-							<hr className="border-gray-200 dark:border-gray-700 mb-6" />
+					{error && (
+						<div className="bg-red-100 dark:bg-red-900/30 border-4 border-dashed border-red-400 dark:border-red-600 p-4 rounded-xl mb-6 text-red-800 dark:text-red-200 font-bold">
+							{error}
 						</div>
+					)}
 
-						<div>
-							<label htmlFor="name" className="block font-bold text-sm uppercase tracking-widest mb-1">
-								Name
-							</label>
-							<input
-								id="name"
-								type="text"
-								value={name}
-								onChange={(e) => setName(e.target.value)}
-								required
-								className="w-full px-3 py-2 border-2 border-[rgba(255,182,193,0.5)] rounded-lg bg-white dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-pink-primary"
-								placeholder="Enter community name"
-							/>
-						</div>
-
-						<div>
-							<label htmlFor="description" className="block font-bold text-sm uppercase tracking-widest mb-1">
-								Description
-							</label>
-							<textarea
-								id="description"
-								value={description}
-								onChange={(e) => setDescription(e.target.value)}
-								rows={3}
-								className="w-full px-3 py-2 border-2 border-[rgba(255,182,193,0.5)] rounded-lg bg-white dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-pink-primary"
-								placeholder="Enter community description"
-							/>
-						</div>
-
-						<div>
-							<label htmlFor="timeLimit" className="block font-bold text-sm uppercase tracking-widest mb-1">
-								Time Limit (MIN)
-							</label>
-							<div className="border-2 border-[rgba(255,182,193,0.5)] p-4 bg-white dark:bg-gray-800 rounded-lg flex items-center">
+					<form onSubmit={handleSubmit} className="space-y-6">
+						<div className="space-y-8">
+							<div>
+								<label
+									htmlFor="name"
+									className="block text-lg font-extrabold text-[#FF69B4] dark:text-[#FF69B4] mb-2 uppercase"
+								>
+									Community Name
+								</label>
 								<input
-									id="timeLimit"
-									type="range"
-									min="1"
-									max="120"
-									step="1"
-									value={timeLimit}
-									onChange={(e) => setTimeLimit(parseInt(e.target.value))}
-									className="w-full mr-4 accent-pink-primary"
+									type="text"
+									id="name"
+									value={name}
+									onChange={(e) => setName(e.target.value)}
+									placeholder="e.g. Doge Lovers"
+									required
+									className="w-full px-4 py-3 rounded-xl bg-gradient-to-r from-pink-50 to-purple-50 dark:from-gray-800 dark:to-gray-900 
+									border-3 border-dashed border-[#FF69B4] dark:border-[#FF1493] 
+									focus:border-[#FF1493] focus:outline-none focus:ring-2 focus:ring-[#FF69B4] 
+									text-gray-700 dark:text-gray-200 placeholder-gray-500 dark:placeholder-gray-400 
+									font-medium transform hover:-rotate-[0.5deg] transition-all"
 								/>
-								<div className="min-w-[80px] bg-pink-light py-1 px-3 font-mono font-bold text-center border-2 border-[rgba(255,182,193,0.5)] rounded-lg">
-									{timeLimit} MIN
+							</div>
+
+							<div>
+								<label
+									htmlFor="description"
+									className="block text-lg font-extrabold text-[#FF69B4] dark:text-[#FF69B4] mb-2 uppercase"
+								>
+									Meme Description
+								</label>
+								<textarea
+									id="description"
+									value={description}
+									onChange={(e) => setDescription(e.target.value)}
+									placeholder="Describe your meme community vibes..."
+									rows={3}
+									className="w-full px-4 py-3 rounded-xl bg-gradient-to-r from-pink-50 to-purple-50 dark:from-gray-800 dark:to-gray-900 
+									border-3 border-dashed border-[#FF69B4] dark:border-[#FF1493] 
+									focus:border-[#FF1493] focus:outline-none focus:ring-2 focus:ring-[#FF69B4] 
+									text-gray-700 dark:text-gray-200 placeholder-gray-500 dark:placeholder-gray-400 
+									font-medium transform hover:rotate-[0.5deg] transition-all"
+								></textarea>
+							</div>
+
+							<div className="grid grid-cols-2 gap-6">
+								<div>
+									<label
+										htmlFor="timeLimit"
+										className="block text-lg font-extrabold text-[#FF69B4] dark:text-[#FF69B4] mb-2 uppercase"
+									>
+										Time Limit (minutes)
+									</label>
+									<div className="relative mt-1">
+										<input
+											type="number"
+											id="timeLimit"
+											value={timeLimit}
+											onChange={(e) => setTimeLimit(Number(e.target.value))}
+											min="1"
+											max="1440"
+											required
+											className="w-full px-4 py-3 rounded-xl bg-gradient-to-r from-pink-50 to-purple-50 dark:from-gray-800 dark:to-gray-900 
+											border-3 border-dashed border-[#FF69B4] dark:border-[#FF1493] 
+											focus:border-[#FF1493] focus:outline-none focus:ring-2 focus:ring-[#FF69B4] 
+											text-gray-700 dark:text-gray-200 
+											font-medium transform hover:rotate-[0.5deg] transition-all text-center"
+										/>
+									</div>
+								</div>
+
+								<div>
+									<label
+										htmlFor="baseFee"
+										className="block text-lg font-extrabold text-[#FF69B4] dark:text-[#FF69B4] mb-2 uppercase"
+									>
+										Base Fee (SOL)
+									</label>
+									<div className="relative mt-1">
+										<input
+											type="number"
+											id="baseFee"
+											value={baseFee}
+											onChange={(e) => setBaseFee(Number(e.target.value))}
+											min="0"
+											step="0.01"
+											required
+											className="w-full px-4 py-3 rounded-xl bg-gradient-to-r from-pink-50 to-purple-50 dark:from-gray-800 dark:to-gray-900 
+											border-3 border-dashed border-[#FF69B4] dark:border-[#FF1493] 
+											focus:border-[#FF1493] focus:outline-none focus:ring-2 focus:ring-[#FF69B4] 
+											text-gray-700 dark:text-gray-200 
+											font-medium transform hover:-rotate-[0.5deg] transition-all text-center"
+										/>
+									</div>
 								</div>
 							</div>
-						</div>
 
-						<div>
-							<label htmlFor="baseFee" className="block font-bold text-sm uppercase tracking-widest mb-1">
-								Base Fee (SOL)
-							</label>
-							<div className="border-2 border-[rgba(255,182,193,0.5)] p-4 bg-white dark:bg-gray-800 rounded-lg flex items-center">
-								<input
-									id="baseFee"
-									type="range"
-									min="0"
-									max="10"
-									step="0.1"
-									value={baseFee}
-									onChange={(e) => setBaseFee(parseFloat(e.target.value))}
-									className="w-full mr-4 accent-pink-primary"
-								/>
-								<div className="min-w-[80px] bg-pink-light py-1 px-3 font-mono font-bold text-center border-2 border-[rgba(255,182,193,0.5)] rounded-lg">
-									{baseFee} SOL
-								</div>
-							</div>
-						</div>
-
-						<div>
-							<label htmlFor="image" className="block font-bold text-sm uppercase tracking-widest mb-1">
-								COMMUNITY PFP
-							</label>
-							<div className="border-2 border-[rgba(255,182,193,0.5)] p-4 bg-white dark:bg-gray-800 rounded-lg">
-								<div className="flex items-center gap-2">
-									<label className="cursor-pointer flex items-center gap-2">
-										<div
-											className={`w-10 h-10 bg-[rgba(255,182,193,0.5)] hover:bg-[rgba(255,182,193,0.6)] rounded-md flex items-center justify-center ${
-												uploadingImage ? 'opacity-50' : ''
-											}`}
-										>
-											{uploadingImage ? (
-												<div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
-											) : (
+							<div>
+								<label className="block text-lg font-extrabold text-[#FF69B4] dark:text-[#FF69B4] mb-2 uppercase">
+									Meme Profile Image (Optional)
+								</label>
+								<div className="flex justify-center">
+									<label
+										htmlFor="image"
+										className="cursor-pointer flex flex-col items-center justify-center w-40 h-40 border-4 border-dashed border-[#FF69B4] dark:border-[#FF1493] rounded-2xl overflow-hidden bg-pink-50 dark:bg-gray-700 hover:bg-pink-100 dark:hover:bg-gray-600 transition-colors transform hover:rotate-3"
+									>
+										{imagePreview ? (
+											<img src={imagePreview} alt="Preview" className="w-full h-full object-cover" />
+										) : (
+											<div className="flex flex-col items-center justify-center p-4">
 												<svg
 													xmlns="http://www.w3.org/2000/svg"
-													className="h-5 w-5"
+													className="h-12 w-12 text-[#FF69B4] dark:text-[#FF1493] mb-2"
 													viewBox="0 0 20 20"
 													fill="currentColor"
 												>
@@ -409,11 +437,11 @@ export default function CreateCommunityDialog({ isOpen, onClose, userWalletAddre
 														clipRule="evenodd"
 													/>
 												</svg>
-											)}
-										</div>
-										<span className="text-sm text-gray-600 dark:text-gray-300">
-											{imagePreview ? 'Change PFP' : 'Upload PFP'}
-										</span>
+												<span className="text-base font-bold text-[#FF69B4] dark:text-[#FF1493]">
+													{uploadingImage ? 'Uploading...' : 'Upload Meme Pic'}
+												</span>
+											</div>
+										)}
 										<input
 											type="file"
 											id="image"
@@ -425,32 +453,16 @@ export default function CreateCommunityDialog({ isOpen, onClose, userWalletAddre
 									</label>
 								</div>
 								{imagePreview && (
-									<div className="relative mt-4">
-										<img
-											src={imagePreview}
-											alt="Preview"
-											className="max-w-full h-auto rounded-lg border-2 border-[rgba(255,182,193,0.5)]"
-										/>
+									<div className="relative mt-4 flex justify-center">
 										<button
 											type="button"
 											onClick={() => {
 												setImage(null);
 												setImagePreview(null);
 											}}
-											className="absolute top-2 right-2 bg-red-500 text-white rounded-full p-1.5 hover:bg-red-600 shadow-lg"
+											className="bg-red-500 text-white rounded-full p-3 hover:bg-red-600 shadow-lg transform hover:rotate-12 transition-all border-2 border-white dark:border-gray-700 font-bold"
 										>
-											<svg
-												xmlns="http://www.w3.org/2000/svg"
-												className="h-4 w-4"
-												viewBox="0 0 20 20"
-												fill="currentColor"
-											>
-												<path
-													fillRule="evenodd"
-													d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
-													clipRule="evenodd"
-												/>
-											</svg>
+											Remove Image
 										</button>
 									</div>
 								)}
@@ -458,31 +470,31 @@ export default function CreateCommunityDialog({ isOpen, onClose, userWalletAddre
 						</div>
 
 						{!connected && (
-							<div className="bg-yellow-50 dark:bg-yellow-900/30 border-2 border-yellow-200 dark:border-yellow-700 p-3 text-yellow-800 dark:text-yellow-300 text-sm rounded-lg">
-								Please connect your wallet to create a community
+							<div className="bg-yellow-100 dark:bg-yellow-900/30 border-4 border-dashed border-yellow-400 dark:border-yellow-600 p-4 rounded-xl text-yellow-800 dark:text-yellow-300 font-bold text-center">
+								Connect your wallet to create a dank meme community!
 							</div>
 						)}
 
 						{connected && !isWalletLinked && (
-							<div className="bg-yellow-50 dark:bg-yellow-900/30 border-2 border-yellow-200 dark:border-yellow-700 p-3 text-yellow-800 dark:text-yellow-300 text-sm rounded-lg">
-								Please link your wallet to your account first
+							<div className="bg-yellow-100 dark:bg-yellow-900/30 border-4 border-dashed border-yellow-400 dark:border-yellow-600 p-4 rounded-xl text-yellow-800 dark:text-yellow-300 font-bold text-center">
+								Link your wallet to your account first!
 							</div>
 						)}
 
-						<div className="flex justify-end gap-4 mt-6">
+						<div className="flex justify-center gap-6 mt-8">
 							<button
 								type="button"
 								onClick={onClose}
-								className="px-4 py-2 border-2 border-[rgba(255,182,193,0.5)] text-sm font-bold uppercase tracking-wider rounded-[20px] hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+								className="px-6 py-3 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-800 dark:text-white font-bold border-4 border-dashed border-gray-400 dark:border-gray-500 rounded-full disabled:opacity-50 disabled:cursor-not-allowed transition-all transform hover:-rotate-2 hover:scale-105 uppercase tracking-wider text-lg shadow-md"
 							>
 								Cancel
 							</button>
 							<button
 								type="submit"
 								disabled={loading || !name.trim() || !connected || !isWalletLinked}
-								className="px-4 py-2 bg-[rgba(255,182,193,0.5)] hover:bg-[rgba(255,182,193,0.6)] text-black font-bold border-2 border-[rgba(255,182,193,0.5)] rounded-[20px] disabled:opacity-50 disabled:cursor-not-allowed transition-colors uppercase tracking-wider"
+								className="px-6 py-3 bg-gradient-to-r from-[#FF69B4] to-[#FF1493] hover:from-[#FF1493] hover:to-[#FF69B4] text-white font-extrabold border-4 border-dashed border-white dark:border-gray-700 rounded-full disabled:opacity-50 disabled:cursor-not-allowed transition-all transform hover:rotate-2 hover:scale-105 uppercase tracking-wider text-lg shadow-md"
 							>
-								{loading ? 'Creating...' : 'Create Community'}
+								{loading ? 'Creating...' : '🚀 Create Community 🚀'}
 							</button>
 						</div>
 					</form>

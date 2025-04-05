@@ -123,19 +123,19 @@ export default function CommunitysPage() {
 	}
 
 	return (
-		<div className="min-h-screen">
+		<div className="min-h-screen bg-gradient-to-br from-white via-pink-50 to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-purple-950">
 			<div className="container mx-auto px-4 py-8">
 				<Toaster position="top-right" />
 				<div className="flex justify-between items-center mb-8">
 					<div className="flex items-center gap-4">
-						<h1 className="text-3xl font-bold uppercase tracking-wider">Communities</h1>
+						<h1 className="text-4xl font-extrabold uppercase tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-[#FF69B4] to-purple-500 dark:from-[#FF1493] dark:to-purple-400 transform -rotate-1">MEME COMMUNITIES</h1>
 						{user && (
 							<button
 								onClick={() => setIsCreateDialogOpen(true)}
-								className="flex items-center gap-2 bg-[rgba(255,182,193,0.5)] hover:bg-[rgba(255,182,193,0.6)] text-black px-4 py-2 border-2 border-[rgba(255,182,193,0.5)] rounded-[20px] text-sm font-bold transition-colors"
+								className="flex items-center gap-2 bg-[#FF69B4] hover:bg-[#FF1493] text-white px-5 py-3 border-4 border-dashed border-white dark:border-gray-700 rounded-full text-sm font-extrabold transition-all transform hover:scale-105 hover:rotate-1 shadow-lg"
 							>
-								<span>+</span>
-								<span>Create Community</span>
+								<span className="text-xl">+</span>
+								<span>CREATE DANK MEME COMMUNITY</span>
 							</button>
 						)}
 					</div>
@@ -143,26 +143,36 @@ export default function CommunitysPage() {
 
 				<div className="flex-1">
 					{/* 커뮤니티 목록 직접 표시 */}
-					<div className="bg-white dark:bg-gray-800 border-2 border-black dark:border-white p-8">
-						<h2 className="text-2xl font-bold tracking-widest uppercase mb-4">Active Communities</h2>
-						<hr className="border-black dark:border-white border-1 mb-6" />
+					<div className="bg-white dark:bg-gray-800 border-4 border-dashed border-[#FF69B4] dark:border-[#FF1493] p-8 rounded-xl shadow-xl">
+						<div className="mb-6 flex items-center">
+							<span className="w-8 h-8 bg-[#FF69B4] rounded-full mr-3 transform rotate-12"></span>
+							<h2 className="text-3xl font-extrabold tracking-widest uppercase mb-0 text-[#FF69B4] dark:text-[#FF69B4]">Trending Meme Communities</h2>
+							<span className="w-8 h-8 bg-[#FF69B4] rounded-full ml-3 transform -rotate-12"></span>
+						</div>
+						<hr className="border-[#FF69B4] dark:border-[#FF1493] border-2 border-dashed mb-6" />
 
 						<SearchCommunities onSearch={handleSearch} />
 
 						{communityLoading ? (
 							<div className="flex justify-center items-center h-40">
-								<div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-gray-900 dark:border-white"></div>
+								<div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-[#FF69B4] dark:border-[#FF1493]"></div>
 							</div>
 						) : communityError ? (
-							<div className="bg-red-50 dark:bg-red-900/30 border-2 border-red-200 dark:border-red-700 p-4 text-red-800 dark:text-red-300">
+							<div className="bg-red-100 dark:bg-red-900/30 border-4 border-dashed border-red-400 dark:border-red-600 p-6 text-red-800 dark:text-red-300 rounded-xl text-center font-bold">
 								{communityError}
 							</div>
 						) : filteredCommunitys.length === 0 ? (
-							<p className="text-center text-gray-500 dark:text-gray-400 py-8">
-								No communities found. Be the first to create one!
-							</p>
+							<div className="text-center py-12">
+								<p className="text-xl text-gray-600 dark:text-gray-300 font-bold mb-4">
+									No meme communities found yet! 
+								</p>
+								<p className="text-lg text-[#FF69B4] dark:text-[#FF69B4] font-extrabold">
+									Be the first to create a dank meme community!
+								</p>
+								<div className="mt-4 text-5xl">🤔 → 💯 → 🚀</div>
+							</div>
 						) : (
-							<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+							<div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-2 gap-8 mt-8">
 								{filteredCommunitys.map((community) => (
 									<CommunityCard
 										key={community.id}
