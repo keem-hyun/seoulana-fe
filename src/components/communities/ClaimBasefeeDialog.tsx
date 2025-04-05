@@ -12,6 +12,7 @@ import { useRouter } from 'next/navigation';
 import { Program, AnchorProvider, web3 } from '@coral-xyz/anchor';
 import * as anchor from '@coral-xyz/anchor';
 import { Connection, PublicKey, clusterApiUrl } from '@solana/web3.js';
+import { LAMPORTS_PER_SOL } from '@solana/web3.js';
 
 interface ClaimBasefeeDialogProps {
 	isOpen: boolean;
@@ -33,6 +34,9 @@ export default function ClaimBasefeeDialog({
 	const [loading, setLoading] = useState(false);
 	const [communityName, setCommunityName] = useState<string | null>(null);
 	const [initializerAddress, setInitializerAddress] = useState<string | null>(null);
+	const [vaultBalance, setVaultBalance] = useState<number>(0);
+	const [claimableBalance, setClaimableBalance] = useState<number>(0);
+	const [claimPercentage, setClaimPercentage] = useState<number>(0);
 	const { connected, publicKey, sendTransaction } = useWallet();
 	
 	// 커뮤니티 이름 가져오기
@@ -53,6 +57,85 @@ export default function ClaimBasefeeDialog({
 				setInitializerAddress(data.walletAddress);
 				console.log('Initializer address loaded:', data.walletAddress);
 				console.log('Community name loaded:', data.name);
+			
+				if (data.walletAddress && data.name) {
+					const connection = new Connection(clusterApiUrl('devnet'), 'confirmed');
+					const initializerPubkey = new PublicKey(data.walletAddress);
+					
+					const [communityPda] = anchor.web3.PublicKey.findProgramAddressSync(
+						[
+							Buffer.from("community"),
+							initializerPubkey.toBuffer(),
+							Buffer.from(data.name)
+						],
+						PROGRAM_ID
+					);
+					
+					const [vaultPda] = anchor.web3.PublicKey.findProgramAddressSync(
+						[
+							Buffer.from("vault"),
+							initializerPubkey.toBuffer(),
+							Buffer.from(data.name)
+						],
+						PROGRAM_ID
+					);
+					
+					const vaultBalanceRaw = await connection.getBalance(vaultPda);
+					const vaultBalanceSol = vaultBalanceRaw / LAMPORTS_PER_SOL;
+					setVaultBalance(vaultBalanceSol);
+					
+					if (publicKey) {
+						try {
+							const provider = new AnchorProvider(
+								connection,
+								{
+									publicKey,
+									signTransaction: async (tx: web3.Transaction) => tx,
+								},
+								{ preflightCommitment: 'processed' }
+							);
+							
+							const program = new Program(kasoroIdl as Kasoro, provider);
+							
+							// Fetch the vault account data to get depositor information
+							const vaultAccount = await program.account.basefeeVault.fetch(vaultPda);
+							
+							let totalDeposit = 0;
+							let userDeposit = 0;
+							
+							// Calculate total deposits and find the user's deposit
+							if (vaultAccount.depositInfo && Array.isArray(vaultAccount.depositInfo)) {
+								for (const deposit of vaultAccount.depositInfo) {
+									const depositAmount = deposit.bountyAmount ? Number(deposit.bountyAmount) : 0;
+									totalDeposit += depositAmount;
+									
+									// Check if this deposit belongs to the current user
+									if (deposit.depositAddress && deposit.depositAddress.toString() === publicKey.toString()) {
+										userDeposit = depositAmount;
+									}
+								}
+							}
+							
+							let claimableAmount = 0;
+							if (totalDeposit > 0) {
+								claimableAmount = (vaultBalanceRaw * userDeposit) / totalDeposit;
+							}
+							
+							const claimableBalanceSol = claimableAmount / LAMPORTS_PER_SOL;
+							setClaimableBalance(claimableBalanceSol);
+							
+							const percentage = totalDeposit > 0 ? (userDeposit / totalDeposit) * 100 : 0;
+							setClaimPercentage(percentage);
+							
+							//console.log('User deposit:', userDeposit);
+							//console.log('Total deposit:', totalDeposit);
+							//console.log('Claimable amount:', claimableAmount);
+							//console.log('Claimable percentage:', percentage);
+						} catch (error) {
+							console.error('Error calculating claimable amount:', error);
+						}
+					}
+				}
 			} catch (err) {
 				console.error('Error fetching community data:', err);
 				toast.error('커뮤니티 데이터를 불러오는데 실패했습니다');
@@ -62,7 +145,7 @@ export default function ClaimBasefeeDialog({
 		if (communityId) {
 			fetchCommunityName();
 		}
-	}, [communityId]);
+	}, [communityId, publicKey]);
 	
 	const handleClaim = async () => {
 		if (!connected || !publicKey) {
@@ -121,18 +204,12 @@ export default function ClaimBasefeeDialog({
 				},
 				{ preflightCommitment: 'processed' }
 			);
-			// Load program from IDL
-
 
 			const program = new Program(kasoroIdl as Kasoro, provider);
 			console.log('Program structure:', program.programId.toString());
 			// Create a transaction to initialize community
 			const transaction = new web3.Transaction();
 			console.log('Transaction structure:', transaction);
-			// Find PDA for community and vault
-			
-		    // console.log("parameter:", );
-			// Add initialize instruction to transaction
 			const beforeBalance = await connection.getBalance(publicKey);
 			console.log('beforeBalance:', beforeBalance);
 			const beforeVaultBalance = await connection.getBalance(vaultPda);
@@ -162,18 +239,8 @@ export default function ClaimBasefeeDialog({
 				lastValidBlockHeight: latestBlockhash.lastValidBlockHeight
 			}, 'confirmed');
 			
-			// // 백엔드 API 호출하여 바운티 정보 업데이트
-			// await api.post(`/communities/${communityId}/deposit`, {
-			// 	amount,
-			// 	walletAddress: publicKey.toString(),
-			// });
-
-			
-
 			const afterBalance = await connection.getBalance(publicKey);
 			console.log('afterBalance:', afterBalance);
-
-			
 
 			const afterVaultBalance = await connection.getBalance(vaultPda);
 			console.log('afterVaultBalance:', afterVaultBalance);
@@ -196,42 +263,37 @@ export default function ClaimBasefeeDialog({
 					<DialogTitle className="text-xl font-bold">Claim</DialogTitle>
 				</DialogHeader>
 
-				<div className="mt-4">
-					<div className="mb-4">
-						<p className="text-sm text-gray-600 dark:text-gray-400 mb-2">
-							contract address: <span className="font-mono">{contractAddress}</span>
-						</p>
-					</div>
-
-					<div className="mb-6">
-						<label className="block font-bold text-sm uppercase tracking-widest mb-2">amount to deposit (SOL)</label>
-						<div className="border-2 border-[rgba(255,182,193,0.5)] p-4 bg-white dark:bg-gray-800 flex items-center rounded-[20px]">
-							<input
-								type="range"
-								min="0.1"
-								max="10"
-								step="0.1"
-								value={amount}
-								onChange={(e) => setAmount(parseFloat(e.target.value))}
-								className="w-full mr-4 accent-[rgba(255,182,193,0.5)]"
-							/>
-							<div className="min-w-[80px] bg-white py-1 px-3 font-mono font-bold text-center border-2 border-[rgba(255,182,193,0.5)] rounded-[20px]">
-								{amount} SOL
-							</div>
+				<div className="space-y-4">
+					<div className="p-4 border rounded bg-gray-50">
+						<div className="grid grid-cols-2 gap-2">
+							<div className="text-sm font-medium text-gray-700">Vault Balance:</div>
+							<div className="text-sm font-semibold text-right">{vaultBalance.toFixed(4)} SOL</div>
+							
+							<div className="text-sm font-medium text-gray-700">Claimable Balance:</div>
+							<div className="text-sm font-semibold text-right">{claimableBalance.toFixed(4)} SOL</div>
+							
+							<div className="text-sm font-medium text-gray-700">Percentage:</div>
+							<div className="text-sm font-semibold text-right">{claimPercentage.toFixed(2)}%</div>
 						</div>
 					</div>
 
 					<button
 						onClick={handleClaim}
-						disabled={loading || !connected}
+						disabled={loading || !connected || claimableBalance <= 0}
 						className="w-full bg-black hover:bg-gray-800 text-white font-bold py-2 px-4 border-2 border-black disabled:opacity-50 disabled:cursor-not-allowed transition-colors uppercase tracking-wider"
 					>
 						{loading ? 'claiming...' : 'Claim'}
 					</button>
 
 					{!connected && (
-						<p className="mt-4 text-sm text-center text-yellow-600 dark:text-yellow-400">
+						<p className="text-sm text-center text-yellow-600 dark:text-yellow-400">
 							출금하려면 지갑을 연결해주세요
+						</p>
+					)}
+					
+					{connected && claimableBalance <= 0 && (
+						<p className="text-sm text-center text-yellow-600 dark:text-yellow-400">
+							현재 클레임 가능한 금액이 없습니다
 						</p>
 					)}
 				</div>
