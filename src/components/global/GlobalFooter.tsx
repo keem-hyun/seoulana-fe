@@ -6,13 +6,15 @@ export default function GlobalFooter() {
 			<div className="max-w-6xl mx-auto px-6">
 				<div className="flex flex-col md:flex-row justify-between items-center mb-8 pb-8 border-b border-white/20">
 					<div className="flex items-center space-x-3 mb-6 md:mb-0">
-						<div className="w-12 h-12 bg-white rounded-xl shadow-md flex items-center justify-center">
-							<Image src="/images/kasoro_logo.png" alt="Kasoro Logo" width={30} height={30} />
-						</div>
-						<div>
-							<h4 className="font-bold text-xl">KASORO</h4>
-							<p className="text-sm text-white/80">First CommuniFi on Solana</p>
-						</div>
+						<a href="/" className="flex items-center space-x-3">
+							<div className="w-12 h-12 bg-white rounded-xl shadow-md flex items-center justify-center">
+								<Image src="/images/kasoro_logo.png" alt="Kasoro Logo" width={30} height={30} />
+							</div>
+							<div>
+								<h4 className="font-[bazzi] font-bold text-xl">KASORO</h4>
+								<p className="text-sm text-white/80">First CommuniFi on Solana</p>
+							</div>
+						</a>
 					</div>
 
 					<div className="flex space-x-8">

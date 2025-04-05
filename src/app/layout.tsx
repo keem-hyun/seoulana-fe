@@ -3,11 +3,19 @@ import { SolanaWalletProvider } from '@/components/wallet/SolanaWalletProvider';
 import '@/styles/globals.css';
 import GlobalHeader from '@/components/global/GlobalHeader';
 import GlobalFooter from '@/components/global/GlobalFooter';
+import { Quicksand } from 'next/font/google';
 
 export const metadata: Metadata = {
 	title: 'Kasoro | First CommuniFi on Solana',
 	description: 'The cutest community-driven platform for content creators and community builders on Solana',
 };
+
+const quicksand = Quicksand({
+	weight: ['300', '400', '500', '600', '700'],
+	variable: '--font-quicksand',
+	subsets: ['latin'],
+	display: 'swap',
+});
 
 export default function RootLayout({
 	children,
@@ -16,19 +24,7 @@ export default function RootLayout({
 }>) {
 	return (
 		<html lang="en">
-			<head>
-				<style>
-					{`
-						@font-face {
-							font-family: 'Bazzi';
-							src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_20-04@2.1/Bazzi.woff') format('woff');
-							font-weight: normal;
-							font-style: normal;
-						}
-					`}
-				</style>
-			</head>
-			<body className="font-['Bazzi'] antialiased">
+			<body className={`${quicksand.variable} antialiased`}>
 				<SolanaWalletProvider>
 					<GlobalHeader />
 					<div className="min-h-screen flex flex-col">
